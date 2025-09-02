@@ -1,0 +1,75 @@
+{
+  "name": "@haiku/swap-widget",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A powerful, customizable swap widget for DeFi applications",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "defi",
+    "swap",
+    "widget",
+    "react",
+    "ethereum",
+    "crypto",
+    "haiku"
+  ],
+  "author": "Haiku",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "wagmi": ">=2.0.0",
+    "viem": ">=2.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-url": "^8.0.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-dts": "^6.0.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "tslib": "^2.6.0"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.1.0",
+    "clsx": "^2.0.0",
+    "tailwind-merge": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haiku/swap-widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/haiku/swap-widget/issues"
+  },
+  "homepage": "https://github.com/haiku/swap-widget#readme"
+}

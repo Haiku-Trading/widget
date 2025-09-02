@@ -1,0 +1,23 @@
+{
+  "name": "haiku-swap-widget-workspace",
+  "version": "1.0.0",
+  "description": "Haiku Swap Widget - Development Workspace",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter app dev",
+    "build:widget": "pnpm --filter widget build",
+    "build:app": "pnpm --filter app build",
+    "build": "pnpm build:widget && pnpm build:app",
+    "clean": "pnpm --filter widget clean && pnpm --filter app clean",
+    "install:all": "pnpm install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}
