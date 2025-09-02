@@ -1,45 +1,47 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
-import url from '@rollup/plugin-url';
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import postcss from 'rollup-plugin-postcss';
+import terser from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
+import json from '@rollup/plugin-json';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 export default [
   {
     input: 'src/index.ts',
-    output: [
-      {
-        file: 'dist/index.js',
-        format: 'cjs',
-        sourcemap: true,
-      },
-      {
-        file: 'dist/index.esm.js',
-        format: 'esm',
-        sourcemap: true,
-      },
-    ],
+    output: {
+      dir: 'dist',
+      format: 'esm',
+      sourcemap: true,
+      entryFileNames: 'index.esm.js',
+      chunkFileNames: '[name]-[hash].js',
+      assetFileNames: '[name].[ext]',
+    },
+    external: ['react', 'react-dom'],
+    inlineDynamicImports: true,
     plugins: [
-      peerDepsExternal(),
       resolve(),
       commonjs(),
-      typescript({
-        tsconfig: './tsconfig.json',
-        declaration: true,
-        declarationDir: './dist',
+      json(),
+      typescript({ tsconfig: './tsconfig.json' }),
+      postcss({
+        extract: 'styles.css',
+        minimize: true,
+        plugins: [
+          tailwindcss,
+          autoprefixer,
+        ],
+        include: '**/*.css',
       }),
-      url({
-        limit: 10 * 1024, // 10kb
-        include: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.gif'],
-        fileName: '[name][extname]',
-      }),
+      terser(),
     ],
-    external: ['react', 'react-dom', 'wagmi', 'viem'],
   },
   {
-    input: 'dist/index.d.ts',
-    output: [{ file: 'dist/index.d.ts', format: 'esm' }],
+    input: 'src/index.ts',
+    output: [{ file: 'dist/index.d.ts', format: 'es' }],
+    external: ['react', 'react-dom'],
     plugins: [dts()],
   },
 ];
