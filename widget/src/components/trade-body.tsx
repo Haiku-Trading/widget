@@ -44,7 +44,6 @@ export function TradeBody() {
   const { updateTransactionConfirming } = useTransactionConfirmingStore()
   const getTransactionURL = useGetTransactionURL()
 
-  const context = useTradeStore((state) => state.context)
   const slippage = useTradeStore((state) => state.slippage)
   const addInputToken = useTradeStore((state) => state.addInputToken)
   const addOutputToken = useTradeStore((state) => state.addOutputToken)

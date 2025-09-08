@@ -5,7 +5,6 @@ import { SolveIntentPayload } from '../services/solve-intent'
 
 export function useClassicSolveIntentPayload(): SolveIntentPayload {
   const account = useAccount()
-  const context = useTradeStore((state) => state.context)
   const slippage = useTradeStore((state) => state.slippage)
   const bridgeMode = useTradeStore((state) => state.bridgeMode)
   const inputPositions = useTradeStore((state) => state.inputPositions)
@@ -24,7 +23,7 @@ export function useClassicSolveIntentPayload(): SolveIntentPayload {
       targetWeights,
       bridgeMode,
     },
-    source: context,
+    source: 'widget',
     sessionID,
   }
 }

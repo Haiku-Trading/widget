@@ -105,15 +105,15 @@ const TaggingInput: React.FC<TaggingInputProps> = React.memo(
                   scrollbarWidth: 'none',
                 }}
                 aria-placeholder={placeholder ?? ''}
-                placeholder={
-                  <span className="w-full h-full pointer-events-none pr-14 pl-4 absolute left-0 top-0 flex justify-start items-center select-none line-clamp-1 max-md:text-[0.8125rem] opacity-70">
-                    {placeholder ?? ''}
-                  </span>
-                }
                 className={`text-nowrap whitespace-nowrap overflow-auto ${(value ?? '').length > 0 ? 'tagging-input' : ''}`}
                 id="tagging-input"
                 autoFocus={true}
               />
+            }
+            placeholder={
+              <span className="w-full h-full pointer-events-none pr-14 pl-4 absolute left-0 top-0 flex justify-start items-center select-none line-clamp-1 max-md:text-[0.8125rem] opacity-70">
+                {placeholder ?? ''}
+              </span>
             }
             ErrorBoundary={LexicalErrorBoundary}
           />
@@ -121,7 +121,7 @@ const TaggingInput: React.FC<TaggingInputProps> = React.memo(
           <AutoFocusPlugin defaultSelection="rootEnd" key="autoFocus" />
           <ValueSyncPlugin value={value ?? ''} triggers={TRIGGER_KEYS} />
           <OnChangePlugin onChange={valueChangeHandle} />
-          <HistoryPlugin delay={100} />
+          <HistoryPlugin />
           <EnterCommandPlugin onSubmit={onSubmit} />
         </div>
       </LexicalComposer>

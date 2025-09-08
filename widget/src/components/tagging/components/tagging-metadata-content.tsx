@@ -117,7 +117,7 @@ const ChainItem = ({ chainName, metadata, images, branches }: ChainItemProps) =>
     <div className="w-[350px] h-[105px] flex flex-col justify-center items-center rounded-lg bg-bg-surface border border-stroke-grey-primary">
       <div className="w-full h-2/3 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-[#4F4F4F] p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
-          <Badge intent="success">Network</Badge>
+          <Badge variant="success">Network</Badge>
         </div>
         <div className="w-full h-full flex justify-start items-center gap-3">
           <ImageGroup images={images} branches={branches} />
@@ -156,7 +156,7 @@ const ProtocolItem = ({ protocolName, metadata, images, branches }: ProtocolItem
     <div className="w-[350px] h-[105px] flex flex-col justify-center items-center rounded-lg bg-bg-surface border border-stroke-grey-primary">
       <div className="w-full h-2/3 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-[#4F4F4F] p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
-          <Badge intent="success">Protocol</Badge>
+          <Badge variant="success">Protocol</Badge>
         </div>
         <div className="w-full h-full flex justify-start items-center gap-3">
           <ImageGroup images={images} branches={branches} />
@@ -222,7 +222,7 @@ const TokenItem = ({ tokenName, metadata, images, branches }: TokenItemProps) =>
     <div className="w-[350px] h-[175px] flex flex-col justify-center items-center rounded-lg bg-bg-primary border border-stroke-grey-primary">
       <div className="w-full h-4/5 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-bg-surface p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
-          <Badge intent="success">Token</Badge>
+          <Badge variant="success">Token</Badge>
         </div>
         <div className="w-full h-full flex flex-col justify-center items-center">
           <div className="w-full h-1/2 flex justify-start items-center gap-3">
@@ -349,7 +349,7 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
     <div className="w-[350px] h-[175px] flex flex-col justify-center items-center rounded-lg bg-bg-surface border border-stroke-grey-primary">
       <div className="w-full h-4/5 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-bg-surface p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
-          <Badge intent="success">Lending</Badge>
+          <Badge variant="success">Lending</Badge>
         </div>
         <div className="w-full h-full flex flex-col justify-center items-center">
           <div className="w-full h-full flex justify-start items-center gap-3">
@@ -457,7 +457,7 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
     <div className="w-[350px] h-[175px] flex flex-col justify-center items-center rounded-lg bg-bg-surface border border-stroke-grey-primary">
       <div className="w-full h-4/5 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-bg-surface p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
-          <Badge intent="success">Pool</Badge>
+          <Badge variant="success">Pool</Badge>
         </div>
         <div className="w-full h-full flex flex-col justify-center items-center">
           <div className="w-full h-full flex justify-start items-center gap-3">
@@ -567,7 +567,7 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
     <div className="w-[350px] h-[175px] flex flex-col justify-center items-center rounded-lg bg-bg-surface border border-stroke-grey-primary">
       <div className="w-full h-4/5 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-bg-surface p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
-          <Badge intent="success">Vault</Badge>
+          <Badge variant="success">Vault</Badge>
         </div>
         <div className="w-full h-full flex flex-col justify-center items-center">
           <div className="w-full h-full flex justify-start items-center gap-3">
