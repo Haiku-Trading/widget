@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion'
+import { Accordion } from './accordion'
 import InfoOutline from './../icons/info-outline.svg'
 import { useTradeStore } from '../providers'
 import { useSwapInputTotal, useSwapOutputTotal } from '../hooks'
@@ -27,12 +27,12 @@ export function LiquidityWarning() {
   if (!showWarning) return null
 
   return (
-    <Accordion type="single" collapsible>
-      <AccordionItem
+    <Accordion.Root type="single" collapsible>
+      <Accordion.Item
         value="item-1"
         className="bg-warning-text/10 text-warning-text border-warning-text"
       >
-        <AccordionTrigger
+        <Accordion.Trigger
           chevronClass="text-warning-text"
           className="h-10 data-[state=open]:border-b data-[state=open]:border-b-warning-text text-warning-text"
         >
@@ -40,8 +40,8 @@ export function LiquidityWarning() {
             <InfoOutline className="size-4" />
             <span className="font-medium text-sm">Liquidity Warning</span>
           </div>
-        </AccordionTrigger>
-        <AccordionContent>
+        </Accordion.Trigger>
+        <Accordion.Content>
           <div className="flex flex-col gap-2 mt-2 text-warning-text">
             {inputTokensLength === 1 && (
               <p className="text-sm">
@@ -60,8 +60,8 @@ export function LiquidityWarning() {
               </p>
             )}
           </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        </Accordion.Content>
+      </Accordion.Item>
+    </Accordion.Root>
   )
 }

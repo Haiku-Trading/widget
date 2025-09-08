@@ -34,10 +34,12 @@ AccordionItem.displayName = 'AccordionItem'
  * ----------------------------------------------------------------------------*/
 
 type AccordionTriggerElement = ComponentRef<typeof RadixAccordion.Trigger>
-type AccordionTriggerProps = ComponentProps<typeof RadixAccordion.Trigger>
+type AccordionTriggerProps = ComponentProps<typeof RadixAccordion.Trigger> & {
+  chevronClass?: string
+}
 
 export const AccordionTrigger = React.forwardRef<AccordionTriggerElement, AccordionTriggerProps>(
-  ({ children, className, ...props }, ref) => (
+  ({ children, className, chevronClass, ...props }, ref) => (
     <RadixAccordion.Header className="flex p-4">
       <RadixAccordion.Trigger
         className={cn('group font-medium flex justify-between w-full', className)}
@@ -45,7 +47,7 @@ export const AccordionTrigger = React.forwardRef<AccordionTriggerElement, Accord
         ref={ref}
       >
         <div className="flex gap-2 items-center">{children}</div>
-        <span className="size-6 group-data-[disabled]:hidden">
+        <span className={cn('size-6 group-data-[disabled]:hidden', chevronClass)}>
           <ChevronDown />
         </span>
       </RadixAccordion.Trigger>
