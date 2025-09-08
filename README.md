@@ -220,9 +220,9 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## Support
 
-- 📧 **Email**: support@haiku.fi
+- 📧 **Email**: support@haiku.trade
 - 💬 **Discord**: [Join our Discord](https://discord.gg/haiku)
-- 📖 **Documentation**: [docs.haiku.fi](https://docs.haiku.fi)
+- 📖 **Documentation**: [docs.haiku.trade](https://docs.haiku.trade)
 - 🐛 **Issues**: [GitHub Issues](https://github.com/haiku/swap-widget/issues)
 
 ## License

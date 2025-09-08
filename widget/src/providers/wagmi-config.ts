@@ -1,0 +1,149 @@
+import { defineChain } from 'viem'
+import { cookieStorage, createStorage, http } from 'wagmi'
+import { arbitrum, base, bsc, sonic, mainnet, polygon, optimism, unichain, avalanche, gnosis, scroll, apeChain, sei, worldchain } from 'wagmi/chains'
+import { createConfig } from 'wagmi'
+
+// Custom chains for the widget
+export const berachain = defineChain({
+  id: 80094,
+  name: 'Berachain',
+  nativeCurrency: { name: 'BERA Token', symbol: 'BERA', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.berachain.com/'] },
+  },
+  blockExplorers: {
+    default: { name: 'Berascan', url: 'https://berascan.com/' },
+  },
+})
+
+export const hyperevm = defineChain({
+  id: 999,
+  name: 'HyperEVM',
+  nativeCurrency: { name: 'HyperEVM', symbol: 'HYPE', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.hyperliquid.xyz/evm'] },
+  },
+  blockExplorers: {
+    default: { name: 'Hyperscan', url: 'https://www.hyperscan.com' },
+  },
+})
+
+export const katana = defineChain({
+  id: 747474,
+  name: 'Katana',
+  nativeCurrency: { name: 'Katana', symbol: 'KAT', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.katana.network'] },
+  },
+  blockExplorers: {
+    default: { name: 'Katanascan', url: 'https://katanascan.com' },
+  },
+})
+
+// Function to get chains based on environment
+const getChainsForEnvironment = () => {
+  const productionReadyChains = [arbitrum, base, berachain, bsc, sonic, mainnet, hyperevm, polygon, gnosis, scroll, apeChain, avalanche, worldchain, katana, sei] as const
+  
+  // In production, only include these chains
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'production') {
+    return productionReadyChains
+  }
+  
+  // In development, include all chains
+  return [...productionReadyChains, optimism, unichain] as const
+}
+
+export const wagmiConfig = createConfig({
+  chains: getChainsForEnvironment(),
+  transports: {
+    [arbitrum.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_ARB_RPC
+        : undefined,
+    ),
+    [base.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_BASE_RPC
+        : undefined,
+    ),
+    [berachain.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_BERACHAIN_RPC
+        : undefined,
+    ),
+    [bsc.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_BSC_RPC
+        : undefined,
+    ),
+    [sonic.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_SONIC_RPC
+        : undefined,
+    ),
+    [mainnet.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_ETH_RPC
+        : undefined,
+    ),
+    [hyperevm.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_HYPE_RPC
+        : undefined,
+    ),
+    [polygon.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_POLYGON_RPC
+        : undefined,
+    ),
+    [optimism.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_OPTIMISM_RPC
+        : undefined,
+    ),
+    [unichain.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_UNICHAIN_RPC
+        : undefined,
+    ),
+    [sei.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_SEI_RPC
+        : undefined,
+    ),
+    [avalanche.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_AVAX_RPC
+        : undefined,
+    ),
+    [gnosis.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_GNOSIS_RPC
+        : undefined,
+    ),
+    [scroll.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_SCROLL_RPC
+        : undefined,
+    ),
+    [katana.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_KATANA_RPC
+        : undefined,
+    ),
+    [apeChain.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_APECHAIN_RPC
+        : undefined,
+    ),
+    [worldchain.id]: http(
+      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+        ? process.env.NEXT_PUBLIC_WORLDCHAIN_RPC
+        : undefined,
+    ),
+  },
+  ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
+})

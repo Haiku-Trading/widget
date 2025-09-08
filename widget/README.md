@@ -41,7 +41,7 @@ function App() {
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `apiKey` | `string` | **Required** | Your Haiku API key |
-| `baseUrl` | `string` | `https://api.haiku.fi` | Custom API base URL |
+| `baseUrl` | `string` | `https://api.haiku.trade/v1` | Custom API base URL |
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | Widget theme |
 | `defaultChainId` | `number` | `1` (Ethereum) | Default selected chain |
 | `supportedChains` | `number[]` | `[1, 137, 42161, 10, 8453]` | Supported chain IDs |
@@ -81,7 +81,7 @@ import { HaikuProvider } from '@haiku/swap-widget';
 function App() {
   const config = {
     apiKey: 'your-api-key',
-    baseUrl: 'https://custom-api.haiku.fi',
+    baseUrl: 'https://custom-api.haiku.trade/v1',
     theme: 'dark',
     supportedChains: [1, 137, 42161]
   };

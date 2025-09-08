@@ -1,5 +1,4 @@
-import React from 'react'
-import { WagmiProvider, createConfig, http } from 'wagmi'
+import { WagmiProvider } from 'wagmi'
 import { 
   arbitrum, 
   base, 
@@ -15,7 +14,10 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider, getDefaultConfig, ConnectButton } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
-import { SwapWidget } from '@haiku/swap-widget'
+import { HaikuWidget } from '@haiku/swap-widget'
+
+
+
 
 // Create a client
 const queryClient = new QueryClient()
@@ -76,32 +78,9 @@ function App() {
                   <p className="text-gray-600 mb-6">
                     The Haiku Swap Widget supports cross-chain swaps across major networks including Ethereum, Polygon, Arbitrum, and more
                   </p>
+
+                  <HaikuWidget />
                   
-                  <SwapWidget
-                    apiKey="demo-api-key"
-                    theme={{
-                      primaryColor: '#6366f1',
-                      secondaryColor: '#8b5cf6',
-                      backgroundColor: '#ffffff',
-                      textColor: '#1f2937',
-                      borderRadius: '16px',
-                    }}
-                    supportedChains={chains.map(chain => chain.id)}
-                    defaultTokens={[]}
-                    slippageTolerance={0.5}
-                    displayMode="full"
-                    onSwapComplete={(transaction) => {
-                      console.log('Swap completed:', transaction)
-                      alert(`Swap completed! Transaction: ${transaction.hash}`)
-                    }}
-                    onError={(error) => {
-                      console.error('Swap error:', error)
-                      alert(`Error: ${error.message}`)
-                    }}
-                    onQuoteUpdate={(quote) => {
-                      console.log('Quote updated:', quote)
-                    }}
-                  />
                 </div>
               </div>
             </div>
