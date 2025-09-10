@@ -498,7 +498,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
           return filter.order === 'descending' ? volumeB - volumeA : volumeA - volumeB
         })
 
-        return process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        return process.env.VERCEL_ENV === 'production'
           ? sorted.filter((token) => {
               const excludedChainIds = [10, 130]
               const excludedProtocols = ['PENDLE']
@@ -519,7 +519,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
           return filter.order === 'descending' ? marketCapB - marketCapA : marketCapA - marketCapB
         })
 
-        return process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        return process.env.VERCEL_ENV === 'production'
           ? sorted.filter((token) => {
               const excludedChainIds = [10, 130]
               const excludedProtocols = ['PENDLE']
@@ -540,7 +540,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
           return filter.order === 'descending' ? fdvB - fdvA : fdvA - fdvB
         })
 
-        return process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        return process.env.VERCEL_ENV === 'production'
           ? sorted.filter((token) => {
               const excludedChainIds = [10, 130]
               const excludedProtocols = ['PENDLE']
@@ -560,7 +560,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
           return filter.order === 'descending' ? fdvB - fdvA : fdvA - fdvB
         })
 
-        return process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        return process.env.VERCEL_ENV === 'production'
           ? sorted.filter((token) => {
               const excludedChainIds = [10, 130]
               const excludedProtocols = ['PENDLE']
@@ -585,7 +585,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
             : priceChangeA - priceChangeB
         })
 
-        return process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        return process.env.VERCEL_ENV === 'production'
           ? sorted.filter((token) => {
               const excludedChainIds = [10, 130]
               const excludedProtocols = ['PENDLE']
@@ -620,7 +620,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
 
           return filter.order === 'descending' ? apyB - apyA : apyA - apyB
         })
-        return process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        return process.env.VERCEL_ENV === 'production'
           ? sorted.filter((token) => {
               const excludedChainIds = [10, 130]
               const excludedProtocols = ['PENDLE']
@@ -634,7 +634,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
 
       //FILTER BY PRODUCTION ENVIRONMENT
       const tokenFilterByEnvironment =
-        process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+        process.env.VERCEL_ENV === 'production'
           ? tokenFilterByProtocol.filter((token) => {
               // In production, exclude tokens from these chains
               const excludedChainIds = [10, 130] // optimism, unichain

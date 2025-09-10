@@ -21,7 +21,7 @@ export function ProtocolSelect({ value, onValueChange, chain }: ProtocolSelectPr
 
   // Filter out excluded protocols in production
   const filterByEnvironment =
-    process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+    process.env.VERCEL_ENV === 'production'
       ? filterByChainProtocol.filter((protocol) => {
           const excludedProtocols = ['PENDLE']
           return !excludedProtocols.includes(protocol.symbol)

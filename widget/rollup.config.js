@@ -6,10 +6,22 @@ import terser from '@rollup/plugin-terser';
 import dts from 'rollup-plugin-dts';
 import json from '@rollup/plugin-json';
 import url from '@rollup/plugin-url';
+import replace from '@rollup/plugin-replace';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const isDev = process.env.NODE_ENV === 'development';
+
+// Load environment configuration
+const envFile = isDev ? 'env.development.json' : 'env.production.json';
+const envPath = join(__dirname, envFile);
+const envConfig = JSON.parse(readFileSync(envPath, 'utf8'));
 
 export default [
   {
@@ -61,6 +73,15 @@ export default [
       warn(warning);
     },
     plugins: [
+      replace({
+        preventAssignment: true,
+        values: Object.fromEntries(
+          Object.entries(envConfig).map(([key, value]) => [
+            `process.env.${key}`,
+            JSON.stringify(value)
+          ])
+        ),
+      }),
       resolve({
         browser: true,
         preferBuiltins: false,

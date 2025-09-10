@@ -45,7 +45,7 @@ const getChainsForEnvironment = () => {
   const productionReadyChains = [arbitrum, base, berachain, bsc, sonic, mainnet, hyperevm, polygon, gnosis, scroll, apeChain, avalanche, worldchain, katana, sei] as const
   
   // In production, only include these chains
-  if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'production') {
+  if (process.env.VERCEL_ENV === 'production') {
     return productionReadyChains
   }
   
@@ -57,88 +57,88 @@ export const wagmiConfig = createConfig({
   chains: getChainsForEnvironment(),
   transports: {
     [arbitrum.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_ARB_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.ARB_RPC
         : undefined,
     ),
     [base.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_BASE_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.BASE_RPC
         : undefined,
     ),
     [berachain.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_BERACHAIN_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.BERACHAIN_RPC
         : undefined,
     ),
     [bsc.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_BSC_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.BSC_RPC
         : undefined,
     ),
     [sonic.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_SONIC_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.SONIC_RPC
         : undefined,
     ),
     [mainnet.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_ETH_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.ETH_RPC
         : undefined,
     ),
     [hyperevm.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_HYPE_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.HYPE_RPC
         : undefined,
     ),
     [polygon.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_POLYGON_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.POLYGON_RPC
         : undefined,
     ),
     [optimism.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_OPTIMISM_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.OPTIMISM_RPC
         : undefined,
     ),
     [unichain.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_UNICHAIN_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.UNICHAIN_RPC
         : undefined,
     ),
     [sei.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_SEI_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.SEI_RPC
         : undefined,
     ),
     [avalanche.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_AVAX_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.AVAX_RPC
         : undefined,
     ),
     [gnosis.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_GNOSIS_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.GNOSIS_RPC
         : undefined,
     ),
     [scroll.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_SCROLL_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.SCROLL_RPC
         : undefined,
     ),
     [katana.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_KATANA_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.KATANA_RPC
         : undefined,
     ),
     [apeChain.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_APECHAIN_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.APECHAIN_RPC
         : undefined,
     ),
     [worldchain.id]: http(
-      process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
-        ? process.env.NEXT_PUBLIC_WORLDCHAIN_RPC
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.WORLDCHAIN_RPC
         : undefined,
     ),
   },

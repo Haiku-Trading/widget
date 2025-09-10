@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 export const requester = (config?: AxiosRequestConfig) => {
   const service = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || config?.baseURL,
+    baseURL: process.env.API_BASE_URL || config?.baseURL,
     ...config,
   })
 

@@ -16,7 +16,7 @@ export function useEIP7702() {
     if (
       connector?.name?.toLowerCase() === 'metamask' &&
       eip7702LocalStorage &&
-      process.env.NEXT_PUBLIC_TURN_OFF_EIP7702 !== 'true'
+      process.env.TURN_OFF_EIP7702 !== 'true'
     ) {
       setEIP7702(true)
     } else {

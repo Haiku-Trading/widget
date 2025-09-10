@@ -274,14 +274,14 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                       </ToggleGroupItem>
                     )}
                   </ToggleGroupRoot>
-                  {process.env.NEXT_PUBLIC_TURN_OFF_EIP7702 !== 'true' && (
+                  {process.env.TURN_OFF_EIP7702 !== 'true' && (
                     <EIP7702Switch
                       isEIP7702={eip7702}
                       switchEIP7702={switchEIP7702}
                       canToggleEIP7702={canToggleEIP7702}
                     />
                   )}
-                  {process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production' && <BridgeModeToogle />}
+                  {process.env.VERCEL_ENV !== 'production' && <BridgeModeToogle />}
                 </div>
 
                 {(warningSlippage || errorSlippage) && (

@@ -28,7 +28,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
 
   // Filter out excluded protocols in production
   const filterByEnvironment =
-    process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+    process.env.VERCEL_ENV === 'production'
       ? filterByChainProtocol.filter((protocol) => {
           // In production, exclude these protocols
           const excludedProtocols = ['PENDLE'] // pendle

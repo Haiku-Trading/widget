@@ -42,7 +42,7 @@ export const solveIntent = async (
         input_positions: inputPositions,
         target_weights: targetWeights,
         allowances_mode:
-          process.env.NEXT_PUBLIC_SOLVER_PERMIT2_TYPE == 'approve' ? 'approve' : 'permit',
+          process.env.SOLVER_PERMIT2_TYPE == 'approve' ? 'approve' : 'permit',
         is_eip7702: isEIP7702 || false,
         bridge_mode: intent.bridgeMode,
       },

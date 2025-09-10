@@ -123,7 +123,7 @@ export const useSwapMutation = (chainIdInput: number) => {
           // Check if this is a user rejection for bridge signature
           if (isUserRejectedError(error)) {
             // User rejection is not a technical error, so we don't track it as a failure
-            if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'development') {
+            if (process.env.VERCEL_ENV === 'development') {
               console.log('User rejected bridge signature:', error)
             }
             throw error // Re-throw to be handled by the main onError callback
@@ -157,7 +157,7 @@ export const useSwapMutation = (chainIdInput: number) => {
           // Check if this is a user rejection for approval transactions
           if (isUserRejectedError(error)) {
             // User rejection is not a technical error, so we don't track it as a failure
-            if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'development') {
+            if (process.env.VERCEL_ENV === 'development') {
               console.log('User rejected approval transaction:', error)
             }
             throw error // Re-throw to be handled by the main onError callback
@@ -186,7 +186,7 @@ export const useSwapMutation = (chainIdInput: number) => {
           // Check if this is a user rejection for Permit2 signature
           if (isUserRejectedError(error)) {
             // User rejection is not a technical error, so we don't track it as a failure
-            if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'development') {
+            if (process.env.VERCEL_ENV === 'development') {
               console.log('User rejected Permit2 signature:', error)
             }
             throw error // Re-throw to be handled by the main onError callback
@@ -262,7 +262,7 @@ export const useSwapMutation = (chainIdInput: number) => {
       if (isUserRejectedError(error)) {
         // User rejection is not a technical error, so we don't track it as a failure
         // Just log it for debugging purposes in development
-        if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'development') {
+        if (process.env.VERCEL_ENV === 'development') {
           console.log('User rejected transaction:', error)
         }
         return
@@ -303,7 +303,7 @@ export const useSwapMutation = (chainIdInput: number) => {
         tx_data: errorData,
       })
 
-      // if (process.env.NEXT_PUBLIC_VERCEL_ENV !== 'development') {
+      // if (process.env.VERCEL_ENV !== 'development') {
       //   console.log('Error', error)
       // }
     },
