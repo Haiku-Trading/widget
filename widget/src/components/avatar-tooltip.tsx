@@ -1,6 +1,6 @@
-import { Tooltip } from 'radix-ui'
 import { Avatar, AvatarProps } from './avatar'
 import { ReactNode } from 'react'
+import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipArrow } from './tooltip/tooltip'
 
 type AvatarTooltipProps = {
   tooltipContent: ReactNode
@@ -10,9 +10,9 @@ type AvatarTooltipProps = {
 
 export function AvatarTooltip({ tooltipContent, chainId, protocol, ...props }: AvatarTooltipProps) {
   return (
-    <Tooltip.Provider>
-      <Tooltip.Root>
-        <Tooltip.Trigger asChild>
+    <TooltipProvider>
+      <TooltipRoot>
+        <TooltipTrigger asChild>
           <div className="relative">
             <Avatar {...props} />
             {chainId && (
@@ -30,16 +30,16 @@ export function AvatarTooltip({ tooltipContent, chainId, protocol, ...props }: A
               />
             )}
           </div>
-        </Tooltip.Trigger>
+        </TooltipTrigger>
 
-        <Tooltip.Content
+        <TooltipContent
           className="bg-bg-primary p-2 border-stroke-grey-primary border rounded-lg text-grey-primary text-xs font-medium"
           side="top"
         >
           {tooltipContent}
-          <Tooltip.Arrow className="fill-border" />
-        </Tooltip.Content>
-      </Tooltip.Root>
-    </Tooltip.Provider>
+          <TooltipArrow className="fill-border" />
+        </TooltipContent>
+      </TooltipRoot>
+    </TooltipProvider>
   )
 }

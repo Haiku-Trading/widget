@@ -48,3 +48,11 @@ export const Tooltip = forwardRef<HTMLButtonElement, TooltipProps>((props, ref) 
 })
 
 Tooltip.displayName = 'Tooltip'
+
+// Export the primitives for direct use
+export const TooltipProvider = TooltipPrimitive.Provider
+export const TooltipRoot = TooltipPrimitive.Root
+export const TooltipTrigger = TooltipPrimitive.Trigger
+export const TooltipContent = TooltipPrimitive.Content
+export const TooltipArrow = TooltipPrimitive.Arrow
+export const TooltipPortal = TooltipPrimitive.Portal

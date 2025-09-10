@@ -1,7 +1,8 @@
 import { cn } from '../utils'
 import { useControllableState } from '@radix-ui/react-use-controllable-state'
-import { Slider, Tooltip } from 'radix-ui'
+import { Slider } from 'radix-ui'
 import { ComponentProps } from 'react'
+import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipArrow } from './tooltip/tooltip'
 
 type SliderRootProps = ComponentProps<typeof Slider.Root>
 type SliderRatingProps = SliderRootProps
@@ -26,8 +27,8 @@ export function SliderPercentage(props: SliderRatingProps) {
         <Slider.Track className="h-2 bg-[#B1B5C3] relative grow rounded-full">
           <Slider.Range className={cn('absolute bg-[#777E91] rounded-full h-full')} />
         </Slider.Track>
-        <Tooltip.Root delayDuration={0}>
-          <Tooltip.Trigger asChild>
+        <TooltipRoot delayDuration={0}>
+          <TooltipTrigger asChild>
             <Slider.Thumb
               aria-label="Percentage"
               className={cn(
@@ -35,8 +36,8 @@ export function SliderPercentage(props: SliderRatingProps) {
                 disabled && 'cursor-default active:cursor-default',
               )}
             />
-          </Tooltip.Trigger>
-          <Tooltip.Content
+          </TooltipTrigger>
+          <TooltipContent
             side="top"
             sideOffset={4}
             onPointerDownOutside={(event) => event.preventDefault()}
@@ -46,9 +47,9 @@ export function SliderPercentage(props: SliderRatingProps) {
             )}
           >
             {value && value[0]}%
-            <Tooltip.Arrow className="fill-tertiary" />
-          </Tooltip.Content>
-        </Tooltip.Root>
+            <TooltipArrow className="fill-tertiary" />
+          </TooltipContent>
+        </TooltipRoot>
       </Slider.Root>
       <div className="w-full flex items-center justify-between pt-2">
         {[0, 25, 50, 75, 100].map((percentage) => (

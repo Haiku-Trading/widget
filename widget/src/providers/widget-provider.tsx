@@ -4,6 +4,7 @@ import { AxiosAdapter } from '../services/axios-adapter'
 import { HttpClientProvider } from './http-client'
 import { SessionStoreProvider } from './session'
 import { TradeStoreProvider } from './index'
+import { TooltipProvider } from '../components/tooltip/tooltip'
 
 // Minimal provider that only provides HTTP client and session stores for the widget
 // The widget expects to be used within a WagmiProvider and QueryClientProvider from the host application
@@ -22,12 +23,14 @@ export function WidgetHttpProvider({ children }: { children: ReactNode }) {
   )
 
   return (
-    <HttpClientProvider client={httpClient}>
-      <SessionStoreProvider>
-        <TradeStoreProvider>
-          {children}
-        </TradeStoreProvider>
-      </SessionStoreProvider>
-    </HttpClientProvider>
+    <TooltipProvider>
+      <HttpClientProvider client={httpClient}>
+        <SessionStoreProvider>
+          <TradeStoreProvider>
+            {children}
+          </TradeStoreProvider>
+        </SessionStoreProvider>
+      </HttpClientProvider>
+    </TooltipProvider>
   )
 }
