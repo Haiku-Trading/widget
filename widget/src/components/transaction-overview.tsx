@@ -1,4 +1,3 @@
-'use client'
 
 import Info from './../icons/info.svg'
 import { tokenFormatter, usdFormatter } from '../utils'

@@ -1,6 +1,6 @@
-'use client'
 /**
- * Hack to work around next.js hydration
+ * Component to ensure client-side only rendering
+ * Useful for components that need to avoid hydration mismatches
  * @see https://github.com/uidotdev/usehooks/issues/218
  */
 import React from 'react'

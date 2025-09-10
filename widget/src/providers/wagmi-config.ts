@@ -142,7 +142,7 @@ export const wagmiConfig = createConfig({
         : undefined,
     ),
   },
-  ssr: true,
+  ssr: false, // Disable SSR for standalone widget
   storage: createStorage({
     storage: cookieStorage,
   }),

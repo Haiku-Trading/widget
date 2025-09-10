@@ -1,4 +1,3 @@
-'use client'
 
 import Alert from './../icons/error.svg'
 import Info from './../icons/info-outline.svg'

@@ -1,4 +1,3 @@
-'use client'
 
 import { useClassicTokensBalancesQuery } from '../queries'
 import { useEffect } from 'react'

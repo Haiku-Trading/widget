@@ -1,4 +1,3 @@
-'use client'
 
 import React, { ChangeEvent, useState } from 'react'
 import { Card } from '../card'

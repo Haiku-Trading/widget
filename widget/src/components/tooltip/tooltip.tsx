@@ -1,4 +1,3 @@
-'use client'
 
 import React, { ReactNode, forwardRef } from 'react'
 import { Tooltip as TooltipPrimitive } from 'radix-ui'

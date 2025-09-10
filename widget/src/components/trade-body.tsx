@@ -1,4 +1,3 @@
-'use client'
 
 import Info from './../icons/info-outline.svg'
 import { mappingErrorCodeMessage } from './../constants/constants'

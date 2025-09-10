@@ -1,4 +1,3 @@
-'use client'
 
 import { useEIP7702 } from '../hooks/use-eip-7702'
 import { isValidWalletAddress } from '../utils/validate-wallet-address'

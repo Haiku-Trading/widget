@@ -1,4 +1,3 @@
-'use client'
 
 import { ReactNode, useState } from 'react'
 import { AxiosAdapter } from '../services/axios-adapter'

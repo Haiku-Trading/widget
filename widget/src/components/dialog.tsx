@@ -1,4 +1,3 @@
-'use client'
 
 import XIcon from '../icons/close.svg'
 import { useMediaQuery } from '@uidotdev/usehooks'

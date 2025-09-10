@@ -1,4 +1,3 @@
-'use client'
 
 import { Button } from './button/button'
 import { Dialog } from './dialog'

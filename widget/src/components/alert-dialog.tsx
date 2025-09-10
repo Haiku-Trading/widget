@@ -1,4 +1,3 @@
-'use client'
 
 import { ComponentProps, ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
 import { Dialog as AlertDialogPrimitive } from 'radix-ui'
