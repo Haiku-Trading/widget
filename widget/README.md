@@ -8,7 +8,16 @@ A standalone, embeddable trading interface widget that can be integrated into an
 - **Multi-Chain Support**: Supports Ethereum, Polygon, Arbitrum, Optimism, Base, and Sepolia
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Customizable**: Configurable themes, colors, and supported chains
-- **Self-Contained**: All dependencies bundled, no external requirements
+- **Host Integration**: Designed to work with your existing WagmiProvider and QueryClientProvider
+
+## Requirements
+
+The widget requires the following providers to be set up in your host application:
+
+- **WagmiProvider**: For wallet connection and blockchain interactions
+- **QueryClientProvider**: For React Query state management
+
+The widget will use your existing wallet connection and share the same state with your application.
 
 ## Installation
 
@@ -22,16 +31,23 @@ pnpm add @haiku/swap-widget
 
 ## Quick Start
 
+The Haiku Swap Widget requires WagmiProvider and QueryClientProvider from the host application. Here's how to set it up:
+
 ```tsx
-import { HaikuSwapWidget } from '@haiku/swap-widget';
+import { WagmiProvider } from 'wagmi'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { HaikuWidget } from '@haiku/swap-widget'
+import { config } from './wagmi-config' // Your wagmi configuration
+
+const queryClient = new QueryClient()
 
 function App() {
   return (
-    <HaikuSwapWidget 
-      apiKey="your-api-key-here"
-      theme="light"
-      defaultChainId={1}
-    />
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <HaikuWidget />
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 ```

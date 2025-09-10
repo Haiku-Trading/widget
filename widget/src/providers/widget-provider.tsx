@@ -7,6 +7,7 @@ import { SessionStoreProvider } from './session'
 import { TradeStoreProvider } from './index'
 
 // Minimal provider that only provides HTTP client and session stores for the widget
+// The widget expects to be used within a WagmiProvider and QueryClientProvider from the host application
 export function WidgetHttpProvider({ children }: { children: ReactNode }) {
   const [httpClient] = useState(
     () =>
