@@ -1,4 +1,4 @@
-import SuccessIcon from './../../icons/success.svg'
+
 import { Avatar } from '../avatar'
 import { usdFormatter } from '../../utils'
 import { formatTokenAmount } from '../../utils/numberFormatting'
@@ -11,6 +11,7 @@ import { SolveIntentResponse } from '../../services/solve-intent'
 import { TransactionOverview } from '../transaction-overview'
 import { TokenType } from '../../enums/token-type'
 import { TransactionDataTypeResponse } from '../../queries/use-transaction-query'
+import { SuccessIcon } from '../icons'
 
 interface SuccessTransactionProps {
   filteredInputTokens: AnyAPIToken[]

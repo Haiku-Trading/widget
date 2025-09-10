@@ -27,7 +27,7 @@ export function useSolveIntentQuery(
   const httpClient = useHttpClient()
   const config = useConfig()
   const { eip7702 } = useEIP7702()
-  const payloadKey = Buffer.from(JSON.stringify(payload)).toString('base64');
+  const payloadKey = btoa(JSON.stringify(payload));
   const { solveIntentErrors, updateSolveIntentErrors, cleanSolveIntentErrors } = useSolveIntentErrorStore()
   const existingPayload = solveIntentErrors[payloadKey];
 

@@ -1,5 +1,5 @@
 
-import Info from './../icons/info-outline.svg'
+
 import { mappingErrorCodeMessage } from './../constants/constants'
 import { useEIP7702 } from '../hooks/use-eip-7702'
 import { Avatar } from './avatar'
@@ -35,6 +35,7 @@ import { LimitAssetsWarningDialog } from './limit-assets-warning-dialog'
 import { OutputAssets } from './output-assets'
 import { SelectedTokensHeader } from './selected-tokens-header'
 import { SwapDivider } from './swap-divider/swap-divider'
+import { InfoOutlineIcon } from './icons'
 
 export function TradeBody() {
   const account = useAccount()
@@ -372,7 +373,7 @@ export function TradeBody() {
       {Number(slippage) <= 0 && (
         <div className="p-6 pb-0">
           <div className="flex items-center text-warning-text text-sm font-medium gap-1 bg-warning-bg/10 border border-warning-border rounded-xl p-3">
-            <Info className="size-4 text-warning-text" /> Slippage must be greater than 0
+            <InfoOutlineIcon className="size-4 text-warning-text" /> Slippage must be greater than 0
           </div>
         </div>
       )}

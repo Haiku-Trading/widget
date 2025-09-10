@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
 import { Badge } from '../badge'
-import XmarkIcon from '../icons/x-mark.svg'
+
 import { Avatar } from '../avatar'
+import { XMarkIcon } from '../icons'
 
 type BadgeCoinProps = {
   coin: string
@@ -21,7 +22,7 @@ export function BadgeCoin({ coin, color, icon, onDismiss, symbol }: BadgeCoinPro
       <Avatar color={color} fallbackName={symbol} src={icon} alt="Coin icon" rootClassName="size-5" />
       <span className="text-xs">{coin}</span>
       <button onClick={onDismiss}>
-        <XmarkIcon />
+        <XMarkIcon />
       </button>
     </Badge>
   )

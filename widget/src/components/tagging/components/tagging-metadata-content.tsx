@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { memo, useEffect, useMemo, useState } from 'react'
 
-import ShareIcon from '../../../icons/share.svg'
+
 import { getInitials } from '../../../utils/get-initials'
 import { cn } from '../../../utils'
 import { Avatar, Clipboard } from '@ark-ui/react'
@@ -11,6 +11,7 @@ import millify from 'millify'
 import { useConfig } from 'wagmi'
 import { Badge } from '../../badge'
 import { formatWithZeroCountSubscript } from '../../../utils/numberFormatting'
+import { ShareIcon } from '../../icons'
 
 /* ----------------------------------------------------------------------------
  * ImageGroup

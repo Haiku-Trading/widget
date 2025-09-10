@@ -1,5 +1,5 @@
 
-import XIcon from '../icons/close.svg'
+
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
@@ -7,6 +7,7 @@ import { Drawer } from 'vaul'
 import { cn } from '../utils'
 import { IconButton } from './icon-button/icon-button'
 import { ScrollArea } from './scroll-area'
+import { CloseIcon } from './icons'
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -179,7 +180,7 @@ export const Header = forwardRef<HeaderElement, HeaderProps>((props, ref) => {
       {/* TODO: add icon button */}
       <CloseWrapper asChild>
         <IconButton variant="outline" size="sm">
-          <XIcon />
+          <CloseIcon />
         </IconButton>
       </CloseWrapper>
     </div>

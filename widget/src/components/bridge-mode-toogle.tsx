@@ -1,7 +1,8 @@
 import { Popup } from "./popup"
-import InfoIcon from './../icons/info.svg'
+
 import { BridgeMode } from "../enums/bridge-mode"
 import { useTradeStore } from "../providers"
+import { InfoIcon } from './icons'
 
 const BridgeModeToogle = () => {
     const bridgeMode = useTradeStore((state) => state.bridgeMode)

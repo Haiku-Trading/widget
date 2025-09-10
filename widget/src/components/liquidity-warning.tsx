@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { Accordion } from './accordion'
-import InfoOutline from './../icons/info-outline.svg'
+
 import { useTradeStore } from '../providers'
 import { useSwapInputTotal, useSwapOutputTotal } from '../hooks'
 import BigNumber from 'bignumber.js'
+import { InfoOutlineIcon } from './icons'
 
 export function LiquidityWarning() {
   const slippage = useTradeStore((state) => state.slippage)
@@ -37,7 +38,7 @@ export function LiquidityWarning() {
           className="h-10 data-[state=open]:border-b data-[state=open]:border-b-warning-text text-warning-text"
         >
           <div className="flex items-center justify-start gap-1">
-            <InfoOutline className="size-4" />
+            <InfoOutlineIcon className="size-4" />
             <span className="font-medium text-sm">Liquidity Warning</span>
           </div>
         </Accordion.Trigger>

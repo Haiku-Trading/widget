@@ -1,0 +1,20 @@
+import React from 'react'
+
+interface SunIconProps extends React.SVGProps<SVGSVGElement> {}
+
+export const SunIcon: React.FC<SunIconProps> = (props) => {
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+
+<g clip-path="url(#clip0_4245_10582)">
+<path d="M9.99996 1.66669V3.33335M9.99996 16.6667V18.3334M3.33329 10H1.66663M5.26172 5.26178L4.08321 4.08327M14.7382 5.26178L15.9167 4.08327M5.26172 14.7417L4.08321 15.9202M14.7382 14.7417L15.9167 15.9202M18.3333 10H16.6666M14.1666 10C14.1666 12.3012 12.3011 14.1667 9.99996 14.1667C7.69877 14.1667 5.83329 12.3012 5.83329 10C5.83329 7.69883 7.69877 5.83335 9.99996 5.83335C12.3011 5.83335 14.1666 7.69883 14.1666 10Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_4245_10582">
+<rect width="20" height="20" fill="white"/>
+</clipPath>
+</defs>
+
+    </svg>
+  )
+}

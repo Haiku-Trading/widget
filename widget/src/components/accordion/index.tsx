@@ -1,6 +1,6 @@
 import React, { ComponentProps, ComponentRef } from 'react'
 import { Accordion as RadixAccordion } from 'radix-ui'
-import ChevronDown from '../../icons/chevron-down.svg'
+import { ChevronDownIcon } from '../icons'
 import { cn } from '../../utils'
 
 /* -----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ export const AccordionTrigger = React.forwardRef<AccordionTriggerElement, Accord
       >
         <div className="flex gap-2 items-center">{children}</div>
         <span className={cn('size-6 group-data-[disabled]:hidden', chevronClass)}>
-          <ChevronDown />
+          <ChevronDownIcon />
         </span>
       </RadixAccordion.Trigger>
     </RadixAccordion.Header>

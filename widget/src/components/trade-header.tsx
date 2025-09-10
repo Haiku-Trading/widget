@@ -1,8 +1,8 @@
 
-import Alert from './../icons/error.svg'
-import Info from './../icons/info-outline.svg'
-import InfoIcon from './../icons/info.svg'
-import SettingsIcon from './../icons/setting-2.svg'
+
+
+
+
 import { useEIP7702 } from '../hooks/use-eip-7702'
 import {
   Content as PopoverContent,
@@ -29,6 +29,7 @@ import { defaultTradeInitState } from '../stores'
 import BridgeModeToogle from './bridge-mode-toogle'
 import { Popup } from './popup'
 import TradeAlerts from './trade-alerts'
+import { ErrorIcon, InfoOutlineIcon, InfoIcon, Setting2Icon } from './icons'
 
 const EIP7702Switch = ({
   isEIP7702,
@@ -221,7 +222,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
               <PopoverTrigger>
                 {/* <button className="border-[0.69px] border-[#D9D9D9] rounded-[6.5px] w-7 h-7 flex items-center justify-center"> */}
                 <button className="border-[0.69px]  border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center">
-                  <SettingsIcon className="w-[18px] h-[18px] text-muted-foreground" />
+                  <Setting2Icon className="w-[18px] h-[18px] text-muted-foreground" />
                 </button>
               </PopoverTrigger>
             </Tooltip>
@@ -296,9 +297,9 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                   >
                     <div className="flex gap-2 items-start">
                       {warningSlippage ? (
-                        <Info className="size-4 min-w-[14px]" />
+                        <InfoOutlineIcon className="size-4 min-w-[14px]" />
                       ) : (
-                        <Alert className="size-4 min-w-[14px]" />
+                        <ErrorIcon className="size-4 min-w-[14px]" />
                       )}
 
                       <p className="text-sm font-medium">

@@ -1,5 +1,5 @@
 
-import Info from './../icons/info.svg'
+
 import { tokenFormatter, usdFormatter } from '../utils'
 import BigNumber from 'bignumber.js'
 import { Fragment, ReactNode, useEffect, useMemo, useState } from 'react'
@@ -7,6 +7,7 @@ import { useSwapOutputTotal } from '../hooks'
 import { useTradeStore } from '../providers'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
 import { Popup } from './popup'
+import { InfoIcon } from './icons'
 
 interface ITransactionOverview {
   isClassicModal?: boolean
@@ -127,7 +128,7 @@ function TransactionOverViewItem({ label, value, tooltip, href }: TransactionOve
         <div className="flex items-center justify-center">
           <span className="text-14px-normal flex items-center">{label}</span>
           <button>
-            <Info className="size-[18px] text-muted-foreground" />
+            <InfoIcon className="size-[18px] text-muted-foreground" />
           </button>
         </div>
       </Popup>

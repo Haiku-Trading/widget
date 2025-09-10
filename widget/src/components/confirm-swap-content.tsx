@@ -1,4 +1,4 @@
-import ShareIcon from './../icons/share.svg'
+
 import { Dialog } from './dialog'
 import { Tooltip } from './tooltip/tooltip'
 import { Button } from './button/button'
@@ -23,6 +23,7 @@ import SuccessTransaction from './dialog/success-transaction'
 import { FeedbackDialog } from './feedback'
 import { TransactionOverview } from './transaction-overview'
 import { useTransactionQuery } from '../queries/use-transaction-query'
+import { ShareIcon } from './icons'
 
 type ConfirmSwapContentProps = {
   status: MutationStatus

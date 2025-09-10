@@ -1,8 +1,9 @@
 import { Checkbox as CheckboxRadix } from 'radix-ui'
 import { forwardRef, useId } from 'react'
 import { cn } from '../../utils'
-import CheckIcon from './../../icons/check.svg'
-import DividerIcon from './../../icons/divider.svg'
+import { CheckIcon, DividerIcon } from '../icons'
+
+
 
 type CheckboxRef = React.ElementRef<typeof CheckboxRadix.Root>
 type CheckboxElement = React.ComponentPropsWithoutRef<typeof CheckboxRadix.Root>

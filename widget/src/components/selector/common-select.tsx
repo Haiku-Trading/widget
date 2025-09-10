@@ -1,4 +1,4 @@
-import ChevronDownIcon from '../icons/chevron-down.svg'
+import { ChevronDownIcon } from '../icons'
 import { cn } from '../../utils'
 import { Select } from 'radix-ui'
 import { ChainSelect } from './chain-select'

@@ -1,7 +1,8 @@
-import MagniferIcon from './../../icons/magnifer.svg'
+
 import { TextField } from '../text-field'
 import React from 'react'
 import { useConfig } from 'wagmi'
+import { MagniferIcon } from '../icons'
 
 type ChainSelectProps = {
   value: string

@@ -1,8 +1,9 @@
-import MagniferIcon from './../../icons/magnifer.svg'
+
 import { protocolsConfig } from '../../constants/constants'
 import { TextField } from '../text-field'
 import { SearchX } from 'lucide-react'
 import React from 'react'
+import { MagniferIcon } from '../icons'
 
 type ProtocolSelectProps = {
   value: string[]

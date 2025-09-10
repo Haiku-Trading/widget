@@ -1,0 +1,13 @@
+import React from 'react'
+
+interface TelegramIconProps extends React.SVGProps<SVGSVGElement> {}
+
+export const TelegramIcon: React.FC<TelegramIconProps> = (props) => {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+
+  <path d="M21.5 2.5L1.5 10.5C0.5 11 0.5 11.5 0.5 12C0.5 12.5 1 13 1.5 13.5L6 15L18 5L8 16L7.5 20.5C7.5 21.5 8 22 9 21.5L12.5 18.5L18 21C19 21.5 19.5 21 19.5 20L22 4C22 3 21.5 2.5 21.5 2.5Z" fill="currentColor" transform="scale(0.71) translate(3.5, 3.5)"/>
+
+    </svg>
+  )
+}

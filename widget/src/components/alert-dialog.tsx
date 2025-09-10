@@ -4,7 +4,8 @@ import { Dialog as AlertDialogPrimitive } from 'radix-ui'
 import { Drawer } from 'vaul'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { cn } from '../utils'
-import InfoIcon from '../icons/info-outline.svg'
+import { InfoOutlineIcon } from './icons'
+
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -285,7 +286,7 @@ export const Warning = forwardRef<WarningElement, WarningProps>((props, ref) => 
       ) : (
         <div className="flex flex-col items-center gap-2 bg-warning-bg/10 rounded-xl p-3 text-warning-text">
           <div className="flex items-center justify-start w-full gap-1">
-            <InfoIcon className="w-5 cursor-pointer text-warning" />
+            <InfoOutlineIcon className="w-5 cursor-pointer text-warning" />
             <span>Collateral Warning</span>
           </div>
           {children}

@@ -3,8 +3,9 @@ import React from 'react'
 import { Slot, Slottable } from '@radix-ui/react-slot'
 import { buttonStyles } from './variants'
 import { VariantProps } from 'tailwind-variants'
-import AlertIcon from '../../icons/alert.svg'
+
 import { cn } from '../../utils'
+import { AlertIcon } from '../icons'
 
 /* -----------------------------------------------------------------------------
  * Button Types

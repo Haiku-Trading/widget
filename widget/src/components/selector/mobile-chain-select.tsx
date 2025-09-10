@@ -1,4 +1,4 @@
-import ChevronDownIcon from './../../icons/chevron-down.svg'
+import { ChevronDownIcon } from '../icons'
 import { cn } from '../../utils'
 import { useEffect, useRef, useState } from 'react'
 import { useConfig } from 'wagmi'

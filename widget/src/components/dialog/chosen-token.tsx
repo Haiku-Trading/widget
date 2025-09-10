@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import CloseIcon from './../../icons/close.svg'
-import MagniferIcon from './../../icons/magnifer.svg'
+
+
 import { getInitials } from '../../utils/get-initials'
 import { Dialog } from '../dialog'
 import { cn } from '../../utils'
@@ -51,6 +51,7 @@ import { FilterSelect } from '../selector/filter-select'
 import { MobileChainSelect } from '../selector/mobile-chain-select'
 import { MobileProtocolSelect } from '../selector/mobile-protocol-select'
 import { ProtocolSelect } from '../selector/protocol-select'
+import { CloseIcon, MagniferIcon } from '../icons'
 
 interface APITokenWithBalance extends APIToken {
   balance: string

@@ -1,7 +1,8 @@
-import SuccessIcon from './../icons/success.svg'
-import ErrorIcon from './../icons/failed.svg'
-import LoadIcon from './../icons/refresh-cw-04.svg'
-import WarningIcon from './../icons/warning.svg'
+import { SuccessIcon, FailedIcon, RefreshCw04Icon, WarningIcon } from './icons'
+
+
+
+
 
 type FeedbackDialogProps = {
   status: 'loading' | 'error' | 'success' | 'warning'
@@ -14,8 +15,8 @@ export function FeedbackDialog({ description, status, title }: FeedbackDialogPro
     <div className="flex flex-col gap-6 h-full w-full justify-center items-center py-28">
       <div className="size-14">
         {status === 'success' && <SuccessIcon />}
-        {status === 'error' && <ErrorIcon />}
-        {status === 'loading' && <LoadIcon className="animate-spin" />}
+        {status === 'error' && <FailedIcon />}
+        {status === 'loading' && <RefreshCw04Icon className="animate-spin" />}
         {status === 'warning' && <WarningIcon />}
       </div>
       <div className="flex flex-col gap-3 items-center">

@@ -1,5 +1,5 @@
 import React from 'react'
-import Switch from './../../icons/switch.svg'
+import { SwitchIcon } from '../icons/switch-icon'
 
 type SwapDividerProps = {
   onSwap?: (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -40,7 +40,7 @@ export function SwapDivider({ onSwap }: SwapDividerProps) {
         onClick={onSwap}
         className="bg-foreground size-11 text-divider absolute rounded-2xl flex items-center justify-center  hover:rotate-180 transition-transform duration-300"
       >
-        <Switch />
+        <SwitchIcon />
       </button>
     </div>
   )
