@@ -25,6 +25,9 @@ export default [
     external: [
       'react', 
       'react-dom', 
+      'wagmi',
+      'viem',
+      '@tanstack/react-query',
       '@wagmi/core',
       '@ark-ui/react',
       'match-sorter',
@@ -96,6 +99,9 @@ export default [
     external: [
       'react', 
       'react-dom', 
+      'wagmi',
+      'viem',
+      '@tanstack/react-query',
       '@wagmi/core',
       '@ark-ui/react',
       'match-sorter',
