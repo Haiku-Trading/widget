@@ -11,4 +11,3 @@ export { Card } from './components/card'
 
 // Example exports
 export { StandaloneExample, MinimalExample } from './examples/standalone-example'
-

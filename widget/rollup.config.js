@@ -25,6 +25,22 @@ const envConfig = JSON.parse(readFileSync(envPath, 'utf8'));
 
 export default [
   {
+    input: 'src/styles.css',
+    output: {
+      file: 'dist/styles.css',
+    },
+    plugins: [
+      postcss({
+        extract: true,
+        minimize: !isDev,
+        plugins: [
+          tailwindcss,
+          autoprefixer,
+        ],
+      }),
+    ],
+  },
+  {
     input: 'src/index.ts',
     output: {
       dir: 'dist',
@@ -100,15 +116,6 @@ export default [
         tsconfig: './tsconfig.json',
         sourceMap: true,
         inlineSources: true,
-      }),
-      postcss({
-        extract: 'styles.css',
-        minimize: !isDev,
-        plugins: [
-          tailwindcss,
-          autoprefixer,
-        ],
-        include: '**/*.css',
       }),
       // Only use terser in production
       ...(isDev ? [] : [terser({ sourceMap: true })]),
