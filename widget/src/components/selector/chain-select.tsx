@@ -2,7 +2,26 @@
 import { TextField } from '../text-field'
 import React from 'react'
 import { useConfig } from 'wagmi'
-import { MagniferIcon } from '../icons'
+import { 
+  MagniferIcon, 
+  Chain1Icon, 
+  Chain56Icon, 
+  Chain8453Icon, 
+  Chain80094Icon,
+  Chain10Icon,
+  Chain100Icon,
+  Chain130Icon,
+  Chain1329Icon,
+  Chain137Icon,
+  Chain146Icon,
+  Chain33139Icon,
+  Chain42161Icon,
+  Chain43114Icon,
+  Chain480Icon,
+  Chain534352Icon,
+  Chain747474Icon,
+  Chain999Icon
+} from '../icons'
 
 type ChainSelectProps = {
   value: string
@@ -17,6 +36,32 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
   const filteredChains = config.chains.filter((chain) =>
     chain.name.toLowerCase().includes(inputValue.toLowerCase()),
   )
+
+  // Helper function to get the appropriate chain icon component
+  const getChainIcon = (chainId: string) => {
+    const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+      '1': Chain1Icon,
+      '10': Chain10Icon,
+      '56': Chain56Icon,
+      '100': Chain100Icon,
+      '130': Chain130Icon,
+      '137': Chain137Icon,
+      '146': Chain146Icon,
+      '42161': Chain42161Icon,
+      '43114': Chain43114Icon,
+      '480': Chain480Icon,
+      '8453': Chain8453Icon,
+      '80094': Chain80094Icon,
+      '999': Chain999Icon,
+      '1329': Chain1329Icon,
+      '33139': Chain33139Icon,
+      '534352': Chain534352Icon,
+      '747474': Chain747474Icon,
+    }
+    
+    const IconComponent = iconMap[chainId]
+    return IconComponent ? <IconComponent className="size-5" /> : null
+  }
 
   return (
     <div className="w-[190px] bg-bg-surface border border-stroke-grey-primary rounded-lg h-[677px] flex flex-col gap-1">
@@ -44,18 +89,10 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
           }}
         >
           <div className="grid grid-cols-2 gap-0 w-5 h-5">
-            <img
-              src="/icons/networks/1.svg"
-              alt="Ethereum"
-              className="w-2.5 h-2.5 object-contain"
-            />
-            <img
-              src="/icons/networks/80094.svg"
-              alt="Bera"
-              className="w-2.5 h-2.5 object-contain"
-            />
-            <img src="/icons/networks/56.svg" alt="Bsc" className="w-2.5 h-2.5 object-contain" />
-            <img src="/icons/networks/8453.svg" alt="Base" className="w-2.5 h-2.5 object-contain" />
+            <Chain1Icon className="w-2.5 h-2.5" />
+            <Chain80094Icon className="w-2.5 h-2.5" />
+            <Chain56Icon className="w-2.5 h-2.5" />
+            <Chain8453Icon className="w-2.5 h-2.5" />
           </div>
           All Chains
         </div>
@@ -83,7 +120,7 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
                     : undefined
                 }
               >
-                <img src={`/icons/networks/${chain.id}.svg`} className="size-5" />
+                {getChainIcon(chain.id.toString())}
                 {chain.name}
               </div>
             )

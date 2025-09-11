@@ -9,7 +9,6 @@ import {
   avalanche,
   gnosis,
   scroll,
-  sepolia
 } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider, getDefaultConfig, ConnectButton } from '@rainbow-me/rainbowkit'
@@ -34,7 +33,6 @@ const chains = [
   avalanche,      // 43114: Avalanche
   base,           // 8453: Base
   scroll,         // 534352: Scroll
-  sepolia         // 11155111: Sepolia (testnet)
 ]
 
 const config = getDefaultConfig({

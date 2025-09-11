@@ -5,7 +5,7 @@ A standalone, embeddable trading interface widget that can be integrated into an
 ## Features
 
 - **Wallet Integration**: Built-in support for multiple wallets via RainbowKit
-- **Multi-Chain Support**: Supports Ethereum, Polygon, Arbitrum, Optimism, Base, and Sepolia
+- **Multi-Chain Support**: Supports Ethereum, Polygon, Arbitrum, Optimism, Base, ...
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Customizable**: Configurable themes, colors, and supported chains
 - **Host Integration**: Designed to work with your existing WagmiProvider and QueryClientProvider
@@ -83,7 +83,6 @@ function App() {
 - **42161** - Arbitrum One
 - **10** - Optimism
 - **8453** - Base
-- **11155111** - Sepolia Testnet
 
 ## Advanced Usage
 

@@ -39,7 +39,6 @@ This is a demo application for testing the Haiku Swap Widget locally during deve
 - Avalanche (43114)
 - Base (8453)
 - Scroll (534352)
-- Sepolia (11155111) - Testnet
 
 ## Development
 
