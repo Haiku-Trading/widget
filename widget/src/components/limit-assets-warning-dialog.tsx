@@ -37,6 +37,10 @@ export function LimitAssetsWarningDialog({ type, onClose }: LimitAssetsWarningDi
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Content className="max-w-[440px] w-full" onCloseAutoFocus={onClose}>
+        <Dialog.Title className="sr-only">Warning</Dialog.Title>
+        <Dialog.Description className="sr-only">
+          Warning about selecting more than 4 assets which may cause increased latency and failed transactions.
+        </Dialog.Description>
         <div className="p-5 flex gap-4">
           <div className="size-10 rounded-[10px] bg-[#F8D3D3] inline-flex justify-center items-center flex-shrink-0">
             <svg

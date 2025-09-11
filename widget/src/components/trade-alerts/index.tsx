@@ -16,7 +16,6 @@ enum AlertView {
 }
 
 const TradeAlerts = () => {
-  const [view, setView] = React.useState<AlertView>(AlertView.Warnings)
   const { alerts, addMoreAlerts, inputTokens, outputTokens, usdInputTotal, inputPositions } =
     useTradeStore(useShallow((state) => state))
   const activeWarnings = useMemo(
@@ -30,6 +29,29 @@ const TradeAlerts = () => {
       alerts.filter((alert) => alert.type === TradeAlert.Error).filter((alert) => alert.isActive),
     [alerts],
   )
+
+  // Automatically select the appropriate tab based on available alerts
+  const [view, setView] = React.useState<AlertView>(() => {
+    // If there are errors, show errors by default
+    if (activeErrors.length > 0) {
+      return AlertView.Errors
+    }
+    // If there are warnings but no errors, show warnings
+    if (activeWarnings.length > 0) {
+      return AlertView.Warnings
+    }
+    // Default to warnings if no alerts
+    return AlertView.Warnings
+  })
+
+  // Update view when alerts change
+  React.useEffect(() => {
+    if (activeErrors.length > 0 && view === AlertView.Warnings) {
+      setView(AlertView.Errors)
+    } else if (activeErrors.length === 0 && activeWarnings.length > 0 && view === AlertView.Errors) {
+      setView(AlertView.Warnings)
+    }
+  }, [activeErrors.length, activeWarnings.length, view])
 
   useEffect(() => {
     const totalDebts = outputTokens
@@ -95,7 +117,10 @@ const TradeAlerts = () => {
       )}
     >
       <AlertDialog.Header>
-        <span className="font-medium text-lg">Active Alerts</span>
+        <AlertDialog.Title>Active Alerts</AlertDialog.Title>
+        <AlertDialog.Description className="sr-only">
+          Review warnings and errors for your current trade configuration.
+        </AlertDialog.Description>
       </AlertDialog.Header>
       <AlertDialog.Body>
         <div className="w-full flex items-center justify-start gap-2">

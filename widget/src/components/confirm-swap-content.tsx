@@ -126,9 +126,10 @@ export function ConfirmSwapContent({
 
   return (
     <>
-      {/* <Dialog.Header>
-        <Dialog.Title>Confirm Your Trade</Dialog.Title>
-      </Dialog.Header> */}
+      <Dialog.Title className="sr-only">Confirm Your Trade</Dialog.Title>
+      <Dialog.Description className="sr-only">
+        Review and confirm your token swap transaction details before proceeding.
+      </Dialog.Description>
       <Dialog.Body className="bg-secondary rounded-2xl">
         {status === 'pending' && (
           <FeedbackDialog

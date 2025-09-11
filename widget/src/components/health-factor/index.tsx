@@ -119,6 +119,9 @@ export const HealthFactor = ({ health, maxLTV = 75, currentLTV }: HealthFactorPr
     <>
       <Dialog.Header>
         <Dialog.Title>Input Health Factor</Dialog.Title>
+        <Dialog.Description className="sr-only">
+          View and understand your current health factor and liquidation risk.
+        </Dialog.Description>
       </Dialog.Header>
       <Dialog.Body>
         <div className="flex flex-col items-center gap-2">
