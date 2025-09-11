@@ -4,6 +4,7 @@ import { TextField } from '../text-field'
 import { SearchX } from 'lucide-react'
 import React from 'react'
 import { MagniferIcon } from '../icons'
+import { getProtocolIcon } from '../../utils'
 
 type ProtocolSelectProps = {
   value: string[]
@@ -92,7 +93,7 @@ export function ProtocolSelect({ value, onValueChange, chain }: ProtocolSelectPr
                     : undefined
                 }
               >
-                <img src={`/icons/protocols/${protocol.symbol}.svg`} className="size-5" />
+                {getProtocolIcon(protocol.symbol)}
                 {protocol.name}
               </div>
             )

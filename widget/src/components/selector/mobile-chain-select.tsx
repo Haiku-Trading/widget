@@ -2,6 +2,7 @@ import { ChevronDownIcon } from '../icons'
 import { cn } from '../../utils'
 import { useEffect, useRef, useState } from 'react'
 import { useConfig } from 'wagmi'
+import { getChainIcon } from '../../utils/chain-utils'
 
 type ChainSelectProps = {
   value: string
@@ -57,36 +58,16 @@ export function MobileChainSelect({
           {value === 'all-chains' ? (
             <div className="flex gap-2">
               <div className="grid grid-cols-2 gap-0 w-5 h-5">
-                <img
-                  src="/icons/networks/1.svg"
-                  alt="Ethereum"
-                  className="w-2.5 h-2.5 object-contain"
-                />
-                <img
-                  src="/icons/networks/80094.svg"
-                  alt="Bera"
-                  className="w-2.5 h-2.5 object-contain"
-                />
-                <img
-                  src="/icons/networks/56.svg"
-                  alt="Bsc"
-                  className="w-2.5 h-2.5 object-contain"
-                />
-                <img
-                  src="/icons/networks/8453.svg"
-                  alt="Base"
-                  className="w-2.5 h-2.5 object-contain"
-                />
+                {getChainIcon('1', 'w-2.5 h-2.5')}
+                {getChainIcon('80094', 'w-2.5 h-2.5')}
+                {getChainIcon('56', 'w-2.5 h-2.5')}
+                {getChainIcon('8453', 'w-2.5 h-2.5')}
               </div>
               All chain
             </div>
           ) : (
             <div className="flex gap-2">
-              <img
-                src={`/icons/networks/${value}.svg`}
-                alt={value}
-                className="w-5 h-5 object-contain"
-              />
+              {getChainIcon(value, 'w-5 h-5')}
               <span className="text-sm">{nameChain}</span>
             </div>
           )}
@@ -144,26 +125,10 @@ export function MobileChainSelect({
                 )}
               >
                 <div className="grid grid-cols-2 gap-0 w-5 h-5">
-                  <img
-                    src="/icons/networks/1.svg"
-                    alt="Ethereum"
-                    className="w-2.5 h-2.5 object-contain"
-                  />
-                  <img
-                    src="/icons/networks/80094.svg"
-                    alt="Bera"
-                    className="w-2.5 h-2.5 object-contain"
-                  />
-                  <img
-                    src="/icons/networks/56.svg"
-                    alt="Bsc"
-                    className="w-2.5 h-2.5 object-contain"
-                  />
-                  <img
-                    src="/icons/networks/8453.svg"
-                    alt="Base"
-                    className="w-2.5 h-2.5 object-contain"
-                  />
+                  {getChainIcon('1', 'w-2.5 h-2.5')}
+                  {getChainIcon('80094', 'w-2.5 h-2.5')}
+                  {getChainIcon('56', 'w-2.5 h-2.5')}
+                  {getChainIcon('8453', 'w-2.5 h-2.5')}
                 </div>
                 All Chains
               </button>
@@ -183,11 +148,7 @@ export function MobileChainSelect({
                       value === chain.id.toString() ? 'bg-bg-section' : '',
                     )}
                   >
-                    <img
-                      src={`/icons/networks/${chain.id}.svg`}
-                      alt={chain.name}
-                      className="size-5 flex-shrink-0"
-                    />
+                    {getChainIcon(chain.id.toString(), 'size-5 flex-shrink-0')}
                     <span className="truncate">{chain.name}</span>
                   </button>
                 ))}

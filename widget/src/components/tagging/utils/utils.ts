@@ -106,7 +106,7 @@ export const convertTokenListToMentionData = (
                 id: `${index}:chain:${chain.id}`,
                 type: 'Chain',
                 value: chain.name,
-                imageUrl: `/icons/networks/${chain.id}.svg`,
+                imageUrl: null,
                 isFirst: index === 0,
                 metadata: JSON.stringify(chain),
             })
@@ -126,7 +126,7 @@ export const convertTokenListToMentionData = (
                 id: `${index}:protocol:${protocol.symbol}`,
                 type: 'Protocol',
                 value: protocol.name,
-                imageUrl: `/icons/protocols/${protocol.symbol}.svg`,
+                imageUrl: null,
                 isFirst: index === 0,
                 metadata: JSON.stringify(protocol)
             })
@@ -146,14 +146,12 @@ export const convertTokenListToMentionData = (
         }).forEach((token, index) => {
             const branches = [
                 {
-                    src: `/icons/networks/${token.network}.svg`,
                     symbol: token.network.toString(),
                 },
             ]
 
             if ('protocol' in token) {
                 branches.push({
-                    src: `/icons/protocols/${token.protocol}.svg`,
                     symbol: token.protocol as string,
                 })
             }
@@ -182,14 +180,12 @@ export const convertTokenListToMentionData = (
         }).forEach((pool, index) => {
             const branches = [
                 {
-                    src: `/icons/networks/${pool.network}.svg`,
                     symbol: pool.network.toString(),
                 },
             ]
 
             if ('protocol' in pool) {
                 branches.push({
-                    src: `/icons/protocols/${pool.protocol}.svg`,
                     symbol: pool.protocol as string,
                 })
             }
@@ -218,14 +214,12 @@ export const convertTokenListToMentionData = (
         }).forEach((vault, index) => {
             const branches = [
                 {
-                    src: `/icons/networks/${vault.network}.svg`,
                     symbol: vault.network.toString(),
                 },
             ]
 
             if ('protocol' in vault) {
                 branches.push({
-                    src: `/icons/protocols/${vault.protocol}.svg`,
                     symbol: vault.protocol as string,
                 })
             }
@@ -254,14 +248,12 @@ export const convertTokenListToMentionData = (
         }).forEach((lending, index) => {
                 const branches = [
                     {
-                        src: `/icons/networks/${lending.network}.svg`,
                         symbol: lending.network.toString(),
                     },
                 ]
 
                 if ('protocol' in lending) {
                     branches.push({
-                        src: `/icons/protocols/${lending.protocol}.svg`,
                         symbol: lending.protocol as string,
                     })
                 }

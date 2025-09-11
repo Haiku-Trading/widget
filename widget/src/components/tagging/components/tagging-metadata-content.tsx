@@ -12,6 +12,8 @@ import { useConfig } from 'wagmi'
 import { Badge } from '../../badge'
 import { formatWithZeroCountSubscript } from '../../../utils/numberFormatting'
 import { ShareIcon } from '../../icons'
+import { getChainIcon } from '../../../utils/chain-utils'
+import { getProtocolIcon } from '../../../utils/protocol-utils'
 
 /* ----------------------------------------------------------------------------
  * ImageGroup
@@ -23,7 +25,6 @@ type ImageGroupProps = {
 }
 
 type ImageObject = {
-  src?: string
   symbol: string
   color?: string
 }
@@ -47,14 +48,9 @@ const ImageGroup = memo(({ branches, images }: ImageGroupProps) => {
               backgroundColor: image.color ?? '#0000003d',
             }}
           >
-            <Avatar.Image
-              src={image.src}
-              alt={image.symbol}
-              className="rounded-full w-full h-full"
-            />
-            <Avatar.Fallback className="text-sm text-foreground absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="rounded-full w-full h-full flex items-center justify-center">
               {getInitials(image.symbol)}
-            </Avatar.Fallback>
+            </div>
 
             {/* Only render branches on last item and if branches exist */}
             {isLastItem &&
@@ -87,19 +83,27 @@ const ImageBranch = memo(({ index, branch }: ImageBranchProps) => {
   // Pre-calculate position to avoid runtime conditionals
   const position = index === 0 ? '-bottom-1.5 -right-1.5' : '-top-1.5 -right-1.5'
 
+  // Determine if this is a chain or protocol icon based on the symbol
+  const isChainIcon = !isNaN(Number(branch.symbol))
+
   return (
-    <Avatar.Root
-      className={cn('absolute block text-[0.625rem] size-5 rounded-full bg-secondary', position)}
+    <div
+      className={cn('absolute block text-[0.625rem] size-5 rounded-full bg-secondary flex items-center justify-center', position)}
     >
-      <Avatar.Image
-        src={branch.src}
-        className="w-full h-full relative rounded-full"
-        draggable={false}
-      />
-      <Avatar.Fallback className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        {getInitials(branch.symbol)}
-      </Avatar.Fallback>
-    </Avatar.Root>
+      {isChainIcon ? (
+        getChainIcon(branch.symbol, 'w-full h-full') || (
+          <div className="w-full h-full flex items-center justify-center text-[8px]">
+            {getInitials(branch.symbol)}
+          </div>
+        )
+      ) : (
+        getProtocolIcon(branch.symbol, 'w-full h-full') || (
+          <div className="w-full h-full flex items-center justify-center text-[8px]">
+            {getInitials(branch.symbol)}
+          </div>
+        )
+      )}
+    </div>
   )
 })
 
@@ -405,11 +409,11 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
         {metadata?.url && (
           <a href={metadata?.url} target="_blank">
             <Avatar.Root className="w-3.5 h-3.5 inline-block rounded-full overflow-hidden">
-              <Avatar.Image
-                src={`/icons/protocols/${metadata?.protocol}.svg`}
-                alt="Favicon"
-                className="rounded-full"
-              />
+              <div className="rounded-full w-full h-full flex items-center justify-center">
+                {getProtocolIcon(metadata?.protocol, 'w-full h-full') || (
+                  <div className="text-[8px]">P</div>
+                )}
+              </div>
             </Avatar.Root>
           </a>
         )}
@@ -515,11 +519,11 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
         {metadata?.url && (
           <a href={metadata?.url} target="_blank">
             <Avatar.Root className="w-3.5 h-3.5 inline-block rounded-full overflow-hidden">
-              <Avatar.Image
-                src={`/icons/protocols/${metadata?.protocol}.svg`}
-                alt="Favicon"
-                className="rounded-full"
-              />
+              <div className="rounded-full w-full h-full flex items-center justify-center">
+                {getProtocolIcon(metadata?.protocol, 'w-full h-full') || (
+                  <div className="text-[8px]">P</div>
+                )}
+              </div>
             </Avatar.Root>
           </a>
         )}
@@ -625,11 +629,11 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
         {metadata?.url && (
           <a href={metadata?.url} target="_blank">
             <Avatar.Root className="w-3.5 h-3.5 inline-block rounded-full overflow-hidden">
-              <Avatar.Image
-                src={`/icons/protocols/${metadata?.protocol}.svg`}
-                alt="Favicon"
-                className="rounded-full"
-              />
+              <div className="rounded-full w-full h-full flex items-center justify-center">
+                {getProtocolIcon(metadata?.protocol, 'w-full h-full') || (
+                  <div className="text-[8px]">P</div>
+                )}
+              </div>
             </Avatar.Root>
           </a>
         )}

@@ -7,21 +7,9 @@ import {
   Chain1Icon, 
   Chain56Icon, 
   Chain8453Icon, 
-  Chain80094Icon,
-  Chain10Icon,
-  Chain100Icon,
-  Chain130Icon,
-  Chain1329Icon,
-  Chain137Icon,
-  Chain146Icon,
-  Chain33139Icon,
-  Chain42161Icon,
-  Chain43114Icon,
-  Chain480Icon,
-  Chain534352Icon,
-  Chain747474Icon,
-  Chain999Icon
+  Chain80094Icon
 } from '../icons'
+import { getChainIcon } from '../../utils'
 
 type ChainSelectProps = {
   value: string
@@ -36,32 +24,6 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
   const filteredChains = config.chains.filter((chain) =>
     chain.name.toLowerCase().includes(inputValue.toLowerCase()),
   )
-
-  // Helper function to get the appropriate chain icon component
-  const getChainIcon = (chainId: string) => {
-    const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-      '1': Chain1Icon,
-      '10': Chain10Icon,
-      '56': Chain56Icon,
-      '100': Chain100Icon,
-      '130': Chain130Icon,
-      '137': Chain137Icon,
-      '146': Chain146Icon,
-      '42161': Chain42161Icon,
-      '43114': Chain43114Icon,
-      '480': Chain480Icon,
-      '8453': Chain8453Icon,
-      '80094': Chain80094Icon,
-      '999': Chain999Icon,
-      '1329': Chain1329Icon,
-      '33139': Chain33139Icon,
-      '534352': Chain534352Icon,
-      '747474': Chain747474Icon,
-    }
-    
-    const IconComponent = iconMap[chainId]
-    return IconComponent ? <IconComponent className="size-5" /> : null
-  }
 
   return (
     <div className="w-[190px] bg-bg-surface border border-stroke-grey-primary rounded-lg h-[677px] flex flex-col gap-1">

@@ -53,3 +53,9 @@ export const tokenFormatter = {
     }
   },
 }
+
+// Chain utilities
+export { getChainIcon } from './chain-utils'
+
+// Protocol utilities
+export { getProtocolIcon } from './protocol-utils'

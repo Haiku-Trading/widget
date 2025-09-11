@@ -1,6 +1,8 @@
 import { Avatar, AvatarProps } from './avatar'
 import { ReactNode } from 'react'
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipArrow } from './tooltip/tooltip'
+import { getChainIcon } from '../utils/chain-utils'
+import { getProtocolIcon } from '../utils/protocol-utils'
 
 type AvatarTooltipProps = {
   tooltipContent: ReactNode
@@ -16,18 +18,14 @@ export function AvatarTooltip({ tooltipContent, chainId, protocol, ...props }: A
           <div className="relative">
             <Avatar {...props} />
             {chainId && (
-              <img
-                src={`/icons/networks/${chainId}.svg`}
-                alt="Chain logo"
-                className="size-3.5 absolute -bottom-1 -right-1 rounded-full"
-              />
+              <div className="size-3.5 absolute -bottom-1 -right-1 rounded-full">
+                {getChainIcon(chainId.toString(), "size-3.5")}
+              </div>
             )}
             {protocol && (
-              <img
-                src={`/icons/protocols/${protocol}.svg`}
-                alt={`Protocol ${protocol} logo`}
-                className="size-3.5 absolute -bottom-1 -right-1 rounded-full"
-              />
+              <div className="size-3.5 absolute -bottom-1 -right-1 rounded-full">
+                {getProtocolIcon(protocol, "size-3.5")}
+              </div>
             )}
           </div>
         </TooltipTrigger>

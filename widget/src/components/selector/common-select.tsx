@@ -3,6 +3,7 @@ import { cn } from '../../utils'
 import { Select } from 'radix-ui'
 import { ChainSelect } from './chain-select'
 import { ProtocolSelect } from './protocol-select'
+import { getChainIcon } from '../../utils/chain-utils'
 
 type CommonSelectProps = {
   valueChain: string
@@ -24,29 +25,15 @@ const CommonSelect = ({
         <div className="w-5 h-5 flex items-center justify-center">
           {valueChain === 'all-chains' ? (
             <div className="grid grid-cols-2 gap-0 w-5 h-5">
-              <img
-                src="/icons/networks/1.svg"
-                alt="Ethereum"
-                className="w-2.5 h-2.5 object-contain"
-              />
-              <img
-                src="/icons/networks/80094.svg"
-                alt="Bera"
-                className="w-2.5 h-2.5 object-contain"
-              />
-              <img src="/icons/networks/56.svg" alt="Bsc" className="w-2.5 h-2.5 object-contain" />
-              <img
-                src="/icons/networks/8453.svg"
-                alt="Base"
-                className="w-2.5 h-2.5 object-contain"
-              />
+              {getChainIcon('1', 'w-2.5 h-2.5')}
+              {getChainIcon('80094', 'w-2.5 h-2.5')}
+              {getChainIcon('56', 'w-2.5 h-2.5')}
+              {getChainIcon('8453', 'w-2.5 h-2.5')}
             </div>
           ) : (
-            <img
-              src={`/icons/networks/${valueChain}.svg`}
-              alt={valueChain}
-              className="w-5 h-5 object-contain"
-            />
+            <div>
+              {getChainIcon(valueChain, 'w-5 h-5')}
+            </div>
           )}
         </div>
 

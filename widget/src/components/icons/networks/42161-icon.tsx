@@ -7,7 +7,7 @@ export const Chain42161Icon: React.FC<Chain42161IconProps> = (props) => {
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 
 <rect x="0.4" y="0.4" width="31.2" height="31.2" rx="15.6" fill="#213147"/>
-<rect x="0.4" y="0.4" width="31.2" height="31.2" rx="15.6" stroke="#191919" stroke-width="0.8"/>
+<rect x="0.4" y="0.4" width="31.2" height="31.2" rx="15.6" stroke="#191919" strokeWidth="0.8"/>
 <mask id="mask0_8336_24812" style={{ maskType: 'luminance' }} maskUnits="userSpaceOnUse" x="7" y="6" width="18" height="20">
 <path d="M7.3916 6.6087H24.609V25.3913H7.3916V6.6087Z" fill="white"/>
 </mask>

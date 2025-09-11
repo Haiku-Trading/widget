@@ -6,7 +6,7 @@ export const AlertCircleIcon: React.FC<AlertCircleIconProps> = (props) => {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
 
-<g clip-path="url(#clip0_6635_42691)">
+<g clipPath="url(#clip0_6635_42691)">
 <path d="M8.00065 3.9987V8.66536M8.00065 11.332H8.00732M14.6673 7.9987C14.6673 11.6806 11.6826 14.6654 8.00065 14.6654C4.31875 14.6654 1.33398 11.6806 1.33398 7.9987C1.33398 4.3168 4.31875 1.33203 8.00065 1.33203C11.6826 1.33203 14.6673 4.3168 14.6673 7.9987Z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
 </g>
 <defs>

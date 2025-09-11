@@ -22,6 +22,8 @@ import { formatTokenAmount, formatWithZeroCountSubscript } from '../../utils/num
 import { Badge } from '../badge'
 import { useIsShortScreen } from '../dialog/chosen-token'
 import CustomSlider from '../ruler-slider/CustomSlider'
+import { getChainIcon } from '../../utils/chain-utils'
+import { getProtocolIcon } from '../../utils/protocol-utils'
 
 /* ----------------------------------------------------------------------------
  * ImageGroup
@@ -134,22 +136,30 @@ const ImageBranch = (props: ImageBranchProps) => {
     return null
   }
 
+  // Determine if this is a chain or protocol icon based on the symbol
+  const isChainIcon = !isNaN(Number(branch.symbol))
+  
   return (
-    <Avatar.Root
+    <div
       className={cn(
-        'absolute block text-[0.625rem] size-[13px] rounded-full bg-secondary',
+        'absolute block text-[0.625rem] size-[13px] rounded-full bg-secondary flex items-center justify-center',
         index === 0 ? '-bottom-[2px] -right-[1px] ' : '-top-[4px] -right-[1px] ',
       )}
     >
-      <Avatar.Image
-        src={branch.src}
-        className="w-full h-full relative rounded-full"
-        draggable={false}
-      />
-      <Avatar.Fallback className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        {getInitials(branch.symbol)}
-      </Avatar.Fallback>
-    </Avatar.Root>
+      {isChainIcon ? (
+        getChainIcon(branch.symbol, 'w-full h-full') || (
+          <div className="w-full h-full flex items-center justify-center text-[8px]">
+            {getInitials(branch.symbol)}
+          </div>
+        )
+      ) : (
+        getProtocolIcon(branch.symbol, 'w-full h-full') || (
+          <div className="w-full h-full flex items-center justify-center text-[8px]">
+            {getInitials(branch.symbol)}
+          </div>
+        )
+      )}
+    </div>
   )
 }
 

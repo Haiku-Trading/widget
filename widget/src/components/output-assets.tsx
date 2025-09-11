@@ -103,14 +103,12 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
 
           const branches = [
             {
-              src: `/icons/networks/${token.network}.svg`,
               symbol: token.network.toString(),
             },
           ]
 
           if ('protocol' in token) {
             branches.push({
-              src: `/icons/protocols/${token.protocol}.svg`,
               symbol: token.protocol as string,
             })
           }

@@ -2,6 +2,7 @@ import { protocolsConfig } from '../../constants/constants'
 import { cn } from '../../utils'
 import { ChevronDownIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { getProtocolIcon } from '../../utils/protocol-utils'
 
 type ProtocolSelectProps = {
   value: string[]
@@ -83,11 +84,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
             <span>Protocol {'(opt)'}</span>
           ) : (
             <div className="flex gap-2">
-              <img
-                src={`/icons/protocols/${value[1]}.svg`}
-                alt={value[0]}
-                className="w-5 h-5 object-contain"
-              />
+              {getProtocolIcon(value[1], 'w-5 h-5')}
               <span>{formatProtocolName(value[1])}</span>
             </div>
           )}
@@ -154,11 +151,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
                       isSelected ? 'bg-bg-section' : '',
                     )}
                   >
-                    <img
-                      src={`/icons/protocols/${protocol.symbol}.svg`}
-                      alt={protocol.name}
-                      className="size-5 flex-shrink-0"
-                    />
+                    {getProtocolIcon(protocol.symbol, 'size-5 flex-shrink-0')}
                     <span className="truncate">{protocol.name}</span>
                     {isSelected && (
                       <div className="ml-auto w-2 h-2 rounded-full bg-primary flex-shrink-0" />
