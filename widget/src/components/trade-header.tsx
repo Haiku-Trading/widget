@@ -1,8 +1,3 @@
-
-
-
-
-
 import { useEIP7702 } from '../hooks/use-eip-7702'
 import {
   Content as PopoverContent,
@@ -153,10 +148,8 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
 
   const switchEIP7702 = useCallback(() => {
     toggleEIP7702()
-    setTimeout(() => {
-      tokenBalancesQuery.refetch()
-    }, 1000)
-  }, [toggleEIP7702, tokenBalancesQuery])
+    // Note: Query will automatically refetch when eip7702 changes due to query key dependency
+  }, [toggleEIP7702])
 
   return (
     <div className="border-b border-b-border px-6 max-md:px-3 max-md:py-3 py-4 w-full">

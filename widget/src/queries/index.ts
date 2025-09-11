@@ -47,7 +47,9 @@ export function useGetTokensQuery() {
         },
       }
     },
-    refetchInterval: 20000,
+    refetchInterval: 30000, // Refetch every 30 seconds
+    staleTime: 30000, // Consider data fresh for 30 seconds
+    refetchOnWindowFocus: true, // Refetch when window regains focus
   })
 
   useEffect(() => {
@@ -101,7 +103,7 @@ export function useClassicTokensBalancesQuery<TData = Response>(
   const { eip7702 } = useEIP7702()
 
   return useQuery({
-    queryKey: [account.address, 'balances'],
+    queryKey: [account.address, 'balances', eip7702],
     queryFn: async () => {
       const data = await httpClient.get<Response>(
         `/tokenBalances?address=${account.address}&eip7702=${eip7702}`,
@@ -110,7 +112,9 @@ export function useClassicTokensBalancesQuery<TData = Response>(
     },
     select,
     enabled: isValidWalletAddress(account.address),
-    refetchInterval: 120000,
+    refetchInterval: 30000, // Refetch every 30 seconds
+    staleTime: 30000, // Consider data fresh for 30 seconds
+    refetchOnWindowFocus: true, // Refetch when window regains focus
   })
 }
 

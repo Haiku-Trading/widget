@@ -7,7 +7,6 @@ import { Button } from './button/button'
 import { ClientOnly } from './client-only'
 import { Dialog } from './dialog'
 import { Spinner } from './spinner'
-import { useClassicTokensBalancesQuery } from '../queries'
 import { usdFormatter } from '../utils'
 import { RiAddLine } from '@remixicon/react'
 import { getWalletClient } from '@wagmi/core'
@@ -22,7 +21,8 @@ import { TradeAlert } from '../enums/trade-alert'
 import { useSwapOutputTotal } from '../hooks'
 import { useGetTransactionURL } from '../hooks/use-get-transaction-url'
 import { useTradeStore } from '../providers'
-import { useGetTokensQuery } from '../queries'
+import { useQueryClient } from '@tanstack/react-query'
+import { tradeKeys } from '../queries'
 import { useSwapMutation } from '../queries/mutations'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
 import { AnyAPIToken, APIToken } from '../services/get-tokens'
@@ -40,7 +40,7 @@ import { InfoOutlineIcon } from './icons'
 export function TradeBody() {
   const account = useAccount()
   const solveIntentQuery = useClassicSolveIntentQuery()
-  const balancesQuery = useClassicTokensBalancesQuery()
+  const queryClient = useQueryClient()
   const { updateTransactionConfirming } = useTransactionConfirmingStore()
   const getTransactionURL = useGetTransactionURL()
 
@@ -175,10 +175,6 @@ export function TradeBody() {
 
   const swapMutation = useSwapMutation(inputChainId)
 
-  // Prefetch
-  useGetTokensQuery()
-  useClassicTokensBalancesQuery()
-
   const handleSwapToken = () => {
     setInsufficientBalance({})
     // if (!inputTokens.length || !outputTokens.length) return
@@ -201,7 +197,8 @@ export function TradeBody() {
         setIsSuccess(true)
         updateTransactionConfirming(false)
         setInsufficientBalance({})
-        balancesQuery.refetch()
+        queryClient.invalidateQueries({ queryKey: tradeKeys.tokens() })
+        queryClient.invalidateQueries({ queryKey: [account.address, 'balances'] })
       },
       onError: (error: unknown) => {
         console.log('ERROR', error instanceof Error ? error.message : String(error))

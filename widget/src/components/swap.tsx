@@ -1,29 +1,11 @@
 
-import { useClassicTokensBalancesQuery } from '../queries'
-import { useEffect } from 'react'
 import { TradeBody } from './trade-body'
 import { TradeHeader } from './trade-header'
-import { useAccount } from 'wagmi'
+import { useClassicTokensBalancesQuery } from '../queries'
 
 export function SwapContainer() {
-  // ON INITIAL LOAD, FETCH BALANCES
+  // Standard query usage
   const tokenBalancesQuery = useClassicTokensBalancesQuery()
-  const { address } = useAccount()
-
-  // Add visibility change listener
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && address) {
-        tokenBalancesQuery.refetch()
-      }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [tokenBalancesQuery, address])
 
   return (
     <div className="flex flex-col lg:flex-row justify-center items-center gap-12 w-full">

@@ -332,7 +332,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
 
   const balances = useMemo(() => {
     if (!tokenBalancesQuery.data) return {} as Record<string, number>
-    return tokenBalancesQuery.data.wallet_positions
+    return (tokenBalancesQuery.data as any).wallet_positions || {}
   }, [tokenBalancesQuery.data])
 
   const filterTokens = ({
