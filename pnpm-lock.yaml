@@ -145,8 +145,8 @@ importers:
         specifier: 2.20.3
         version: 2.20.3(@types/react@18.3.24)(react@18.3.1)(typescript@5.9.2)(use-sync-external-store@1.4.0)(viem@2.37.1)
       axios:
-        specifier: ^1.8.2
-        version: 1.11.0
+        specifier: ^1.12.0
+        version: 1.12.0
       bignumber.js:
         specifier: ^9.1.2
         version: 9.3.1
@@ -622,7 +622,7 @@ packages:
       eth-json-rpc-filters: 6.0.1
       eventemitter3: 5.0.1
       keccak: 3.0.4
-      preact: 10.27.1
+      preact: 10.27.2
       sha.js: 2.4.12
     transitivePeerDependencies:
       - supports-color
@@ -1742,7 +1742,7 @@ packages:
     resolution: {integrity: sha512-YYYHsVYd46XwY2QZzpGeU4PSdRhHdxnzkB8piWGvJW2xbikZ3R+epAYEL4q/K8bh9JPTucsUdwRFnACor1aOYw==}
     engines: {node: ^18.20 || ^20.17 || >=22}
     dependencies:
-      '@metamask/utils': 11.5.0
+      '@metamask/utils': 11.8.0
       fast-safe-stringify: 2.1.1
     transitivePeerDependencies:
       - supports-color
@@ -1769,7 +1769,7 @@ packages:
       bufferutil: 4.0.9
       cross-fetch: 4.1.0
       date-fns: 2.30.0
-      debug: 4.4.1
+      debug: 4.4.3
       eciesjs: 0.4.15
       eventemitter2: 6.4.9
       readable-stream: 3.6.2
@@ -1820,8 +1820,8 @@ packages:
     engines: {node: '>=16.0.0'}
     dev: false
 
-  /@metamask/utils@11.5.0:
-    resolution: {integrity: sha512-fgPTBWyFhGp8VZ5HsWniY5qZIb9DfusRB8ssw8unGIomICCK+cnEcV2xajhpPJ6QPH62y1KyVHF+VbXKrgilLA==}
+  /@metamask/utils@11.8.0:
+    resolution: {integrity: sha512-EJqiuvVBAjV1vd1kBhmVmRtGfadrBfY3ImcAMjl+8MSSByTB3VNwvlIBLQdp+TwdAomUdenJCx2BvOSQykm8Hg==}
     engines: {node: ^18.18 || ^20.14 || >=22}
     dependencies:
       '@ethereumjs/tx': 4.2.0
@@ -1830,7 +1830,7 @@ packages:
       '@scure/base': 1.2.6
       '@types/debug': 4.1.12
       '@types/lodash': 4.17.20
-      debug: 4.4.1
+      debug: 4.4.3
       lodash: 4.17.21
       pony-cause: 2.1.11
       semver: 7.7.2
@@ -1845,7 +1845,7 @@ packages:
     dependencies:
       '@ethereumjs/tx': 4.2.0
       '@types/debug': 4.1.12
-      debug: 4.4.1
+      debug: 4.4.3
       semver: 7.7.2
       superstruct: 1.0.4
     transitivePeerDependencies:
@@ -1861,7 +1861,7 @@ packages:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
       '@types/debug': 4.1.12
-      debug: 4.4.1
+      debug: 4.4.3
       pony-cause: 2.1.11
       semver: 7.7.2
       uuid: 9.0.1
@@ -1878,7 +1878,7 @@ packages:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
       '@types/debug': 4.1.12
-      debug: 4.4.1
+      debug: 4.4.3
       pony-cause: 2.1.11
       semver: 7.7.2
       uuid: 9.0.1
@@ -1890,7 +1890,7 @@ packages:
     resolution: {integrity: sha512-95hX4BJH/FokLK23Z5E8c7wPGft1DXrm/0ehF3osasjX8/cKTIVg0o+coTho0Fs+aKN3mAV9lxmCCPfgFAPILA==}
     dependencies:
       '@types/lodash': 4.17.20
-      axios: 1.11.0
+      axios: 1.12.0
       axios-retry: 3.9.1
       bignumber.js: 9.3.1
       ethers: 5.8.0
@@ -5948,8 +5948,8 @@ packages:
       is-retry-allowed: 2.2.0
     dev: false
 
-  /axios@1.11.0:
-    resolution: {integrity: sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==}
+  /axios@1.12.0:
+    resolution: {integrity: sha512-oXTDccv8PcfjZmPGlWsPSwtOJCZ/b6W5jAMCNcfwJbCzDckwG0jrYJFaWH1yvivfCXjVzV/SPDEhMB3Q+DSurg==}
     dependencies:
       follow-redirects: 1.15.11
       form-data: 4.0.4
@@ -6478,6 +6478,18 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.3
+
+  /debug@4.4.3:
+    resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    dependencies:
+      ms: 2.1.3
+    dev: false
 
   /decamelize@1.2.0:
     resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
@@ -8664,7 +8676,7 @@ packages:
     resolution: {integrity: sha512-zpe98Q6kvavpCr1NPVSCMebCKfD7CA2NqZ+rykeNhONIJBpc1tFKt9hucLGwha3jNTNI8lHpctWJWoimVF4PfA==}
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.4.1
+      debug: 4.4.3
       decode-named-character-reference: 1.2.0
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.3
@@ -9657,6 +9669,10 @@ packages:
 
   /preact@10.27.1:
     resolution: {integrity: sha512-V79raXEWch/rbqoNc7nT9E4ep7lu+mI3+sBmfRD4i1M73R3WLYcCtdI0ibxGVf4eQL8ZIz2nFacqEC+rmnOORQ==}
+    dev: false
+
+  /preact@10.27.2:
+    resolution: {integrity: sha512-5SYSgFKSyhCbk6SrXyMpqjb5+MQBgfvEKE/OC+PujcY34sOpqtr+0AZQtPYx5IA6VxynQ7rUPCtKzyovpj9Bpg==}
     dev: false
 
   /prelude-ls@1.2.1:
