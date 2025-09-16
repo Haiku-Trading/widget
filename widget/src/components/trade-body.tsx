@@ -35,7 +35,7 @@ import { LimitAssetsWarningDialog } from './limit-assets-warning-dialog'
 import { OutputAssets } from './output-assets'
 import { SelectedTokensHeader } from './selected-tokens-header'
 import { SwapDivider } from './swap-divider/swap-divider'
-import { InfoOutlineIcon } from './icons'
+import { InfoOutlineIcon, HaikuBirdIcon } from './icons'
 
 export function TradeBody() {
   const account = useAccount()
@@ -524,6 +524,14 @@ export function TradeBody() {
               </Dialog.Root>
             </ClientOnly>
           </div>
+        </div>
+        
+        {/* Powered by text */}
+        <div className="flex justify-center items-center">
+          <HaikuBirdIcon className="w-4 h-4" />
+          <p className="text-xs text-grey-secondary opacity-60 pl-1">
+            Powered by Haiku x Biconomy
+          </p>
         </div>
       </div>
     </div>
