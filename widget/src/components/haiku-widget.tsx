@@ -1,10 +1,18 @@
 import { WidgetHttpProvider } from "../providers/widget-provider";
+import { ThemeProvider } from "../providers/theme-provider";
 import { SwapContainer } from "./swap";
+import { WidgetTheme } from "../types/theme";
 
-export function HaikuWidget() {
+interface HaikuWidgetProps {
+  theme?: WidgetTheme;
+}
+
+export function HaikuWidget({ theme }: HaikuWidgetProps) {
   return (
-    <WidgetHttpProvider>
-      <SwapContainer />
-    </WidgetHttpProvider>
+    <ThemeProvider theme={theme}>
+      <WidgetHttpProvider>
+        <SwapContainer />
+      </WidgetHttpProvider>
+    </ThemeProvider>
   );
 }

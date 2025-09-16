@@ -59,3 +59,6 @@ export { getChainIcon } from './chain-utils'
 
 // Protocol utilities
 export { getProtocolIcon } from './protocol-utils'
+
+// Theme utilities
+export { hexToHsl, isValidHexColor, generateThemeCSS, applyThemeToElement } from './theme-utils'

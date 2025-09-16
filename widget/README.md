@@ -56,24 +56,56 @@ function App() {
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `apiKey` | `string` | **Required** | Your Haiku API key |
-| `baseUrl` | `string` | `https://api.haiku.trade/v1` | Custom API base URL |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | Widget theme |
-| `defaultChainId` | `number` | `1` (Ethereum) | Default selected chain |
-| `supportedChains` | `number[]` | `[1, 137, 42161, 10, 8453]` | Supported chain IDs |
-| `customStyles` | `object` | `{}` | Custom styling options |
+| `theme` | `WidgetTheme` | `{}` | Theme configuration object |
 
-### Custom Styles
+### Theme Configuration
+
+The widget supports custom theming through the `theme` prop:
 
 ```tsx
-<HaikuSwapWidget 
-  apiKey="your-api-key"
-  customStyles={{
-    primaryColor: '#3B82F6',
-    borderRadius: '12px',
-    fontFamily: 'Inter, sans-serif'
-  }}
-/>
+import { HaikuWidget, WidgetTheme } from '@haiku/swap-widget'
+
+const theme: WidgetTheme = {
+  mode: 'light', // 'light' | 'dark' | 'auto'
+  primaryColor: '#3B82F6', // Hex color for primary elements
+  secondaryColor: '#10B981' // Hex color for secondary elements
+}
+
+function App() {
+  return <HaikuWidget theme={theme} />
+}
+```
+
+#### Theme Properties
+
+- **`mode`**: Controls the color scheme
+  - `'light'`: Forces light mode
+  - `'dark'`: Forces dark mode  
+  - `'auto'`: Uses system preference (default)
+- **`primaryColor`**: Hex color for primary elements (buttons, links, etc.)
+- **`secondaryColor`**: Hex color for secondary elements
+
+#### Theme Examples
+
+```tsx
+// Brand colors
+const brandTheme: WidgetTheme = {
+  primaryColor: '#FF6B6B', // Your brand red
+  secondaryColor: '#4ECDC4' // Your brand teal
+}
+
+// Dark mode
+const darkTheme: WidgetTheme = {
+  mode: 'dark',
+  primaryColor: '#8B5CF6', // Purple
+  secondaryColor: '#F59E0B' // Amber
+}
+
+// Auto mode (follows system preference)
+const autoTheme: WidgetTheme = {
+  mode: 'auto',
+  primaryColor: '#EF4444' // Red
+}
 ```
 
 ## Supported Chains
