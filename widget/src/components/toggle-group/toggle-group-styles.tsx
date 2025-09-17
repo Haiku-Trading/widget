@@ -6,7 +6,7 @@ export const toggleItemStyles = tv(
     variants: {
       variant: {
         filled:
-          'bg-filled hover:bg-filled/75 p-2 font-medium data-[state=on]:bg-primary min-w-8 text-xs font-medium h-7 data-[state=on]:hover:bg-primary/75 text-white',
+          'bg-filled hover:bg-filled/75 p-2 font-medium data-[state=on]:bg-primary min-w-8 text-xs font-medium h-7 data-[state=on]:hover:bg-primary/75 text-foreground data-[state=on]:text-white',
         outlined:
           'ring-1 border border-transparent ring-stroke-grey-primary data-[state=on]:border data-[state=on]:border-[#F97316] dark:data-[state=on]:text-black  px-3 w-fit bg-bg-section data-[state=on]:bg-[#FEF0E6] rounded-lg data-[state=on]:ring-0',
       },
