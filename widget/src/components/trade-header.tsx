@@ -44,8 +44,8 @@ const EIP7702Switch = ({
             <p>
               {!canToggleEIP7702 ? (
                 <span>
-                  Smart Account support only with Metamask. Please switch to Metamask to continue.{' '}
-                  <a href="#" target="_blank" rel="noopener noreferrer" className="text-primary">
+                  Smart Accounts are only supported with Metamask. Please switch to Metamask to continue.{' '}
+                  <a href="https://support.metamask.io/configure/accounts/what-is-a-smart-account/" target="_blank" rel="noopener noreferrer" className="text-primary">
                     Learn more
                   </a>
                 </span>

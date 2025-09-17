@@ -14,12 +14,12 @@ const BridgeModeToogle = () => {
                 <span className="text-sm">Bridge Mode</span>
                 <Popup
                     content={
-                        <p>
+                        <div>
                             <p className="font-bold">Fast Mode</p>
                             <p>Lightning-fast transfers for when time matters most. Best for complex transfers.</p>
                             <p className="font-bold mt-2">Economy Mode</p>
                             <p>Cheaper bridging with slower transfers (up to ~2 minutes). Best for simple transfers; may fail if complex.</p>
-                        </p>
+                        </div>
                     }
                 >
                     <div className="flex items-center gap-2">
@@ -41,7 +41,7 @@ const BridgeModeToogle = () => {
                     onClick={() => setBridgeMode(BridgeMode.Economy)}
                     className={`flex-1 p-1 rounded-lg text-sm font-medium transition-all duration-200 ${bridgeMode === BridgeMode.Economy
                         ? 'bg-primary text-white shadow-md'
-                        : 'bg-filled text-white hover:bg-gray-200'
+                        : 'bg-filled text-gray-600 hover:bg-gray-200'
                         }`}
                 >
                     Economy
