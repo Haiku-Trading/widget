@@ -556,7 +556,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
               <Dialog.Trigger>
                 <button className="bg-bg-section rounded-[18px] h-10 px-3 flex items-center gap-2">
                   <p className="text-sm font-medium whitespace-nowrap text-foreground">
-                    Select Asset
+                  Large Chngus
                   </p>
                   <RiAddLine size={16} />
                 </button>
