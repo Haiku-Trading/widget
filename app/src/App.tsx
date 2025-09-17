@@ -107,59 +107,7 @@ function App() {
                       Original widget styling
                     </p>
                     <div className="border rounded-lg p-4 bg-white">
-                      <HaikuWidget theme={defaultTheme} />
-                    </div>
-                  </div>
-
-                  {/* Blue Theme */}
-                  <div className="card">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Blue Theme (Light)
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Primary: #3B82F6, Secondary: #10B981
-                    </p>
-                    <div className="border rounded-lg p-4 bg-white">
-                      <HaikuWidget theme={blueTheme} />
-                    </div>
-                  </div>
-
-                  {/* Purple Theme */}
-                  <div className="card">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Purple Theme (Dark)
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Primary: #8B5CF6, Secondary: #F59E0B
-                    </p>
-                    <div className="border rounded-lg p-4 bg-gray-800">
-                      <HaikuWidget theme={purpleTheme} />
-                    </div>
-                  </div>
-
-                  {/* Red Theme */}
-                  <div className="card">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Red Theme (Auto)
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Primary: #EF4444, Secondary: #06B6D4
-                    </p>
-                    <div className="border rounded-lg p-4 bg-white">
                       <HaikuWidget theme={redTheme} />
-                    </div>
-                  </div>
-
-                  {/* Orange Theme */}
-                  <div className="card">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Orange Theme (Auto)
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      Primary: #F97316, Secondary: #84CC16
-                    </p>
-                    <div className="border rounded-lg p-4 bg-white">
-                      <HaikuWidget theme={orangeTheme} />
                     </div>
                   </div>
 

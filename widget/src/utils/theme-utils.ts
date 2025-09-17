@@ -52,6 +52,10 @@ export function generateThemeCSS(theme: WidgetTheme): Record<string, string> {
     const primaryHsl = hexToHsl(theme.primaryColor)
     cssVars['--primary'] = primaryHsl
     cssVars['--primary-foreground'] = '0 0% 98%' // Light text for dark backgrounds
+    
+    // Also set some related properties that might use primary color
+    cssVars['--active'] = primaryHsl
+    cssVars['--filled'] = primaryHsl
   }
 
   if (theme.secondaryColor && isValidHexColor(theme.secondaryColor)) {
