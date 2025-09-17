@@ -9,14 +9,16 @@ import {
   avalanche,
   gnosis,
   scroll,
+  berachain,
+  sei,
+  worldchain,
+  katana,
 } from 'wagmi/chains'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider, getDefaultConfig, ConnectButton } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import { HaikuWidget, WidgetTheme } from '@haiku/swap-widget'
-import '@haiku/swap-widget/dist/styles.css'
-
-
+// import '@haiku/swap-widget/dist/styles.css'
 
 
 // Create a client
@@ -33,6 +35,10 @@ const chains = [
   avalanche,      // 43114: Avalanche
   base,           // 8453: Base
   scroll,         // 534352: Scroll
+  berachain,      // 80094: Berachain
+  sei,            // 1329: Sei
+  worldchain,     // 480: Worldchain
+  katana,         // 747474: Katana
 ]
 
 const config = getDefaultConfig({

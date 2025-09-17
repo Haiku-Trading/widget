@@ -6,49 +6,46 @@ import { RainbowKitProvider, getDefaultConfig, ConnectButton } from '@rainbow-me
 import '@rainbow-me/rainbowkit/styles.css'
 import { HaikuWidget, WidgetTheme } from './index'
 import './styles.css'
+import { 
+  arbitrum, 
+  base, 
+  bsc, 
+  mainnet, 
+  optimism, 
+  polygon, 
+  avalanche,
+  gnosis,
+  scroll,
+  berachain,
+  sei,
+  worldchain,
+  katana,
+} from 'wagmi/chains'
 
 // Create a client
 const queryClient = new QueryClient()
 
 // Configure chains for development
+const chains = [
+  mainnet,        // 1: Ethereum
+  optimism,       // 10: Optimism
+  bsc,            // 56: BNB Smart Chain
+  gnosis,         // 100: Gnosis
+  polygon,        // 137: Polygon
+  arbitrum,       // 42161: Arbitrum
+  avalanche,      // 43114: Avalanche
+  base,           // 8453: Base
+  scroll,         // 534352: Scroll
+  berachain,      // 80094: Berachain
+  sei,            // 1329: Sei
+  worldchain,     // 480: Worldchain
+  katana,         // 747474: Katana
+]
+
 const config = getDefaultConfig({
-  appName: 'Haiku Swap Widget Dev',
+  appName: 'Haiku Swap Widget Demo',
   projectId: '559f57c80e698d3d95adb8d69e8b9228', // Get from https://cloud.walletconnect.com
-  chains: [
-    {
-      id: 1,
-      name: 'Ethereum',
-      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrls: {
-        default: { http: [process.env.ETH_RPC || 'https://eth.llamarpc.com'] },
-      },
-      blockExplorers: {
-        default: { name: 'Etherscan', url: 'https://etherscan.io' },
-      },
-    },
-    {
-      id: 137,
-      name: 'Polygon',
-      nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-      rpcUrls: {
-        default: { http: [process.env.POLYGON_RPC || 'https://polygon-rpc.com'] },
-      },
-      blockExplorers: {
-        default: { name: 'PolygonScan', url: 'https://polygonscan.com' },
-      },
-    },
-    {
-      id: 42161,
-      name: 'Arbitrum',
-      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrls: {
-        default: { http: [process.env.ARB_RPC || 'https://arb1.arbitrum.io/rpc'] },
-      },
-      blockExplorers: {
-        default: { name: 'Arbiscan', url: 'https://arbiscan.io' },
-      },
-    },
-  ] as any,
+  chains: chains as any,
 })
 
 function DevApp() {
