@@ -5,6 +5,7 @@ import { SearchX } from 'lucide-react'
 import React from 'react'
 import { MagniferIcon } from '../icons'
 import { getProtocolIcon } from '../../utils'
+import { useConfig as useWidgetConfig } from '../../providers/config-provider'
 
 type ProtocolSelectProps = {
   value: string[]
@@ -13,6 +14,7 @@ type ProtocolSelectProps = {
 }
 
 export function ProtocolSelect({ value, onValueChange, chain }: ProtocolSelectProps) {
+  const { config: widgetConfig } = useWidgetConfig()
   const [inputValue, setInputValue] = React.useState<string>('')
   const filterByChainProtocol =
     chain === 'all-chains'
@@ -30,7 +32,15 @@ export function ProtocolSelect({ value, onValueChange, chain }: ProtocolSelectPr
         })
       : filterByChainProtocol
 
-  const filteredProtocols = filterByEnvironment.filter(
+  // Filter out hidden protocols from config
+  const filterByHiddenProtocols = filterByEnvironment.filter((protocol) => {
+    if (widgetConfig.hiddenProtocols?.includes(protocol.symbol)) {
+      return false
+    }
+    return true
+  })
+
+  const filteredProtocols = filterByHiddenProtocols.filter(
     (protocol) =>
       protocol.name.toLowerCase().includes(inputValue.toLowerCase()) ||
       protocol.symbol.toLowerCase().includes(inputValue.toLowerCase()),

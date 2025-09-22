@@ -4,7 +4,7 @@ import { WagmiProvider } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider, getDefaultConfig, ConnectButton } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
-import { HaikuWidget, WidgetTheme } from './index'
+import { HaikuWidget, WidgetTheme, WidgetConfig } from './index'
 import './styles.css'
 import { 
   arbitrum, 
@@ -106,7 +106,26 @@ function DevApp() {
                     Original widget styling
                   </p>
                   <div className="border rounded-lg p-4">
-                    <HaikuWidget theme={defaultTheme} />
+                    <HaikuWidget config={{ theme: defaultTheme }} />
+                  </div>
+                </div>
+
+                {/* Hidden Chains Example */}
+                <div className="bg-white rounded-lg p-6 shadow-sm border">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Hidden Chains & Protocols
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Hiding Ethereum (1), Optimism (10), and AAVE_V3 protocol
+                  </p>
+                  <div className="border rounded-lg p-4">
+                    <HaikuWidget 
+                      config={{ 
+                        theme: blueTheme,
+                        hiddenChains: [1, 10], // Hide Ethereum and Optimism
+                        hiddenProtocols: ['AAVE_V3'] // Hide Aave V3
+                      }} 
+                    />
                   </div>
                 </div>
               </div>
@@ -122,6 +141,7 @@ function DevApp() {
                   <p>✅ Fast rebuilds with Vite</p>
                   <p>✅ Source maps for debugging</p>
                   <p>✅ Multiple theme examples</p>
+                  <p>✅ Hidden chains & protocols configuration</p>
                   <p>✅ Wallet connection ready</p>
                 </div>
               </div>

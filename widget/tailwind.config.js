@@ -262,7 +262,7 @@ module.exports = {
         dialogShow: 'dialogShow 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         dialogHide: 'dialogHide 300ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideDownAndFade: 'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-        slideLeftAndFade: 'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideLeftAndFade: 'slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade: 'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         'slide-from-top': 'slide-from-top 300ms cubic-bezier(0.16, 1, 0.3, 1)',

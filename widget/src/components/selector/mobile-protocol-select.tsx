@@ -3,6 +3,7 @@ import { cn } from '../../utils'
 import { ChevronDownIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getProtocolIcon } from '../../utils/protocol-utils'
+import { useConfig as useWidgetConfig } from '../../providers/config-provider'
 
 type ProtocolSelectProps = {
   value: string[]
@@ -11,6 +12,7 @@ type ProtocolSelectProps = {
 }
 
 export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSelectProps) {
+  const { config: widgetConfig } = useWidgetConfig()
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -36,6 +38,14 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
           return !excludedProtocols.includes(protocol.symbol)
         })
       : filterByChainProtocol
+
+  // Filter out hidden protocols from config
+  const filterByHiddenProtocols = filterByEnvironment.filter((protocol) => {
+    if (widgetConfig.hiddenProtocols?.includes(protocol.symbol)) {
+      return false
+    }
+    return true
+  })
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -137,7 +147,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
                 touchAction: 'pan-y',
               }}
             >
-              {filterByEnvironment.map((protocol) => {
+              {filterByHiddenProtocols.map((protocol) => {
                 const isSelected = value.includes(protocol.symbol)
                 return (
                   <button

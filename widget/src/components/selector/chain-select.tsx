@@ -10,6 +10,7 @@ import {
   Chain80094Icon
 } from '../icons'
 import { getChainIcon } from '../../utils'
+import { useConfig as useWidgetConfig } from '../../providers/config-provider'
 
 type ChainSelectProps = {
   value: string
@@ -19,11 +20,17 @@ type ChainSelectProps = {
 
 export function ChainSelect({ value, onValueChange, onValueProtocolChange }: ChainSelectProps) {
   const config = useConfig()
+  const { config: widgetConfig } = useWidgetConfig()
   const [inputValue, setInputValue] = React.useState<string>('')
 
-  const filteredChains = config.chains.filter((chain) =>
-    chain.name.toLowerCase().includes(inputValue.toLowerCase()),
-  )
+  const filteredChains = config.chains
+    .filter((chain) => {
+      // Filter out hidden chains
+      if (widgetConfig.hiddenChains?.includes(chain.id)) {
+        return false
+      }
+      return chain.name.toLowerCase().includes(inputValue.toLowerCase())
+    })
 
   return (
     <div className="w-[190px] bg-bg-surface border border-stroke-grey-primary rounded-lg h-[677px] flex flex-col gap-1">

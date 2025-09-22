@@ -43,6 +43,7 @@ import {
 } from '../../services/get-tokens'
 import { Badge } from '../badge'
 import { Card } from '../card'
+import { useConfig as useWidgetConfig } from '../../providers/config-provider'
 
 import TaggingMetadataContent from '../tagging/components/tagging-metadata-content'
 import millify from 'millify'
@@ -287,6 +288,7 @@ export function useIsShortScreen() {
 export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }: ChosenTokenDialogContentProps) {
   const getTokensQuery = useGetTokensQuery()
   const tokenBalancesQuery = useClassicTokensBalancesQuery()
+  const { config: widgetConfig } = useWidgetConfig()
 
   const allTokensSelected = useTradeStore(
     useShallow((state) => state.inputTokens.concat(state.outputTokens)),
@@ -352,6 +354,17 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     function removeOutputToken(token: { iid: string }) {
       return !selectedOutputToken.some((tokenSelected) => tokenSelected.iid === token.iid)
     }
+    function removeHiddenChainsAndProtocols(token: { network: number; protocol?: string }) {
+      // Filter out tokens from hidden chains
+      if (widgetConfig.hiddenChains?.includes(token.network)) {
+        return false
+      }
+      // Filter out tokens from hidden protocols
+      if (token.protocol && widgetConfig.hiddenProtocols?.includes(token.protocol)) {
+        return false
+      }
+      return true
+    }
 
     function isVarDebtAPIToken<T>(token: T | APIVarDebtToken): token is APIVarDebtToken {
       return (token as APIVarDebtToken).primaryColor !== undefined
@@ -367,15 +380,17 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     }
 
     const addBalanceToTokens = (tokens: (APIToken | APICollateralToken | APIVarDebtToken)[]) => {
-      return tokens.map((token) => {
-        const balance = BigNumber(balances[token.iid] || 0)
-          .multipliedBy(token.priceUSD || 0)
-          .toFixed()
-        return {
-          ...token,
-          balance: isNaN(Number(balance)) ? '0' : balance,
-        }
-      })
+      return tokens
+        .filter(removeHiddenChainsAndProtocols)
+        .map((token) => {
+          const balance = BigNumber(balances[token.iid] || 0)
+            .multipliedBy(token.priceUSD || 0)
+            .toFixed()
+          return {
+            ...token,
+            balance: isNaN(Number(balance)) ? '0' : balance,
+          }
+        })
     }
 
     const filteredTokens = (() => {
@@ -757,6 +772,8 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       protocolValue,
       filter,
       balances: Object.keys(balances).length,
+      hiddenChains: widgetConfig.hiddenChains,
+      hiddenProtocols: widgetConfig.hiddenProtocols,
     })
   }, [
     tokens,
@@ -771,6 +788,8 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     protocolValue,
     filter,
     balances,
+    widgetConfig.hiddenChains,
+    widgetConfig.hiddenProtocols,
   ])
 
   // Smart filtered tokens computation

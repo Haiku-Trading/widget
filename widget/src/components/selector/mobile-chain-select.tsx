@@ -3,6 +3,7 @@ import { cn } from '../../utils'
 import { useEffect, useRef, useState } from 'react'
 import { useConfig } from 'wagmi'
 import { getChainIcon } from '../../utils/chain-utils'
+import { useConfig as useWidgetConfig } from '../../providers/config-provider'
 
 type ChainSelectProps = {
   value: string
@@ -16,9 +17,18 @@ export function MobileChainSelect({
   onValueProtocolChange,
 }: ChainSelectProps) {
   const config = useConfig()
+  const { config: widgetConfig } = useWidgetConfig()
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const nameChain = config.chains.find((val) => val.id.toString() === value)?.name
+
+  // Filter out hidden chains
+  const filteredChains = config.chains.filter((chain) => {
+    if (widgetConfig.hiddenChains?.includes(chain.id)) {
+      return false
+    }
+    return true
+  })
 
   // Закрытие по клику вне компонента
   useEffect(() => {
@@ -134,7 +144,7 @@ export function MobileChainSelect({
               </button>
 
               {/* Chain Options */}
-              {config.chains
+              {filteredChains
                 .toSorted((a, b) => a.name.localeCompare(b.name))
                 .map((chain) => (
                   <button
