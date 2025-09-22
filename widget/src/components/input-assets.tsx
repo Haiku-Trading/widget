@@ -104,6 +104,7 @@ export function InputAssets({ onInsufficientBalance, onSelectTokens }: InputAsse
               minApr={'minApr' in token ? token.minApr : undefined}
               maxApr={'maxApr' in token ? token.maxApr : undefined}
               showAddButton={widgetConfig.multiInput}
+              isLocked={widgetConfig.lockedInputs}
             />
           )
         })}

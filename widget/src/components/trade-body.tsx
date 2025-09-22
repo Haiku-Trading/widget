@@ -549,7 +549,9 @@ type EmptyAssetsStateProps = {
 function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
   const [open, setOpen] = useState(false)
   const { isResolvingPreselectedTokens } = usePreselectedTokensContext()
+  const { config: widgetConfig } = useWidgetConfig()
   const header = `${type === 'input' ? 'From' : 'To'}`
+  const isLocked = type === 'input' ? widgetConfig.lockedInputs : widgetConfig.lockedOutputs
   
   return (
     <div>
@@ -561,6 +563,12 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
               <Spinner className="w-4 h-4" />
               <p className="text-sm font-medium text-foreground">
                 Loading preselected tokens...
+              </p>
+            </div>
+          ) : isLocked ? (
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-medium text-foreground opacity-50">
+                Tokens are locked
               </p>
             </div>
           ) : (
@@ -618,6 +626,7 @@ function CollapsedTokensList({
   
   // Determine if multi-selection is allowed based on type and config
   const isMultiSelectAllowed = type === 'input' ? widgetConfig.multiInput : widgetConfig.multiOutput
+  const isLocked = type === 'input' ? widgetConfig.lockedInputs : widgetConfig.lockedOutputs
 
   return (
     <div className="bg-bg-section rounded-[32px] p-4 flex justify-between items-center relative">
@@ -651,7 +660,7 @@ function CollapsedTokensList({
         <p className="font-medium text-lg">{usdFormatter.fullValue.format(usdTotal)}</p>
       </div>
 
-      {isMultiSelectAllowed && (
+      {isMultiSelectAllowed && !isLocked && (
         <ClientOnly>
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger>

@@ -146,6 +146,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               minApr={'minApr' in token ? token.minApr : undefined}
               maxApr={'maxApr' in token ? token.maxApr : undefined}
               showAddButton={widgetConfig.multiOutput}
+              isLocked={widgetConfig.lockedOutputs}
             />
           )
         })}

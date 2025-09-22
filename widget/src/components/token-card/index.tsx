@@ -250,6 +250,7 @@ type AssetCardProps = ImageGroupProps & {
   minApr?: string
   maxApr?: string
   showAddButton?: boolean
+  isLocked?: boolean
 }
 
 export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
@@ -279,6 +280,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
       minApr,
       maxApr,
       showAddButton = true,
+      isLocked = false,
     },
     ref,
   ) => {
@@ -545,37 +547,40 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
           toggleSlider(iid, type)
         }}
       >
-        <button
-          onClick={() => {
-            onDismiss?.()
-            removeAlerts([
-              {
-                isActive: true,
-                type: TradeAlert.Error,
-                message: `You don't have enough funds to complete the transaction. (${symbol})`,
-              },
-            ])
-            Object.keys(mappingErrorCodeMessage).forEach((key) => {
+        {!isLocked && (
+          <button
+            onClick={() => {
+              onDismiss?.()
               removeAlerts([
                 {
                   isActive: true,
                   type: TradeAlert.Error,
-                  message: mappingErrorCodeMessage[key],
+                  message: `You don't have enough funds to complete the transaction. (${symbol})`,
                 },
               ])
-            })
-          }}
-          className="bg-state-error-default size-5 rounded-full flex items-center justify-center absolute -top-2 -right-2 invisible group-hover:visible re"
-        >
-          <RiCloseLine size={16} />
-        </button>
+              Object.keys(mappingErrorCodeMessage).forEach((key) => {
+                removeAlerts([
+                  {
+                    isActive: true,
+                    type: TradeAlert.Error,
+                    message: mappingErrorCodeMessage[key],
+                  },
+                ])
+              })
+            }}
+            className="bg-state-error-default size-5 rounded-full flex items-center justify-center absolute -top-2 -right-2 invisible group-hover:visible re"
+          >
+            <RiCloseLine size={16} />
+          </button>
+        )}
 
         <div className="flex w-full items-center justify-between">
           <div className="flex w-full items-start justify-center flex-col gap-1">
             <div className="flex items-center gap-2">
               <button
-                className="bg-bg-section  rounded-[18px] h-10 px-[4px] flex items-center gap-2"
+                className="bg-bg-section  rounded-[18px] h-10 px-[4px] flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={onOpenChosenTokens}
+                disabled={isLocked}
               >
                 <ImageGroup images={images} branches={branches} />
                 <p className="text-sm  font-medium whitespace-nowrap">
@@ -589,7 +594,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   )}
                 </div>
               </button>
-              {isLast && showAddButton && (
+              {isLast && showAddButton && !isLocked && (
                 <button
                   className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary"
                   onClick={() => setOpen(true)}
@@ -712,7 +717,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
         </div>
 
         {/*{showSlider && !locked && (*/}
-        {!locked && (
+        {!locked && !isLocked && (
           <div
             className={
               'mt-2 w-full overflow-hidden transition-all duration-800 ease-in-out max-h-0 group-hover:max-h-32'

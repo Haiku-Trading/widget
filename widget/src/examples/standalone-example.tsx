@@ -96,6 +96,36 @@ export function PreselectedTokensExample() {
   )
 }
 
+// Example with locked tokens
+export function LockedTokensExample() {
+  return (
+    <Providers>
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-8">
+            Haiku Widget - Locked Tokens
+          </h1>
+          <HaikuWidget 
+            config={{
+              multiInput: false,
+              multiOutput: true,
+              preselectedInputs: {
+                "uni:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 100
+              },
+              preselectedOutputs: {
+                "base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 0.5,
+                "base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 0.5
+              },
+              lockedInputs: true,  // Users can only change amounts, not tokens
+              lockedOutputs: true, // Users cannot change tokens or weights
+            }}
+          />
+        </div>
+      </div>
+    </Providers>
+  )
+}
+
 // Minimal usage - just the widget (requires providers to be set up elsewhere)
 export function MinimalExample() {
   return <HaikuWidget />

@@ -130,13 +130,15 @@ function DevApp() {
                         hiddenProtocols: ["AAVE_V3"], // Hide Aave V3
                         multiInput: false,
                         multiOutput: true,
-                        preselectedInputs: {
-                          "uni:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 1,
-                        },
-                        preselectedOutputs: {
-                          "base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 0.4,
-                          "base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 0.6,
-                        },
+                        // preselectedInputs: {
+                        //   "uni:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 1,
+                        // },
+                        // preselectedOutputs: {
+                        //   "base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 0.4,
+                        //   "base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 0.6,
+                        // },
+                        // lockedInputs: true,
+                        // lockedOutputs: true,
                       }}
                     />
                   </div>

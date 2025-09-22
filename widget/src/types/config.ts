@@ -8,6 +8,8 @@ export interface WidgetConfig {
   multiOutput?: boolean
   preselectedInputs?: Record<string, number> // token iid -> amount
   preselectedOutputs?: Record<string, number> // token iid -> weight
+  lockedInputs?: boolean
+  lockedOutputs?: boolean
 }
 
 export interface ConfigProviderProps {

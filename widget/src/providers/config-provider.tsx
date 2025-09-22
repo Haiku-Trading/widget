@@ -12,6 +12,8 @@ export function ConfigProvider({ config = {}, children }: { config?: WidgetConfi
     config: {
       multiInput: true,
       multiOutput: true,
+      lockedInputs: false,
+      lockedOutputs: false,
       ...config,
     },
   }
