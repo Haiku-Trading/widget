@@ -9,7 +9,11 @@ const ConfigContext = createContext<ConfigContextType | null>(null)
 
 export function ConfigProvider({ config = {}, children }: { config?: WidgetConfig; children: React.ReactNode }) {
   const contextValue: ConfigContextType = {
-    config,
+    config: {
+      multiInput: true,
+      multiOutput: true,
+      ...config,
+    },
   }
 
   return (

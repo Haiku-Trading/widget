@@ -249,6 +249,7 @@ type AssetCardProps = ImageGroupProps & {
   showSlider?: boolean
   minApr?: string
   maxApr?: string
+  showAddButton?: boolean
 }
 
 export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
@@ -277,6 +278,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
       color,
       minApr,
       maxApr,
+      showAddButton = true,
     },
     ref,
   ) => {
@@ -587,7 +589,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   )}
                 </div>
               </button>
-              {isLast && (
+              {isLast && showAddButton && (
                 <button
                   className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary"
                   onClick={() => setOpen(true)}

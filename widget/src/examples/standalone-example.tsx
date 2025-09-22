@@ -47,6 +47,27 @@ export function StandaloneExample() {
   )
 }
 
+// Example with single token selection (no multi-select)
+export function SingleTokenExample() {
+  return (
+    <Providers>
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-8">
+            Haiku Widget - Single Token Selection
+          </h1>
+          <HaikuWidget 
+            config={{
+              multiInput: false,  // Only allow single input token
+              multiOutput: false, // Only allow single output token
+            }}
+          />
+        </div>
+      </div>
+    </Providers>
+  )
+}
+
 // Minimal usage - just the widget (requires providers to be set up elsewhere)
 export function MinimalExample() {
   return <HaikuWidget />

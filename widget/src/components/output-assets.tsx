@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useShallow } from 'zustand/shallow'
 import { useTradeStore } from '../providers'
 import { AssetCard } from './token-card'
+import { useConfig as useWidgetConfig } from '../providers/config-provider'
 
 import { ClientOnly } from './client-only'
 import { Dialog } from './dialog'
@@ -22,6 +23,7 @@ type OutputAssetsProps = {
 
 export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
   const isShortScreen = useIsShortScreen()
+  const { config: widgetConfig } = useWidgetConfig()
   const { outputTokens, removeOutputToken, setTokenValue } = useTradeStore(
     useShallow((state) => ({
       outputTokens: state.outputTokens,
@@ -143,6 +145,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               showSlider={token.showSlider}
               minApr={'minApr' in token ? token.minApr : undefined}
               maxApr={'maxApr' in token ? token.maxApr : undefined}
+              showAddButton={widgetConfig.multiOutput}
             />
           )
         })}
@@ -202,7 +205,15 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
             isOpen={open}
             onSelectTokens={(tokens) => {
               setOpen(false)
-              onSelectTokens?.(tokens)
+              // In single-token mode, replace the current token instead of adding
+              if (!widgetConfig.multiOutput && tokens.length > 0) {
+                // Remove all current output tokens and add the new one
+                const currentTokens = outputTokens
+                currentTokens.forEach(token => removeOutputToken(token))
+                onSelectTokens?.(tokens)
+              } else {
+                onSelectTokens?.(tokens)
+              }
             }}
           />
         </Dialog.Root>

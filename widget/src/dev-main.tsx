@@ -123,7 +123,8 @@ function DevApp() {
                       config={{ 
                         theme: blueTheme,
                         hiddenChains: [1, 10], // Hide Ethereum and Optimism
-                        hiddenProtocols: ['AAVE_V3'] // Hide Aave V3
+                        hiddenProtocols: ['AAVE_V3'], // Hide Aave V3
+                        multiInput: false,
                       }} 
                     />
                   </div>

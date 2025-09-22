@@ -16,6 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useAccount, useConfig } from 'wagmi'
 import { mappingChainNameToChainId } from '../constants/constants'
+import { useConfig as useWidgetConfig } from '../providers/config-provider'
 import { TokenType } from '../enums/token-type'
 import { TradeAlert } from '../enums/trade-alert'
 import { useSwapOutputTotal } from '../hooks'
@@ -599,7 +600,11 @@ function CollapsedTokensList({
   onSelectTokens,
 }: CollapsedTokensListProps) {
   const [open, setOpen] = useState(false)
+  const { config: widgetConfig } = useWidgetConfig()
   const slicedInputTokens = tokens.slice(0, 2)
+  
+  // Determine if multi-selection is allowed based on type and config
+  const isMultiSelectAllowed = type === 'input' ? widgetConfig.multiInput : widgetConfig.multiOutput
 
   return (
     <div className="bg-bg-section rounded-[32px] p-4 flex justify-between items-center relative">
@@ -633,23 +638,25 @@ function CollapsedTokensList({
         <p className="font-medium text-lg">{usdFormatter.fullValue.format(usdTotal)}</p>
       </div>
 
-      <ClientOnly>
-        <Dialog.Root open={open} onOpenChange={setOpen}>
-          <Dialog.Trigger>
-            <button className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary absolute bottom-[-15px] left-1/2 -translate-x-1/2">
-              <RiAddLine size={14} />
-            </button>
-          </Dialog.Trigger>
-          <ChosenTokenDialogContent
-            type={type}
-            isOpen={open}
-            onSelectTokens={(tokens) => {
-              setOpen(false)
-              onSelectTokens?.(tokens)
-            }}
-          />
-        </Dialog.Root>
-      </ClientOnly>
+      {isMultiSelectAllowed && (
+        <ClientOnly>
+          <Dialog.Root open={open} onOpenChange={setOpen}>
+            <Dialog.Trigger>
+              <button className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary absolute bottom-[-15px] left-1/2 -translate-x-1/2">
+                <RiAddLine size={14} />
+              </button>
+            </Dialog.Trigger>
+            <ChosenTokenDialogContent
+              type={type}
+              isOpen={open}
+              onSelectTokens={(tokens) => {
+                setOpen(false)
+                onSelectTokens?.(tokens)
+              }}
+            />
+          </Dialog.Root>
+        </ClientOnly>
+      )}
     </div>
   )
 }

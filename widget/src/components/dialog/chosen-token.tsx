@@ -289,6 +289,9 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   const getTokensQuery = useGetTokensQuery()
   const tokenBalancesQuery = useClassicTokensBalancesQuery()
   const { config: widgetConfig } = useWidgetConfig()
+  
+  // Determine if multi-selection is allowed based on type and config
+  const isMultiSelectAllowed = type === 'input' ? widgetConfig.multiInput : widgetConfig.multiOutput
 
   const allTokensSelected = useTradeStore(
     useShallow((state) => state.inputTokens.concat(state.outputTokens)),
@@ -702,6 +705,11 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
         - User adds a token from chain B
         - Chain C now disabled */
 
+      // In single-token mode, we're replacing the current token, so chain restrictions don't apply
+      if (!isMultiSelectAllowed) {
+        return false
+      }
+
       if (type === 'input') {
         const selectedNetworks = selectedTokens.map((token) => token.network)
         const networks = Array.from(new Set(inputChainIds.concat(selectedNetworks)))
@@ -750,7 +758,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
 
       return false
     },
-    [inputChainIds, outputChainIds, type, selectedTokens],
+    [inputChainIds, outputChainIds, type, selectedTokens, isMultiSelectAllowed],
   )
 
   // Cache for filtered tokens to avoid re-computation
@@ -864,6 +872,12 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       )
       if (isTokenSelected)
         return currentSelectedTokens.filter((currentToken) => currentToken.iid !== token.iid)
+      
+      // In single selection mode, replace the current selection
+      if (!isMultiSelectAllowed) {
+        return [token]
+      }
+      
       return currentSelectedTokens.concat(token)
     })
   }
@@ -939,10 +953,14 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
         className={`flex flex-col md:w-[500px] h-full animate-[slideInFromRight_0.4s_ease-out_0.05s_both]`}
       >
         <Dialog.Header>
-          <Dialog.Title>Select Assets</Dialog.Title>
+          <Dialog.Title>
+            {isMultiSelectAllowed ? 'Select Assets' : 'Select Asset'}
+          </Dialog.Title>
           <Dialog.Description className="sr-only">
-            Choose tokens to add to your trade. Use the search bar to find specific tokens, and
-            filter by chain and protocol.
+            {isMultiSelectAllowed 
+              ? 'Choose tokens to add to your trade. Use the search bar to find specific tokens, and filter by chain and protocol.'
+              : 'Choose a token for your trade. Use the search bar to find specific tokens, and filter by chain and protocol.'
+            }
           </Dialog.Description>
         </Dialog.Header>
         <Dialog.Body className="px-0 pb-0">
@@ -1169,7 +1187,10 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                 }}
                 disabled={!selectedTokens.length}
               >
-                Continue {selectedTokens.length > 0 && `(${selectedTokens.length})`}
+                {isMultiSelectAllowed 
+                  ? `Continue ${selectedTokens.length > 0 ? `(${selectedTokens.length})` : ''}`
+                  : 'Continue'
+                }
               </Button>
             </div>
           </div>

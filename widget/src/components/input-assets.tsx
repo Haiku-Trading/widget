@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useShallow } from 'zustand/shallow'
 import { useTradeStore } from '../providers'
 import { AssetCard } from './token-card'
+import { useConfig as useWidgetConfig } from '../providers/config-provider'
 
 import { Dialog } from './dialog'
 import { Avatar } from './avatar'
@@ -18,6 +19,7 @@ type InputAssetsProps = {
 
 export function InputAssets({ onInsufficientBalance, onSelectTokens }: InputAssetsProps) {
   const isShortScreen = useIsShortScreen()
+  const { config: widgetConfig } = useWidgetConfig()
   const { inputTokens, inputPositions, removeInputToken, setTokenValue } = useTradeStore(
     useShallow((state) => ({
       inputTokens: state.inputTokens,
@@ -101,6 +103,7 @@ export function InputAssets({ onInsufficientBalance, onSelectTokens }: InputAsse
               showSlider={token.showSlider}
               minApr={'minApr' in token ? token.minApr : undefined}
               maxApr={'maxApr' in token ? token.maxApr : undefined}
+              showAddButton={widgetConfig.multiInput}
             />
           )
         })}
@@ -128,7 +131,15 @@ export function InputAssets({ onInsufficientBalance, onSelectTokens }: InputAsse
             isOpen={open}
             onSelectTokens={(tokens) => {
               setOpen(false)
-              onSelectTokens?.(tokens)
+              // In single-token mode, replace the current token instead of adding
+              if (!widgetConfig.multiInput && tokens.length > 0) {
+                // Remove all current input tokens and add the new one
+                const currentTokens = inputTokens
+                currentTokens.forEach(token => removeInputToken(token))
+                onSelectTokens?.(tokens)
+              } else {
+                onSelectTokens?.(tokens)
+              }
             }}
           />
         </Dialog.Root>
