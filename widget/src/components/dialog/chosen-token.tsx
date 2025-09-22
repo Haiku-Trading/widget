@@ -25,6 +25,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { VirtuosoGrid } from 'react-virtuoso'
@@ -268,6 +269,7 @@ type FilterTokensProps = {
 type ChosenTokenDialogContentProps = {
   type: 'input' | 'output'
   onSelectTokens?: (tokens: APIToken[]) => void
+  isOpen?: boolean
 }
 
 // Hook to detect if viewport height is 800px or less
@@ -282,7 +284,7 @@ export function useIsShortScreen() {
   return isShort
 }
 
-export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDialogContentProps) {
+export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }: ChosenTokenDialogContentProps) {
   const getTokensQuery = useGetTokensQuery()
   const tokenBalancesQuery = useClassicTokensBalancesQuery()
 
@@ -736,9 +738,54 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
     [inputChainIds, outputChainIds, type, selectedTokens],
   )
 
-  // Memoize the expensive filterTokens operation to prevent re-computation on every render
+  // Cache for filtered tokens to avoid re-computation
+  const cachedTokensRef = useRef<any[]>([])
+  const lastDepsRef = useRef<string>('')
+
+  // Create a dependency string to detect changes
+  const depsString = useMemo(() => {
+    return JSON.stringify({
+      tokens: tokens.length,
+      collateralTokens: collateralTokens.length,
+      varDebtTokens: varDebtTokens.length,
+      vaultTokens: vaultTokens.length,
+      weightedLiquidityTokens: weightedLiquidityTokens.length,
+      search,
+      selectedCategories,
+      allTokensSelected: allTokensSelected.length,
+      chainValue,
+      protocolValue,
+      filter,
+      balances: Object.keys(balances).length,
+    })
+  }, [
+    tokens,
+    collateralTokens,
+    varDebtTokens,
+    vaultTokens,
+    weightedLiquidityTokens,
+    search,
+    selectedCategories,
+    allTokensSelected,
+    chainValue,
+    protocolValue,
+    filter,
+    balances,
+  ])
+
+  // Smart filtered tokens computation
   const filteredTokens = useMemo(() => {
-    return filterTokens({
+    if (!isOpen) {
+      return []
+    }
+
+    // Check if we can use cached results
+    if (lastDepsRef.current === depsString && cachedTokensRef.current.length > 0) {
+      return cachedTokensRef.current
+    }
+
+    // Compute new tokens and cache them
+    const newTokens = filterTokens({
       tokens,
       collateralTokens,
       varDebtTokens,
@@ -747,20 +794,13 @@ export function ChosenTokenDialogContent({ type, onSelectTokens }: ChosenTokenDi
       vaultTokens,
       weightedLiquidityTokens,
     })
-  }, [
-    tokens,
-    collateralTokens,
-    varDebtTokens,
-    search,
-    selectedCategories,
-    vaultTokens,
-    allTokensSelected,
-    weightedLiquidityTokens,
-    chainValue, // Add chainValue dependency
-    protocolValue, // Add protocolValue dependency
-    filter, // Add filter dependency for sorting
-    balances, // Add balances dependency so list updates when balances load
-  ])
+
+    // Cache the results
+    cachedTokensRef.current = newTokens
+    lastDepsRef.current = depsString
+
+    return newTokens
+  }, [isOpen, depsString, tokens, collateralTokens, varDebtTokens, search, selectedCategories, vaultTokens, weightedLiquidityTokens])
 
   const matches = useMemo(() => {
     return filteredTokens

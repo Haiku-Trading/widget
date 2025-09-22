@@ -199,6 +199,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
           </Dialog.Trigger> */}
           <ChosenTokenDialogContent
             type="output"
+            isOpen={open}
             onSelectTokens={(tokens) => {
               setOpen(false)
               onSelectTokens?.(tokens)

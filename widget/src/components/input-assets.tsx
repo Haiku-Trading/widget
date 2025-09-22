@@ -125,6 +125,7 @@ export function InputAssets({ onInsufficientBalance, onSelectTokens }: InputAsse
           </Dialog.Trigger> */}
           <ChosenTokenDialogContent
             type="input"
+            isOpen={open}
             onSelectTokens={(tokens) => {
               setOpen(false)
               onSelectTokens?.(tokens)

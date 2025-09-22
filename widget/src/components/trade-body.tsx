@@ -563,6 +563,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
               </Dialog.Trigger>
               <ChosenTokenDialogContent
                 type={type}
+                isOpen={open}
                 onSelectTokens={(tokens) => {
                   setOpen(false)
                   onSelectTokens?.(tokens)
@@ -641,6 +642,7 @@ function CollapsedTokensList({
           </Dialog.Trigger>
           <ChosenTokenDialogContent
             type={type}
+            isOpen={open}
             onSelectTokens={(tokens) => {
               setOpen(false)
               onSelectTokens?.(tokens)
