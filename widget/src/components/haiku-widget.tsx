@@ -1,7 +1,7 @@
 import { WidgetHttpProvider } from "../providers/widget-provider";
 import { ThemeProvider } from "../providers/theme-provider";
 import { ConfigProvider } from "../providers/config-provider";
-import { SwapContainer } from "./swap";
+import { SwapContainerWithPreselectedTokens } from "./preselected-tokens-handler";
 import { WidgetConfig } from "../types/config";
 
 interface HaikuWidgetProps {
@@ -13,7 +13,7 @@ export function HaikuWidget({ config }: HaikuWidgetProps) {
     <ConfigProvider config={config}>
       <ThemeProvider theme={config?.theme}>
         <WidgetHttpProvider>
-          <SwapContainer />
+          <SwapContainerWithPreselectedTokens />
         </WidgetHttpProvider>
       </ThemeProvider>
     </ConfigProvider>

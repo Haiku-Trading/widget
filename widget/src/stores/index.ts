@@ -27,6 +27,8 @@ export type TradeActions = {
   removeInputToken: (token: AnyAPIToken) => void
   addOutputToken: (tokens: AnyAPIToken[]) => void
   removeOutputToken: (token: AnyAPIToken) => void
+  setPreselectedInputTokens: (tokens: Array<{ token: AnyAPIToken; amount: number }>) => void
+  setPreselectedOutputTokens: (tokens: Array<{ token: AnyAPIToken; amount: number }>) => void
   setTokenValue: (token: AnyAPIToken, value: string) => void
   swapToken: () => void
   updateTokensUSDPrice: (tokens: AnyAPIToken[]) => void
@@ -161,6 +163,61 @@ export const createTradeStore = (initState: TradeState = defaultTradeInitState) 
           outputChainIds: state.outputChainIds.filter((chain) => token.network !== chain),
           targetWeights: Object.fromEntries(
             updatedOutputTokens.map((token) => [token.iid, 1 / updatedOutputTokens.length]),
+          ),
+        }
+      })
+    },
+    setPreselectedInputTokens: (tokensWithAmounts) => {
+      set((state) => {
+        const modifyTokens = tokensWithAmounts.map(({ token }) => {
+          return {
+            ...token,
+            showSlider: false,
+          }
+        })
+        const inputPositionsEntries = tokensWithAmounts.map(({ token, amount }) => [token.iid, amount.toString()] as const)
+        const newInputPositions = {
+          ...state.inputPositions,
+          ...Object.fromEntries(inputPositionsEntries),
+        }
+        return {
+          inputTokens: modifyTokens,
+          inputPositions: newInputPositions,
+          inputChainIds: Array.from(
+            new Set(tokensWithAmounts.map(({ token }) => token.network)),
+          ),
+        }
+      })
+    },
+    setPreselectedOutputTokens: (tokensWithWeights) => {
+      set((state) => {
+        const modifyTokens = tokensWithWeights.map(({ token }) => {
+          return {
+            ...token,
+            percentage: 0,
+            locked: false,
+            showSlider: false,
+          }
+        })
+        
+        // Calculate total weight for normalization
+        const totalWeight = tokensWithWeights.reduce((sum, { amount }) => sum + amount, 0)
+        
+        // Set percentages based on weights (convert to percentages)
+        const tokensWithPercentages = modifyTokens.map((token, index) => {
+          const weight = tokensWithWeights[index].amount
+          const percentage = totalWeight > 0 ? (weight / totalWeight) * 100 : 0
+          return {
+            ...token,
+            percentage,
+          }
+        })
+        
+        return {
+          outputTokens: tokensWithPercentages,
+          outputChainIds: tokensWithWeights.map(({ token }) => token.network),
+          targetWeights: Object.fromEntries(
+            tokensWithWeights.map(({ token, amount }) => [token.iid, totalWeight > 0 ? amount / totalWeight : 0]),
           ),
         }
       })

@@ -1,18 +1,22 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { WagmiProvider } from 'wagmi'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { RainbowKitProvider, getDefaultConfig, ConnectButton } from '@rainbow-me/rainbowkit'
-import '@rainbow-me/rainbowkit/styles.css'
-import { HaikuWidget, WidgetTheme, WidgetConfig } from './index'
-import './styles.css'
-import { 
-  arbitrum, 
-  base, 
-  bsc, 
-  mainnet, 
-  optimism, 
-  polygon, 
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { WagmiProvider } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  RainbowKitProvider,
+  getDefaultConfig,
+  ConnectButton,
+} from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
+import { HaikuWidget, WidgetTheme, WidgetConfig } from "./index";
+import "./styles.css";
+import {
+  arbitrum,
+  base,
+  bsc,
+  mainnet,
+  optimism,
+  polygon,
   avalanche,
   gnosis,
   scroll,
@@ -20,62 +24,62 @@ import {
   sei,
   worldchain,
   katana,
-} from 'wagmi/chains'
+} from "wagmi/chains";
 
 // Create a client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 // Configure chains for development
 const chains = [
-  mainnet,        // 1: Ethereum
-  optimism,       // 10: Optimism
-  bsc,            // 56: BNB Smart Chain
-  gnosis,         // 100: Gnosis
-  polygon,        // 137: Polygon
-  arbitrum,       // 42161: Arbitrum
-  avalanche,      // 43114: Avalanche
-  base,           // 8453: Base
-  scroll,         // 534352: Scroll
-  berachain,      // 80094: Berachain
-  sei,            // 1329: Sei
-  worldchain,     // 480: Worldchain
-  katana,         // 747474: Katana
-]
+  mainnet, // 1: Ethereum
+  optimism, // 10: Optimism
+  bsc, // 56: BNB Smart Chain
+  gnosis, // 100: Gnosis
+  polygon, // 137: Polygon
+  arbitrum, // 42161: Arbitrum
+  avalanche, // 43114: Avalanche
+  base, // 8453: Base
+  scroll, // 534352: Scroll
+  berachain, // 80094: Berachain
+  sei, // 1329: Sei
+  worldchain, // 480: Worldchain
+  katana, // 747474: Katana
+];
 
 const config = getDefaultConfig({
-  appName: 'Haiku Swap Widget Demo',
-  projectId: '559f57c80e698d3d95adb8d69e8b9228', // Get from https://cloud.walletconnect.com
+  appName: "Haiku Swap Widget Demo",
+  projectId: "559f57c80e698d3d95adb8d69e8b9228", // Get from https://cloud.walletconnect.com
   chains: chains as any,
-})
+});
 
 function DevApp() {
   // Define different theme examples for testing
   const defaultTheme: WidgetTheme = {
-    mode: 'dark',
-  }
-  
+    mode: "dark",
+  };
+
   const blueTheme: WidgetTheme = {
-    mode: 'light',
-    primaryColor: '#3B82F6', // Blue
-    secondaryColor: '#10B981' // Green
-  }
+    mode: "light",
+    primaryColor: "#3B82F6", // Blue
+    secondaryColor: "#10B981", // Green
+  };
 
   const purpleTheme: WidgetTheme = {
-    mode: 'dark',
-    primaryColor: '#8B5CF6', // Purple
-    secondaryColor: '#F59E0B' // Amber
-  }
+    mode: "dark",
+    primaryColor: "#8B5CF6", // Purple
+    secondaryColor: "#F59E0B", // Amber
+  };
 
   const redTheme: WidgetTheme = {
-    mode: 'auto',
-    primaryColor: '#EF4444', // Red
-    secondaryColor: '#06B6D4' // Cyan
-  }
+    mode: "auto",
+    primaryColor: "#EF4444", // Red
+    secondaryColor: "#06B6D4", // Cyan
+  };
 
   const orangeTheme: WidgetTheme = {
-    primaryColor: '#F97316', // Orange
-    secondaryColor: '#84CC16' // Lime
-  }
+    primaryColor: "#F97316", // Orange
+    secondaryColor: "#84CC16", // Lime
+  };
 
   return (
     <WagmiProvider config={config}>
@@ -94,7 +98,7 @@ function DevApp() {
                   <ConnectButton />
                 </div>
               </div>
-              
+
               {/* Theme Examples */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Default Theme */}
@@ -119,18 +123,25 @@ function DevApp() {
                     Hiding Ethereum (1), Optimism (10), and AAVE_V3 protocol
                   </p>
                   <div className="border rounded-lg p-4">
-                    <HaikuWidget 
-                      config={{ 
+                    <HaikuWidget
+                      config={{
                         theme: blueTheme,
                         hiddenChains: [1, 10], // Hide Ethereum and Optimism
-                        hiddenProtocols: ['AAVE_V3'], // Hide Aave V3
+                        hiddenProtocols: ["AAVE_V3"], // Hide Aave V3
                         multiInput: false,
-                      }} 
+                        multiOutput: true,
+                        preselectedInputs: {
+                          "uni:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 1,
+                        },
+                        preselectedOutputs: {
+                          "base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 0.4,
+                          "base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 0.6,
+                        },
+                      }}
                     />
                   </div>
                 </div>
               </div>
-
 
               {/* Development Info */}
               <div className="mt-8 bg-blue-50 rounded-lg p-6">
@@ -151,11 +162,11 @@ function DevApp() {
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
-  )
+  );
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <DevApp />
   </React.StrictMode>
-)
+);

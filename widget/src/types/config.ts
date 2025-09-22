@@ -6,6 +6,8 @@ export interface WidgetConfig {
   hiddenProtocols?: string[]
   multiInput?: boolean
   multiOutput?: boolean
+  preselectedInputs?: Record<string, number> // token iid -> amount
+  preselectedOutputs?: Record<string, number> // token iid -> weight
 }
 
 export interface ConfigProviderProps {

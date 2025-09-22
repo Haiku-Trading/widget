@@ -17,6 +17,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAccount, useConfig } from 'wagmi'
 import { mappingChainNameToChainId } from '../constants/constants'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
+import { usePreselectedTokensContext } from '../providers/preselected-tokens-provider'
 import { TokenType } from '../enums/token-type'
 import { TradeAlert } from '../enums/trade-alert'
 import { useSwapOutputTotal } from '../hooks'
@@ -44,6 +45,7 @@ export function TradeBody() {
   const queryClient = useQueryClient()
   const { updateTransactionConfirming } = useTransactionConfirmingStore()
   const getTransactionURL = useGetTransactionURL()
+  const { isResolvingPreselectedTokens } = usePreselectedTokensContext()
 
   const slippage = useTradeStore((state) => state.slippage)
   const addInputToken = useTradeStore((state) => state.addInputToken)
@@ -546,32 +548,43 @@ type EmptyAssetsStateProps = {
 
 function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
   const [open, setOpen] = useState(false)
+  const { isResolvingPreselectedTokens } = usePreselectedTokensContext()
   const header = `${type === 'input' ? 'From' : 'To'}`
+  
   return (
     <div>
       <span className="text-16px-normal mt-3 mb-3">{header}</span>
       <div className="mt-3 bg-bg-section rounded-[32px] p-4">
         <div className="bg-bg-surface rounded-[16px] p-4 flex items-center justify-between">
-          <ClientOnly>
-            <Dialog.Root open={open} onOpenChange={setOpen}>
-              <Dialog.Trigger>
-                <button className="bg-bg-section rounded-[18px] h-10 px-3 flex items-center gap-2">
-                  <p className="text-sm font-medium whitespace-nowrap text-foreground">
-                    Select Asset
-                  </p>
-                  <RiAddLine size={16} />
-                </button>
-              </Dialog.Trigger>
-              <ChosenTokenDialogContent
-                type={type}
-                isOpen={open}
-                onSelectTokens={(tokens) => {
-                  setOpen(false)
-                  onSelectTokens?.(tokens)
-                }}
-              />
-            </Dialog.Root>
-          </ClientOnly>
+          {isResolvingPreselectedTokens ? (
+            <div className="flex items-center gap-2">
+              <Spinner className="w-4 h-4" />
+              <p className="text-sm font-medium text-foreground">
+                Loading preselected tokens...
+              </p>
+            </div>
+          ) : (
+            <ClientOnly>
+              <Dialog.Root open={open} onOpenChange={setOpen}>
+                <Dialog.Trigger>
+                  <button className="bg-bg-section rounded-[18px] h-10 px-3 flex items-center gap-2">
+                    <p className="text-sm font-medium whitespace-nowrap text-foreground">
+                      Select Asset
+                    </p>
+                    <RiAddLine size={16} />
+                  </button>
+                </Dialog.Trigger>
+                <ChosenTokenDialogContent
+                  type={type}
+                  isOpen={open}
+                  onSelectTokens={(tokens) => {
+                    setOpen(false)
+                    onSelectTokens?.(tokens)
+                  }}
+                />
+              </Dialog.Root>
+            </ClientOnly>
+          )}
 
           <div className="flex flex-col gap-1">
             {/* <p className="text-xs text-grey-muted mb-1">Bal: $0.00</p> */}
