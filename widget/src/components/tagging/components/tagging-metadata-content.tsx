@@ -249,8 +249,8 @@ const TokenItem = ({ tokenName, metadata, images, branches }: TokenItemProps) =>
                       <span
                         className={cn(
                           'w-full text-start text-wrap text-sm flex justify-between items-center font-thin',
-                          (metadata?.metadata?.pricePercentage24h ?? 0) > 0 && 'text-green-500',
-                          (metadata?.metadata?.pricePercentage24h ?? 0) < 0 && 'text-red-500',
+                          (metadata?.metadata?.pricePercentage24h ?? 0) > 0 && 'text-success',
+                          (metadata?.metadata?.pricePercentage24h ?? 0) < 0 && 'text-failed',
                         )}
                       >
                         {(metadata?.metadata?.pricePercentage24h ?? 0) > 0 && <TriangleUpIcon />}

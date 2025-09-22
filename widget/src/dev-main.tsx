@@ -50,7 +50,9 @@ const config = getDefaultConfig({
 
 function DevApp() {
   // Define different theme examples for testing
-  const defaultTheme: WidgetTheme = {}
+  const defaultTheme: WidgetTheme = {
+    mode: 'dark',
+  }
   
   const blueTheme: WidgetTheme = {
     mode: 'light',

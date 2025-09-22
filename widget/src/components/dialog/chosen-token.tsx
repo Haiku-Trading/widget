@@ -1332,8 +1332,8 @@ export const TokenCard = memo(function TokenCard({
                     <p
                       className={`flex items-center gap-1 text-12px-normal ${
                         Number.parseFloat(token.metadata?.pricePercentage24h ?? '0') < 0
-                          ? 'text-red-500'
-                          : 'text-green-500'
+                          ? 'text-failed'
+                          : 'text-success'
                       }`}
                     >
                       {Number.parseFloat(token.metadata?.pricePercentage24h ?? '0') < 0 ? (

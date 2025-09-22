@@ -628,7 +628,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                 className={cn(
                   `text-[32px] font-medium outline-none bg-transparent w-full max-w-[75%] h-7 placeholder:text-[#B2B2B2] dark:placeholder:text-[#B2B2B2]   disabled:text-muted-foreground`,
                   Number(inputValue) > Math.abs(Number(isTokenView ? balance : usdBalance))
-                    ? 'text-red-700'
+                    ? 'text-failed'
                     : 'text-[#B2B2B2] dark:text-[#FFFFFF]',
                 )}
                 placeholder="0.00"
