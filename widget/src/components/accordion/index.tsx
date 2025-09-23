@@ -14,7 +14,7 @@ export const AccordionItem = React.forwardRef<AccordionItemElement, AccordionIte
   ({ children, className, disabled, ...props }, ref) => (
     <RadixAccordion.Item
       className={cn(
-        'bg-secondary border border-border rounded-2xl',
+        'bg-bg-surface border border-border rounded-2xl',
         disabled && 'bg-hover border-[#D6DBDC] text-muted',
         className,
       )}

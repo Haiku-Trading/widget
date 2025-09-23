@@ -124,7 +124,7 @@ const ImageGroup = (props: ImageGroupProps) => {
   return (
     <Tooltip
       content={content}
-      className="bg-bg-surface border border-stroke-grey-primary rounded-lg p-2 text-sm text-grey-secondary"
+      className="bg-bg-primary border border-stroke-grey-primary rounded-lg p-2 text-sm text-grey-secondary"
     >
       <div className="flex -space-x-2 py-2 shrink-0 grow-0 isolate">
         {images.map((image, index) => {
@@ -227,7 +227,7 @@ const ImageBranch = (props: ImageBranchProps) => {
   return (
     <div
       className={cn(
-        'absolute block text-[0.625rem] size-5 rounded-full bg-secondary flex items-center justify-center',
+        'absolute block text-[0.625rem] size-5 rounded-full flex items-center justify-center',
         index === 0 ? '-bottom-1.5 -right-1.5' : '-top-1.5 -right-1.5',
       )}
     >
@@ -1167,7 +1167,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                 />
               )}
             </div>
-            <div className="bg-bg-surface p-4 flex items-center gap-4 rounded-b-full">
+            <div className="bg-bg-primary p-4 flex items-center gap-4 rounded-b-full">
               {selectedTokens.length > 0 && (
                 <Button
                   className="flex-1 text-base text-grey-secondary"

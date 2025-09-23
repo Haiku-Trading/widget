@@ -125,6 +125,11 @@ function DevApp() {
       mode: themeMode,
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
+      // Add some example additional colors to test the new system
+      accentColor: '#EC4899', // Pink
+      successColor: '#10B981', // Green
+      warningColor: '#F59E0B', // Amber
+      errorColor: '#EF4444', // Red
     };
 
     return {

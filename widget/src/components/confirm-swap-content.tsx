@@ -130,7 +130,7 @@ export function ConfirmSwapContent({
       <Dialog.Description className="sr-only">
         Review and confirm your token swap transaction details before proceeding.
       </Dialog.Description>
-      <Dialog.Body className="bg-secondary rounded-2xl">
+      <Dialog.Body className="bg-bg-primary rounded-2xl">
         {status === 'pending' && (
           <FeedbackDialog
             status="loading"

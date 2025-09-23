@@ -94,7 +94,7 @@ const DialogContent = forwardRef<ContentElement, ContentProps>((props, ref) => {
           {sideElement && sideElement}
           <DialogPrimitive.Content
             className={cn(
-              'bg-secondary border border-border rounded-2xl max-h-[95vh] flex flex-col',
+              'bg-bg-primary border border-border rounded-2xl max-h-[95vh] flex flex-col',
               'data-[state=open]:animate-dialogShow data-[state=closed]:animate-dialogHide',
               className,
             )}
@@ -133,7 +133,7 @@ const DrawerContent = forwardRef<DrawerContentElement, DrawerContentProps>((prop
       <Drawer.Overlay className="fixed inset-0 bg-overlay/50" />
       <Drawer.Content
         className={cn(
-          'bg-secondary flex flex-col rounded-t-2xl max-h-[96%] h-full fixed bottom-0 left-0 right-0 border border-border',
+          'bg-bg-primary flex flex-col rounded-t-2xl max-h-[96%] h-full fixed bottom-0 left-0 right-0 border border-border',
           className,
         )}
         {...contentProps}

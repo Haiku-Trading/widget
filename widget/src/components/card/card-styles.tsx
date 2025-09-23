@@ -5,7 +5,7 @@ export const cardStyles = tv({
   variants: {
     variant: {
       primary: 'border border-border bg-background',
-      secondary: 'border border-border bg-secondary',
+      secondary: 'border border-border bg-bg-surface',
     },
   },
   defaultVariants: {

@@ -6,7 +6,7 @@ export const iconButtonStyles = tv(
     variants: {
       variant: {
         primary: 'bg-primary text-white hover:opacity-75',
-        secondary: 'bg-secondary text-foreground border border-border hover:bg-background',
+        secondary: 'bg-bg-surface text-foreground border border-border hover:bg-background',
         outline: 'bg-transparent border border-border text-muted-foreground hover:bg-background',
       },
       size: {

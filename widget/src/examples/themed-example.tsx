@@ -26,21 +26,21 @@ export function ThemedExample() {
       <div>
         <h2 className="text-xl font-bold mb-4">Blue Theme (Light Mode)</h2>
         <div className="border rounded-lg p-4">
-          <HaikuWidget theme={blueTheme} />
+          <HaikuWidget config={{ theme: blueTheme }} />
         </div>
       </div>
 
       <div>
         <h2 className="text-xl font-bold mb-4">Purple Theme (Dark Mode)</h2>
         <div className="border rounded-lg p-4">
-          <HaikuWidget theme={purpleTheme} />
+          <HaikuWidget config={{ theme: purpleTheme }} />
         </div>
       </div>
 
       <div>
         <h2 className="text-xl font-bold mb-4">Red Theme (Auto Mode)</h2>
         <div className="border rounded-lg p-4">
-          <HaikuWidget theme={autoTheme} />
+          <HaikuWidget config={{ theme: autoTheme }} />
         </div>
       </div>
 

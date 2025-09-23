@@ -50,7 +50,7 @@ export function PositionBreakdown({ inputTokens, outputTokens }: ProgressBarProp
     }))
 
   return (
-    <Card className="bg-secondary max-md:min-w-full rounded-2xl max-w-[520px] min-[1550px]:max-w-[580px] min-[1750px]:max-w-[818px]">
+    <Card className="bg-bg-surface max-md:min-w-full rounded-2xl max-w-[520px] min-[1550px]:max-w-[580px] min-[1750px]:max-w-[818px]">
       <div className="flex gap-24 justify-between items-center w-full">
         <span className="text-2xl font-medium max-md:text-base">Position Breakdown</span>
       </div>

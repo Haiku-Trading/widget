@@ -37,7 +37,7 @@ export const Content = forwardRef<ContentElement, ContentProps>((props, ref) => 
     <PopoverPrimitive.Portal container={themeContainer}>
       <PopoverPrimitive.Content
         className={cn(
-          'font-sans border-[0.7px] border-border rounded-xl bg-secondary text-muted-foreground shadow-[0px_2px_9.9px_0px_#19191D0D]',
+          'font-sans border-[0.7px] border-border rounded-xl bg-bg-primary text-muted-foreground shadow-[0px_2px_9.9px_0px_#19191D0D]',
           'origin-[--radix-popover-content-transform-origin]',
           // Animation enter
           'data-[state=open]:data-[side=top]:animate-slide-from-top data-[state=open]:data-[side=bottom]:animate-slide-from-bottom data-[state=open]:data-[side=left]:animate-slide-from-left data-[state=open]:data-[side=right]:animate-slide-from-right',

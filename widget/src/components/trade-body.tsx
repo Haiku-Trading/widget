@@ -372,8 +372,8 @@ export function TradeBody() {
 
       {Number(slippage) <= 0 && (
         <div className="p-6 pb-0">
-          <div className="flex items-center text-warning-text text-sm font-medium gap-1 bg-warning-bg/10 border border-warning-border rounded-xl p-3">
-            <InfoOutlineIcon className="size-4 text-warning-text" /> Slippage must be greater than 0
+          <div className="flex items-center text-foreground text-sm font-medium gap-1 bg-warning-bg/10 border border-warning-border rounded-xl p-3">
+            <InfoOutlineIcon className="size-4 text-foreground" /> Slippage must be greater than 0
           </div>
         </div>
       )}
@@ -381,8 +381,8 @@ export function TradeBody() {
       {/* {inputTokens.length > 0 &&
         inputTokens.some((token) => BigNumber(inputPositions[token.iid] || 0).isEqualTo(0)) && (
           <div className="p-6 pb-0 pt-3">
-            <div className="flex items-center text-warning-text text-sm font-medium gap-1 bg-warning-bg/10 border border-warning-border rounded-xl p-3">
-              <Info className="size-4 text-warning-text" /> All input tokens must have a value
+            <div className="flex items-center text-foreground text-sm font-medium gap-1 bg-warning-bg/10 border border-warning-border rounded-xl p-3">
+              <Info className="size-4 text-foreground" /> All input tokens must have a value
               greater than 0
             </div>
           </div>

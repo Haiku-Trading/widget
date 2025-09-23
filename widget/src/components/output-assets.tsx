@@ -179,7 +179,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
                     </span>
                     <RiArrowDownSLine
                       size={16}
-                      className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+                      className={`transition-transform duration-200 text-foreground ${isOpen ? 'rotate-180' : 'rotate-0'}`}
                     />
                   </div>
                 </div>

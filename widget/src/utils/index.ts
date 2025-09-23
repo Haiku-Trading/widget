@@ -61,7 +61,7 @@ export { getChainIcon } from './chain-utils'
 export { getProtocolIcon } from './protocol-utils'
 
 // Theme utilities
-export { hexToHsl, isValidHexColor, generateThemeCSS, applyThemeToElement } from './theme-utils'
+export { colorToHsl, isValidColor, generateThemeCSS, applyThemeToElement, generateColorScale, getContrastColor } from './theme-utils'
 
 // Token resolution utilities
 export { resolveTokensFromIids, resolveTokensFromMap, resolveTokenFromIid, type TokenListData, type AnyAPIToken } from './token-resolution'
