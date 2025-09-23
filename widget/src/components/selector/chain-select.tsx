@@ -41,7 +41,7 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
           leftIcon={<MagniferIcon />}
           placeholder="Chain"
           containerClassName="w-full h-[36px] border-b border-border bg-transparent shrink-0"
-          className="bg-transparent shrink-0"
+          className="bg-transparent"
           onChange={(event) => setInputValue(event.target.value)}
           value={inputValue}
           autoFocus
