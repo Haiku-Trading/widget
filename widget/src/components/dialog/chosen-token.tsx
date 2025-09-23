@@ -1301,7 +1301,7 @@ export const TokenCard = memo(function TokenCard({
   return (
     <HoverCard.Root>
       <HoverCard.Trigger className="w-full">
-        <Card variant="secondary" asChild className="p-2 w-full h-full">
+        <Card variant="primary" asChild className="p-2 w-full h-full">
           <button
             style={{ height: isFirstCard ? '70px' : '100%' }}
             disabled={disabled}
