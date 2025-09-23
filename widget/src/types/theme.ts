@@ -1,12 +1,16 @@
-export interface WidgetTheme {
-  mode?: 'light' | 'dark' | 'auto'
+export interface ColorPalette {
   primaryColor?: string
   secondaryColor?: string
-  // Optional overrides for specific color roles
   accentColor?: string
   successColor?: string
   warningColor?: string
   errorColor?: string
+}
+
+export interface WidgetTheme {
+  mode?: 'light' | 'dark' | 'auto'
+  light?: ColorPalette
+  dark?: ColorPalette
 }
 
 export interface ThemeProviderProps {

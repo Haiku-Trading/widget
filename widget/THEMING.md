@@ -1,6 +1,6 @@
 # Widget Theming
 
-The Haiku Widget supports comprehensive custom theming through props, allowing you to match your brand colors and support both light and dark modes with automatically generated color palettes.
+The Haiku Widget supports comprehensive custom theming through separate light and dark color palettes, giving you complete control over how your brand colors appear in each mode.
 
 ## Basic Usage
 
@@ -8,9 +8,15 @@ The Haiku Widget supports comprehensive custom theming through props, allowing y
 import { HaikuWidget, WidgetTheme } from '@your-org/haiku-widget'
 
 const theme: WidgetTheme = {
-  mode: 'light',
-  primaryColor: '#3B82F6', // Blue
-  secondaryColor: '#10B981' // Green
+  mode: 'auto',
+  light: {
+    primaryColor: '#3B82F6',    // Blue for light mode
+    secondaryColor: '#10B981',  // Green for light mode
+  },
+  dark: {
+    primaryColor: '#60A5FA',    // Lighter blue for dark mode
+    secondaryColor: '#34D399',  // Lighter green for dark mode
+  }
 }
 
 function App() {
@@ -23,15 +29,19 @@ function App() {
 ### WidgetTheme Interface
 
 ```typescript
-interface WidgetTheme {
-  mode?: 'light' | 'dark' | 'auto'
+interface ColorPalette {
   primaryColor?: string
   secondaryColor?: string
-  // Optional overrides for specific color roles
   accentColor?: string
   successColor?: string
   warningColor?: string
   errorColor?: string
+}
+
+interface WidgetTheme {
+  mode?: 'light' | 'dark' | 'auto'
+  light?: ColorPalette
+  dark?: ColorPalette
 }
 ```
 
@@ -41,6 +51,11 @@ interface WidgetTheme {
   - `'light'`: Forces light mode
   - `'dark'`: Forces dark mode  
   - `'auto'`: Uses system preference (default)
+- **light**: Color palette for light mode
+- **dark**: Color palette for dark mode
+
+### Color Palette Properties
+
 - **primaryColor**: Main brand color for primary elements (buttons, links, etc.)
 - **secondaryColor**: Secondary brand color for supporting elements
 - **accentColor**: Accent color (defaults to primary if not specified)
@@ -58,11 +73,18 @@ The widget automatically generates comprehensive color palettes from your specif
 
 ## Examples
 
-### Brand Colors
+### Brand Colors with Separate Palettes
 ```tsx
 const brandTheme: WidgetTheme = {
-  primaryColor: '#FF6B6B', // Your brand red
-  secondaryColor: '#4ECDC4' // Your brand teal
+  mode: 'auto',
+  light: {
+    primaryColor: '#FF6B6B', // Your brand red for light mode
+    secondaryColor: '#4ECDC4' // Your brand teal for light mode
+  },
+  dark: {
+    primaryColor: '#FF8E8E', // Lighter red for dark mode
+    secondaryColor: '#6EDDD6' // Lighter teal for dark mode
+  }
 }
 ```
 
@@ -70,20 +92,44 @@ const brandTheme: WidgetTheme = {
 ```tsx
 const customTheme: WidgetTheme = {
   mode: 'dark',
-  primaryColor: '#8B5CF6', // Purple
-  secondaryColor: '#F59E0B', // Amber
-  accentColor: '#EC4899', // Pink
-  successColor: '#10B981', // Green
-  warningColor: '#F59E0B', // Amber
-  errorColor: '#EF4444' // Red
+  light: {
+    primaryColor: '#8B5CF6', // Purple
+    secondaryColor: '#F59E0B', // Amber
+    accentColor: '#EC4899', // Pink
+    successColor: '#10B981', // Green
+    warningColor: '#F59E0B', // Amber
+    errorColor: '#EF4444' // Red
+  },
+  dark: {
+    primaryColor: '#A78BFA', // Lighter purple
+    secondaryColor: '#FBBF24', // Lighter amber
+    accentColor: '#F472B6', // Lighter pink
+    successColor: '#34D399', // Lighter green
+    warningColor: '#FBBF24', // Lighter amber
+    errorColor: '#F87171' // Lighter red
+  }
 }
 ```
 
-### Minimal Theme
+### Light Mode Only
 ```tsx
-const minimalTheme: WidgetTheme = {
-  primaryColor: '#3B82F6' // Only primary color specified
-  // All other colors will use defaults or inherit from primary
+const lightOnlyTheme: WidgetTheme = {
+  mode: 'light',
+  light: {
+    primaryColor: '#3B82F6' // Only light mode colors specified
+    // Dark mode will use default colors
+  }
+}
+```
+
+### Dark Mode Only
+```tsx
+const darkOnlyTheme: WidgetTheme = {
+  mode: 'dark',
+  dark: {
+    primaryColor: '#60A5FA' // Only dark mode colors specified
+    // Light mode will use default colors
+  }
 }
 ```
 
@@ -112,9 +158,17 @@ import { ThemeProvider, WidgetHttpProvider } from '@your-org/haiku-widget'
 function CustomWidget() {
   return (
     <ThemeProvider theme={{ 
-      primaryColor: '#FF6B6B',
-      secondaryColor: '#4ECDC4',
-      accentColor: '#EC4899'
+      mode: 'auto',
+      light: {
+        primaryColor: '#FF6B6B',
+        secondaryColor: '#4ECDC4',
+        accentColor: '#EC4899'
+      },
+      dark: {
+        primaryColor: '#FF8E8E',
+        secondaryColor: '#6EDDD6',
+        accentColor: '#F472B6'
+      }
     }}>
       <WidgetHttpProvider>
         {/* Your custom widget content */}
@@ -141,7 +195,16 @@ The generated color scales can be used in your custom components:
 
 ## Best Practices
 
-1. **Start simple**: Begin with just `primaryColor` and `secondaryColor`
-2. **Test contrast**: The system automatically calculates foreground colors, but test in both light and dark modes
-3. **Use semantic colors**: Leverage `successColor`, `warningColor`, and `errorColor` for better UX
-4. **Consistent branding**: Use your brand colors across all theme properties for cohesive design
+1. **Design for both modes**: Always provide colors for both light and dark modes for the best user experience
+2. **Test contrast**: Ensure your colors have sufficient contrast against the widget's background colors
+3. **Use lighter colors in dark mode**: Generally, use lighter, more saturated versions of your brand colors in dark mode
+4. **Use semantic colors**: Leverage `successColor`, `warningColor`, and `errorColor` for better UX
+5. **Consistent branding**: Use your brand colors across all theme properties for cohesive design
+6. **Start with primary colors**: Begin with just `primaryColor` and `secondaryColor`, then add other colors as needed
+
+## Design Tips
+
+- **Light mode**: Use your standard brand colors
+- **Dark mode**: Use lighter, more saturated versions of your brand colors
+- **Contrast**: Ensure at least 4.5:1 contrast ratio for normal text, 3:1 for large text
+- **Testing**: Always test your colors in both light and dark modes before deploying

@@ -1,5 +1,5 @@
 import chroma from 'chroma-js'
-import { WidgetTheme } from '../types/theme'
+import { WidgetTheme, ColorPalette } from '../types/theme'
 
 /**
  * Validates if a string is a valid color
@@ -55,18 +55,18 @@ export function getContrastColor(backgroundColor: string): string {
 }
 
 /**
- * Generates comprehensive CSS custom properties from theme configuration
+ * Generates CSS custom properties from a color palette
  */
-export function generateThemeCSS(theme: WidgetTheme): Record<string, string> {
+export function generatePaletteCSS(palette: ColorPalette): Record<string, string> {
   const cssVars: Record<string, string> = {}
 
   // Generate primary color palette
-  if (theme.primaryColor && isValidColor(theme.primaryColor)) {
-    const primaryScale = generateColorScale(theme.primaryColor, 'primary')
+  if (palette.primaryColor && isValidColor(palette.primaryColor)) {
+    const primaryScale = generateColorScale(palette.primaryColor, 'primary')
     Object.assign(cssVars, primaryScale)
     
     // Set primary foreground based on contrast
-    cssVars['--primary-foreground'] = getContrastColor(theme.primaryColor)
+    cssVars['--primary-foreground'] = getContrastColor(palette.primaryColor)
     
     // Set related properties
     cssVars['--active'] = cssVars['--primary']
@@ -75,27 +75,27 @@ export function generateThemeCSS(theme: WidgetTheme): Record<string, string> {
   }
 
   // Generate secondary color palette
-  if (theme.secondaryColor && isValidColor(theme.secondaryColor)) {
-    const secondaryScale = generateColorScale(theme.secondaryColor, 'secondary')
+  if (palette.secondaryColor && isValidColor(palette.secondaryColor)) {
+    const secondaryScale = generateColorScale(palette.secondaryColor, 'secondary')
     Object.assign(cssVars, secondaryScale)
     
     // Set secondary foreground based on contrast
-    cssVars['--secondary-foreground'] = getContrastColor(theme.secondaryColor)
+    cssVars['--secondary-foreground'] = getContrastColor(palette.secondaryColor)
   }
 
   // Handle accent color (defaults to primary if not specified)
-  if (theme.accentColor && isValidColor(theme.accentColor)) {
-    const accentScale = generateColorScale(theme.accentColor, 'accent')
+  if (palette.accentColor && isValidColor(palette.accentColor)) {
+    const accentScale = generateColorScale(palette.accentColor, 'accent')
     Object.assign(cssVars, accentScale)
-  } else if (theme.primaryColor && isValidColor(theme.primaryColor)) {
+  } else if (palette.primaryColor && isValidColor(palette.primaryColor)) {
     // Use primary as accent if not specified
     cssVars['--accent'] = cssVars['--primary']
     cssVars['--accent-foreground'] = cssVars['--primary-foreground']
   }
 
   // Handle success color (defaults to green if not specified)
-  if (theme.successColor && isValidColor(theme.successColor)) {
-    const successScale = generateColorScale(theme.successColor, 'success')
+  if (palette.successColor && isValidColor(palette.successColor)) {
+    const successScale = generateColorScale(palette.successColor, 'success')
     Object.assign(cssVars, successScale)
   } else {
     // Default success colors
@@ -104,8 +104,8 @@ export function generateThemeCSS(theme: WidgetTheme): Record<string, string> {
   }
 
   // Handle warning color (defaults to amber if not specified)
-  if (theme.warningColor && isValidColor(theme.warningColor)) {
-    const warningScale = generateColorScale(theme.warningColor, 'warning')
+  if (palette.warningColor && isValidColor(palette.warningColor)) {
+    const warningScale = generateColorScale(palette.warningColor, 'warning')
     Object.assign(cssVars, warningScale)
     cssVars['--warning-bg'] = `${cssVars['--warning']} / 0.1`
     cssVars['--warning-border'] = `${cssVars['--warning']} / 0.2`
@@ -117,8 +117,8 @@ export function generateThemeCSS(theme: WidgetTheme): Record<string, string> {
   }
 
   // Handle error color (defaults to red if not specified)
-  if (theme.errorColor && isValidColor(theme.errorColor)) {
-    const errorScale = generateColorScale(theme.errorColor, 'error')
+  if (palette.errorColor && isValidColor(palette.errorColor)) {
+    const errorScale = generateColorScale(palette.errorColor, 'error')
     Object.assign(cssVars, errorScale)
     cssVars['--failed'] = cssVars['--error']
     cssVars['--slippage-error-bg'] = `${cssVars['--error']} / 0.1`
@@ -129,6 +129,29 @@ export function generateThemeCSS(theme: WidgetTheme): Record<string, string> {
     cssVars['--failed'] = '0 84% 60%'
     cssVars['--slippage-error-bg'] = '0 84% 60% / 0.1'
     cssVars['--slippage-error-text'] = '0 84% 60%'
+  }
+
+  return cssVars
+}
+
+/**
+ * Generates comprehensive CSS custom properties from theme configuration
+ */
+export function generateThemeCSS(theme: WidgetTheme): Record<string, string> {
+  const cssVars: Record<string, string> = {}
+
+  // Generate light mode colors
+  if (theme.light) {
+    const lightVars = generatePaletteCSS(theme.light)
+    Object.assign(cssVars, lightVars)
+  }
+
+  // Generate dark mode colors with -dark suffix
+  if (theme.dark) {
+    const darkVars = generatePaletteCSS(theme.dark)
+    Object.entries(darkVars).forEach(([key, value]) => {
+      cssVars[`${key}-dark`] = value
+    })
   }
 
   return cssVars
@@ -149,42 +172,29 @@ export function applyThemeToElement(element: HTMLElement, theme: WidgetTheme): v
     element.classList.add('dark')
     element.classList.remove('light')
     
-    // Apply dark mode specific overrides for better contrast
-    if (theme.warningColor && isValidColor(theme.warningColor)) {
-      // For dark mode, use a lighter version of the warning color for better contrast
-      const warningColor = chroma(theme.warningColor)
-      const lighterWarning = warningColor.brighten(0.3).saturate(0.1)
-      element.style.setProperty('--warning', colorToHsl(lighterWarning.hex()))
-      element.style.setProperty('--warning-bg', `${colorToHsl(lighterWarning.hex())} / 0.15`)
-      element.style.setProperty('--warning-border', `${colorToHsl(lighterWarning.hex())} / 0.3`)
-    } else {
-      // Even if no user warning color is set, ensure we have good contrast in dark mode
-      element.style.setProperty('--warning', '38 92% 60%')
-      element.style.setProperty('--warning-bg', '38 92% 50% / 0.15')
-      element.style.setProperty('--warning-border', '38 92% 50% / 0.3')
+    // Apply dark mode colors by overriding the base colors with -dark variants
+    if (theme.dark) {
+      const darkVars = generatePaletteCSS(theme.dark)
+      Object.entries(darkVars).forEach(([key, value]) => {
+        element.style.setProperty(key, value)
+      })
     }
   } else if (theme.mode === 'light') {
     element.classList.add('light')
     element.classList.remove('dark')
+    
+    // Apply light mode colors (these are already set as base colors)
+    if (theme.light) {
+      const lightVars = generatePaletteCSS(theme.light)
+      Object.entries(lightVars).forEach(([key, value]) => {
+        element.style.setProperty(key, value)
+      })
+    }
   } else if (theme.mode === 'auto') {
     // Remove both classes to let CSS media queries handle it
     element.classList.remove('dark', 'light')
     
-    // For auto mode, we need to handle both light and dark mode cases
-    // We'll set up CSS custom properties that work with media queries
-    if (theme.warningColor && isValidColor(theme.warningColor)) {
-      const warningColor = chroma(theme.warningColor)
-      const lighterWarning = warningColor.brighten(0.3).saturate(0.1)
-      
-      // Set the base warning color (for light mode)
-      element.style.setProperty('--warning', colorToHsl(warningColor.hex()))
-      element.style.setProperty('--warning-bg', `${colorToHsl(warningColor.hex())} / 0.1`)
-      element.style.setProperty('--warning-border', `${colorToHsl(warningColor.hex())} / 0.2`)
-      
-      // Set dark mode specific colors that will be used by CSS media queries
-      element.style.setProperty('--warning-dark', colorToHsl(lighterWarning.hex()))
-      element.style.setProperty('--warning-bg-dark', `${colorToHsl(lighterWarning.hex())} / 0.15`)
-      element.style.setProperty('--warning-border-dark', `${colorToHsl(lighterWarning.hex())} / 0.3`)
-    }
+    // For auto mode, set up CSS custom properties that work with media queries
+    // The base colors are already set, and -dark variants are available for media queries
   }
 }

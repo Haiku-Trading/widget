@@ -1137,15 +1137,15 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                       >
                         {/* <div className={`w-full`} key={token.iid}> */}
                         {_index === 0 && myTokens.length > 0 && (
-                          <div className="flex items-center gap-1 ml-[10px] text-warning">
+                          <div className="flex items-center gap-1 ml-[10px] text-primary">
                             <Coins className="w-4 h-4" />
-                            <h3 className="text-warning">My assets by {renderSortedName(true)}</h3>
+                            <h3 className="text-primary">My assets by {renderSortedName(true)}</h3>
                           </div>
                         )}
                         {_index === myTokens.length && (
-                          <div className="flex items-center gap-1 ml-[10px] text-warning">
+                          <div className="flex items-center gap-1 ml-[10px] text-primary">
                             <TrendingUp className="w-4 h-4" />
-                            <h3 className="text-warning">Assets by {renderSortedName(false)}</h3>
+                            <h3 className="text-primary">Assets by {renderSortedName(false)}</h3>
                           </div>
                         )}
                         <TokenCard

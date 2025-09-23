@@ -98,8 +98,22 @@ const exampleTokens = {
 function DevApp() {
   // Theme state
   const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'auto'>('dark');
-  const [primaryColor, setPrimaryColor] = useState('#3B82F6');
-  const [secondaryColor, setSecondaryColor] = useState('#10B981');
+  
+  // Light mode colors
+  const [lightPrimaryColor, setLightPrimaryColor] = useState('#3B82F6');
+  const [lightSecondaryColor, setLightSecondaryColor] = useState('#10B981');
+  const [lightAccentColor, setLightAccentColor] = useState('#EC4899');
+  const [lightSuccessColor, setLightSuccessColor] = useState('#10B981');
+  const [lightWarningColor, setLightWarningColor] = useState('#F59E0B');
+  const [lightErrorColor, setLightErrorColor] = useState('#EF4444');
+  
+  // Dark mode colors
+  const [darkPrimaryColor, setDarkPrimaryColor] = useState('#60A5FA');
+  const [darkSecondaryColor, setDarkSecondaryColor] = useState('#34D399');
+  const [darkAccentColor, setDarkAccentColor] = useState('#F472B6');
+  const [darkSuccessColor, setDarkSuccessColor] = useState('#34D399');
+  const [darkWarningColor, setDarkWarningColor] = useState('#FBBF24');
+  const [darkErrorColor, setDarkErrorColor] = useState('#F87171');
 
   // Widget configuration state
   const [hiddenChains, setHiddenChains] = useState<number[]>([]);
@@ -123,13 +137,22 @@ function DevApp() {
   const widgetConfig = useMemo((): WidgetConfig => {
     const theme: WidgetTheme = {
       mode: themeMode,
-      primaryColor: primaryColor,
-      secondaryColor: secondaryColor,
-      // Add some example additional colors to test the new system
-      accentColor: '#EC4899', // Pink
-      successColor: '#10B981', // Green
-      warningColor: '#F59E0B', // Amber
-      errorColor: '#EF4444', // Red
+      light: {
+        primaryColor: lightPrimaryColor,
+        secondaryColor: lightSecondaryColor,
+        accentColor: lightAccentColor,
+        successColor: lightSuccessColor,
+        warningColor: lightWarningColor,
+        errorColor: lightErrorColor,
+      },
+      dark: {
+        primaryColor: darkPrimaryColor,
+        secondaryColor: darkSecondaryColor,
+        accentColor: darkAccentColor,
+        successColor: darkSuccessColor,
+        warningColor: darkWarningColor,
+        errorColor: darkErrorColor,
+      },
     };
 
     return {
@@ -145,8 +168,18 @@ function DevApp() {
     };
   }, [
     themeMode,
-    primaryColor,
-    secondaryColor,
+    lightPrimaryColor,
+    lightSecondaryColor,
+    lightAccentColor,
+    lightSuccessColor,
+    lightWarningColor,
+    lightErrorColor,
+    darkPrimaryColor,
+    darkSecondaryColor,
+    darkAccentColor,
+    darkSuccessColor,
+    darkWarningColor,
+    darkErrorColor,
     hiddenChains,
     hiddenProtocols,
     singleInput,
@@ -220,8 +253,23 @@ function DevApp() {
 
   const resetConfig = () => {
     setThemeMode('dark');
-    setPrimaryColor('#3B82F6');
-    setSecondaryColor('#10B981');
+    
+    // Reset light mode colors
+    setLightPrimaryColor('#3B82F6');
+    setLightSecondaryColor('#10B981');
+    setLightAccentColor('#EC4899');
+    setLightSuccessColor('#10B981');
+    setLightWarningColor('#F59E0B');
+    setLightErrorColor('#EF4444');
+    
+    // Reset dark mode colors
+    setDarkPrimaryColor('#60A5FA');
+    setDarkSecondaryColor('#34D399');
+    setDarkAccentColor('#F472B6');
+    setDarkSuccessColor('#34D399');
+    setDarkWarningColor('#FBBF24');
+    setDarkErrorColor('#F87171');
+    
     setHiddenChains([]);
     setHiddenProtocols([]);
     setSingleInput(false);
@@ -269,7 +317,7 @@ function DevApp() {
                   <div className="bg-white rounded-lg p-4 shadow-sm border">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">Theme</h3>
                     
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Mode
@@ -285,45 +333,137 @@ function DevApp() {
                         </select>
                       </div>
 
+                      {/* Light Mode Colors */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Primary Color
-                        </label>
-                        <div className="flex gap-2">
-                          <input
-                            type="color"
-                            value={primaryColor}
-                            onChange={(e) => setPrimaryColor(e.target.value)}
-                            className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            value={primaryColor}
-                            onChange={(e) => setPrimaryColor(e.target.value)}
-                            className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="#3B82F6"
-                          />
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Light Mode Colors</h4>
+                        <div className="space-y-2">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Primary
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={lightPrimaryColor}
+                                onChange={(e) => setLightPrimaryColor(e.target.value)}
+                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={lightPrimaryColor}
+                                onChange={(e) => setLightPrimaryColor(e.target.value)}
+                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="#3B82F6"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Secondary
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={lightSecondaryColor}
+                                onChange={(e) => setLightSecondaryColor(e.target.value)}
+                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={lightSecondaryColor}
+                                onChange={(e) => setLightSecondaryColor(e.target.value)}
+                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="#10B981"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Accent
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={lightAccentColor}
+                                onChange={(e) => setLightAccentColor(e.target.value)}
+                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={lightAccentColor}
+                                onChange={(e) => setLightAccentColor(e.target.value)}
+                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="#EC4899"
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
 
+                      {/* Dark Mode Colors */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Secondary Color
-                        </label>
-                        <div className="flex gap-2">
-                          <input
-                            type="color"
-                            value={secondaryColor}
-                            onChange={(e) => setSecondaryColor(e.target.value)}
-                            className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            value={secondaryColor}
-                            onChange={(e) => setSecondaryColor(e.target.value)}
-                            className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="#10B981"
-                          />
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Dark Mode Colors</h4>
+                        <div className="space-y-2">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Primary
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={darkPrimaryColor}
+                                onChange={(e) => setDarkPrimaryColor(e.target.value)}
+                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={darkPrimaryColor}
+                                onChange={(e) => setDarkPrimaryColor(e.target.value)}
+                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="#60A5FA"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Secondary
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={darkSecondaryColor}
+                                onChange={(e) => setDarkSecondaryColor(e.target.value)}
+                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={darkSecondaryColor}
+                                onChange={(e) => setDarkSecondaryColor(e.target.value)}
+                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="#34D399"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Accent
+                            </label>
+                            <div className="flex gap-2">
+                              <input
+                                type="color"
+                                value={darkAccentColor}
+                                onChange={(e) => setDarkAccentColor(e.target.value)}
+                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
+                              />
+                              <input
+                                type="text"
+                                value={darkAccentColor}
+                                onChange={(e) => setDarkAccentColor(e.target.value)}
+                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="#F472B6"
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
