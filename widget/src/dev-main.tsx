@@ -104,8 +104,8 @@ function DevApp() {
   // Widget configuration state
   const [hiddenChains, setHiddenChains] = useState<number[]>([]);
   const [hiddenProtocols, setHiddenProtocols] = useState<string[]>([]);
-  const [multiInput, setMultiInput] = useState(false);
-  const [multiOutput, setMultiOutput] = useState(true);
+  const [singleInput, setSingleInput] = useState(false);
+  const [singleOutput, setSingleOutput] = useState(false);
   const [lockedInputs, setLockedInputs] = useState(false);
   const [lockedOutputs, setLockedOutputs] = useState(false);
 
@@ -131,8 +131,8 @@ function DevApp() {
       theme,
       hiddenChains: hiddenChains.length > 0 ? hiddenChains : undefined,
       hiddenProtocols: hiddenProtocols.length > 0 ? hiddenProtocols : undefined,
-      multiInput,
-      multiOutput,
+      multiInput: !singleInput, // Convert single to multi
+      multiOutput: !singleOutput, // Convert single to multi
       lockedInputs,
       lockedOutputs,
       preselectedInputs: Object.keys(preselectedInputs).length > 0 ? preselectedInputs : undefined,
@@ -144,8 +144,8 @@ function DevApp() {
     secondaryColor,
     hiddenChains,
     hiddenProtocols,
-    multiInput,
-    multiOutput,
+    singleInput,
+    singleOutput,
     lockedInputs,
     lockedOutputs,
     preselectedInputs,
@@ -219,8 +219,8 @@ function DevApp() {
     setSecondaryColor('#10B981');
     setHiddenChains([]);
     setHiddenProtocols([]);
-    setMultiInput(false);
-    setMultiOutput(true);
+    setSingleInput(false);
+    setSingleOutput(false);
     setLockedInputs(false);
     setLockedOutputs(false);
     setPreselectedInputs({});
@@ -332,21 +332,21 @@ function DevApp() {
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          checked={multiInput}
-                          onChange={(e) => setMultiInput(e.target.checked)}
+                          checked={singleInput}
+                          onChange={(e) => setSingleInput(e.target.checked)}
                           className="mr-2"
                         />
-                        <span className="text-sm text-gray-700">Multi Input</span>
+                        <span className="text-sm text-gray-700">Single Input</span>
                       </label>
 
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          checked={multiOutput}
-                          onChange={(e) => setMultiOutput(e.target.checked)}
+                          checked={singleOutput}
+                          onChange={(e) => setSingleOutput(e.target.checked)}
                           className="mr-2"
                         />
-                        <span className="text-sm text-gray-700">Multi Output</span>
+                        <span className="text-sm text-gray-700">Single Output</span>
                       </label>
 
                       <label className="flex items-center">

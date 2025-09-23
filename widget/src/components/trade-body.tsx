@@ -226,7 +226,7 @@ export function TradeBody() {
   }
 
   const renderNameButton = () => {
-    if (!inputTokens.length || !outputTokens.length) return 'Select Asset'
+    if (!inputTokens.length || !outputTokens.length) return 'Select Assets'
 
     const hasZeroBalance = inputTokens.some(
       (token) => !BigNumber(inputPositions[token.iid] || 0).isGreaterThan(0),
@@ -553,6 +553,9 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
   const header = `${type === 'input' ? 'From' : 'To'}`
   const isLocked = type === 'input' ? widgetConfig.lockedInputs : widgetConfig.lockedOutputs
   
+  // Determine if multi-selection is allowed based on type and config
+  const isMultiSelectAllowed = type === 'input' ? widgetConfig.multiInput : widgetConfig.multiOutput
+  
   return (
     <div>
       <span className="text-16px-normal mt-3 mb-3">{header}</span>
@@ -577,7 +580,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
                 <Dialog.Trigger>
                   <button className="bg-bg-section rounded-[18px] h-10 px-3 flex items-center gap-2">
                     <p className="text-sm font-medium whitespace-nowrap text-foreground">
-                      Select Asset
+                      {isMultiSelectAllowed ? 'Select Assets' : 'Select Asset'}
                     </p>
                     <RiAddLine size={16} />
                   </button>
