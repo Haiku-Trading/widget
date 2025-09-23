@@ -131,7 +131,7 @@ const ImageGroup = (props: ImageGroupProps) => {
           const isLastItem = index === images.length - 1
           const style = {
             zIndex: images.length - index,
-            '--avatar-color': image.color ?? '#0000003d',
+            '--avatar-color': image.color ?? 'hsl(var(--bg-section) / 0.24)',
           } as React.CSSProperties
 
           return (
@@ -1137,15 +1137,15 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                       >
                         {/* <div className={`w-full`} key={token.iid}> */}
                         {_index === 0 && myTokens.length > 0 && (
-                          <div className="flex items-center gap-1 ml-[10px] text-orange-400">
+                          <div className="flex items-center gap-1 ml-[10px] text-warning">
                             <Coins className="w-4 h-4" />
-                            <h3 className="">My assets by {renderSortedName(true)}</h3>
+                            <h3 className="text-warning">My assets by {renderSortedName(true)}</h3>
                           </div>
                         )}
                         {_index === myTokens.length && (
-                          <div className="flex items-center gap-1 ml-[10px] text-orange-400">
+                          <div className="flex items-center gap-1 ml-[10px] text-warning">
                             <TrendingUp className="w-4 h-4" />
-                            <h3 className="">Assets by {renderSortedName(false)}</h3>
+                            <h3 className="text-warning">Assets by {renderSortedName(false)}</h3>
                           </div>
                         )}
                         <TokenCard
@@ -1322,19 +1322,19 @@ export const TokenCard = memo(function TokenCard({
                   <div className="flex flex-col gap-0.5">
                     <p
                       title={token.name || token.symbol}
-                      className="text-left text-[16px] font-normal"
+                      className="text-left text-[16px] font-normal text-foreground"
                     >
                       {token.name || token.symbol}
                     </p>
                     <div className="flex gap-1 items-center">
                       {Number(balance) > 0 && (
-                        <p className="text-12px-normal opacity-55">
+                        <p className="text-12px-normal opacity-55 text-grey-secondary">
                           {formatTokenAmount(Number(balance), Number(token.priceUSD) || 0)}
                         </p>
                       )}
                       <p
                         title={token.symbol}
-                        className="text-left text-12px-normal opacity-55 truncate max-w-[77px]"
+                        className="text-left text-12px-normal opacity-55 truncate max-w-[77px] text-grey-secondary"
                       >
                         {token.symbol}
                       </p>

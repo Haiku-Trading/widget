@@ -43,7 +43,7 @@ const ImageGroup = memo(({ branches, images }: ImageGroupProps) => {
             className="block relative size-8 rounded-full"
             style={{
               zIndex,
-              backgroundColor: image.color ?? '#0000003d',
+              backgroundColor: image.color ?? 'hsl(var(--bg-section) / 0.24)',
             }}
           >
             <Avatar.Image src={image.src} alt={image.symbol} className="rounded-full" />

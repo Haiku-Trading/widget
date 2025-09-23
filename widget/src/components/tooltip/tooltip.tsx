@@ -2,6 +2,7 @@
 import React, { ReactNode, forwardRef } from 'react'
 import { Tooltip as TooltipPrimitive } from 'radix-ui'
 import { cn } from '../../utils'
+import { useTheme } from '../../providers/theme-provider'
 
 type TooltipContentProps = React.ComponentProps<typeof TooltipPrimitive.Content>
 
@@ -22,6 +23,12 @@ export const Tooltip = forwardRef<HTMLButtonElement, TooltipProps>((props, ref) 
     ...contentProps
   } = props
 
+  // Get the theme container to use as portal container
+  const { theme } = useTheme()
+  const themeContainer = typeof document !== 'undefined' 
+    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+    : null
+
   return (
     <TooltipPrimitive.Root delayDuration={delayDuration}>
       <TooltipPrimitive.Trigger ref={ref} asChild={asChild}>
@@ -29,7 +36,7 @@ export const Tooltip = forwardRef<HTMLButtonElement, TooltipProps>((props, ref) 
       </TooltipPrimitive.Trigger>
 
       {content && (
-        <TooltipPrimitive.Portal>
+        <TooltipPrimitive.Portal container={themeContainer}>
           <TooltipPrimitive.Content
             className={cn(
               'bg-section border border-border rounded-xl text-muted-foreground p-3 text-xs z-[100] max-w-[272px]',

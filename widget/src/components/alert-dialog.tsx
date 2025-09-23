@@ -5,6 +5,7 @@ import { Drawer } from 'vaul'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { cn } from '../utils'
 import { InfoOutlineIcon } from './icons'
+import { useTheme } from '../providers/theme-provider'
 
 
 /* -------------------------------------------------------------------------------------------------
@@ -75,8 +76,14 @@ type PortalProps = {
 
 function AlertPortal({ children, position, container }: PortalProps) {
   if (position === 'fixed') {
+    // Get the theme container to use as portal container
+    const { theme } = useTheme()
+    const themeContainer = typeof document !== 'undefined' 
+      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+      : null
+    
     return (
-      <AlertDialogPrimitive.Portal container={container}>{children}</AlertDialogPrimitive.Portal>
+      <AlertDialogPrimitive.Portal container={container || themeContainer}>{children}</AlertDialogPrimitive.Portal>
     )
   }
   return children
@@ -114,8 +121,15 @@ type DrawerContentProps = ComponentPropsWithoutRef<typeof Drawer.Content>
 
 const DrawerContent = forwardRef<DrawerContentElement, DrawerContentProps>((props, ref) => {
   const { className, ...contentProps } = props
+  
+  // Get the theme container to use as portal container
+  const { theme } = useTheme()
+  const themeContainer = typeof document !== 'undefined' 
+    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+    : null
+  
   return (
-    <Drawer.Portal>
+    <Drawer.Portal container={themeContainer}>
       <Drawer.Overlay className="fixed inset-0 bg-black/80" />
       <Drawer.Content
         className={cn(

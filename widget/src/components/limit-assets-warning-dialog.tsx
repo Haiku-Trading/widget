@@ -42,7 +42,7 @@ export function LimitAssetsWarningDialog({ type, onClose }: LimitAssetsWarningDi
           Warning about selecting more than 4 assets which may cause increased latency and failed transactions.
         </Dialog.Description>
         <div className="p-5 flex gap-4">
-          <div className="size-10 rounded-[10px] bg-[#F8D3D3] inline-flex justify-center items-center flex-shrink-0">
+          <div className="size-10 rounded-[10px] bg-failed/10 inline-flex justify-center items-center flex-shrink-0">
             <svg
               width="24"
               height="25"
@@ -52,7 +52,7 @@ export function LimitAssetsWarningDialog({ type, onClose }: LimitAssetsWarningDi
             >
               <path
                 d="M12 21.5C7.0293 21.5 3 17.4707 3 12.5C3 7.5293 7.0293 3.5 12 3.5C16.9707 3.5 21 7.5293 21 12.5C21 17.4707 16.9707 21.5 12 21.5ZM11.1 15.2V17H12.9V15.2H11.1ZM11.1 8V13.4H12.9V8H11.1Z"
-                fill="#FB3748"
+                fill="hsl(var(--failed))"
               />
             </svg>
           </div>

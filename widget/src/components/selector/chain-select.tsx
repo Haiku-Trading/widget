@@ -2,6 +2,7 @@
 import { TextField } from '../text-field'
 import React from 'react'
 import { useConfig } from 'wagmi'
+import { cn } from '../../utils'
 import { 
   MagniferIcon, 
   Chain1Icon, 
@@ -51,7 +52,7 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
       <div className="overflow-auto flex-1 flex flex-col gap-[2px] p-4 pt-0">
         {/* All chains option */}
         <div
-          className="p-2 mt-[2px] h-[38px] text-sm cursor-pointer rounded-lg flex items-center gap-1 hover:bg-bg-section"
+          className="p-2 mt-[2px] h-[38px] text-sm cursor-pointer rounded-lg flex items-center gap-1 hover:bg-bg-section text-foreground"
           onClick={() => {
             onValueChange('all-chains')
             onValueProtocolChange([''])
@@ -79,15 +80,10 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
                   onValueChange(chain.id.toString())
                   onValueProtocolChange([''])
                 }}
-                className="p-2 text-sm cursor-pointer rounded-lg hover:bg-bg-section flex items-center gap-1 border border-transparent"
-                style={
-                  isSelected
-                    ? {
-                        background: 'rgba(112, 69, 54, 0.1)',
-                        borderColor: 'rgba(112, 69, 54, 0.7)',
-                      }
-                    : undefined
-                }
+                className={cn(
+                  "p-2 text-sm cursor-pointer rounded-lg hover:bg-bg-section flex items-center gap-1 border border-transparent text-foreground",
+                  isSelected && "bg-primary/10 border-primary/70"
+                )}
               >
                 {getChainIcon(chain.id.toString())}
                 {chain.name}

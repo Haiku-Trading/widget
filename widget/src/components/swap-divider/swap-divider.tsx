@@ -7,7 +7,7 @@ type SwapDividerProps = {
 export function SwapDivider({ onSwap }: SwapDividerProps) {
   return (
     <div className="w-full flex items-center flex-col justify-center h-11 relative">
-      <div className="w-full">
+      <div className="w-full text-divider">
         <svg
           width="100%"
           height="3"

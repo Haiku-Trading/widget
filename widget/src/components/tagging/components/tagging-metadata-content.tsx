@@ -45,7 +45,7 @@ const ImageGroup = memo(({ branches, images }: ImageGroupProps) => {
             className="block relative size-8 rounded-full"
             style={{
               zIndex,
-              backgroundColor: image.color ?? '#0000003d',
+              backgroundColor: image.color ?? 'hsl(var(--bg-section) / 0.24)',
             }}
           >
             <div className="rounded-full w-full h-full flex items-center justify-center">
@@ -120,7 +120,7 @@ type ChainItemProps = ImageGroupProps & {
 const ChainItem = ({ chainName, metadata, images, branches }: ChainItemProps) => {
   return (
     <div className="w-[350px] h-[105px] flex flex-col justify-center items-center rounded-lg bg-bg-surface border border-stroke-grey-primary">
-      <div className="w-full h-2/3 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-[#4F4F4F] p-[16px] relative">
+      <div className="w-full h-2/3 rounded-t-lg bg-warning-bg p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
           <Badge variant="success">Network</Badge>
         </div>
@@ -159,7 +159,7 @@ type ProtocolItemProps = ImageGroupProps & {
 const ProtocolItem = ({ protocolName, metadata, images, branches }: ProtocolItemProps) => {
   return (
     <div className="w-[350px] h-[105px] flex flex-col justify-center items-center rounded-lg bg-bg-surface border border-stroke-grey-primary">
-      <div className="w-full h-2/3 rounded-t-lg bg-[rgba(194,65,12,0.1)] dark:bg-[#4F4F4F] p-[16px] relative">
+      <div className="w-full h-2/3 rounded-t-lg bg-warning-bg p-[16px] relative">
         <div className="absolute top-[16px] right-[16px]">
           <Badge variant="success">Protocol</Badge>
         </div>

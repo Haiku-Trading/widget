@@ -3,6 +3,7 @@ import { CheckIcon } from '@radix-ui/react-icons'
 import { ArrowUpDown } from 'lucide-react'
 import { Select } from 'radix-ui'
 import { FilterType } from '../dialog/chosen-token'
+import { useTheme } from '../../providers/theme-provider'
 
 type FilterSelectProps = {
   value: FilterType
@@ -24,6 +25,11 @@ const orderField = [
 ]
 
 export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
+  const { theme } = useTheme()
+  const themeContainer = typeof document !== 'undefined' 
+    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+    : null
+
   const activeSort =
     Object.entries(value).find(
       ([k, v]) => ['default', 'priceChange', 'marketCap', 'volume', 'fdv'].includes(k) && v,
@@ -38,7 +44,7 @@ export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
     >
       <Select.Trigger
         style={{ paddingLeft: '11px', paddingRight: '11px' }}
-        className="w-[38px] items-center justify-center p-2 flex gap-1 rounded-lg bg-bg-section text-sm outline-none duration-150"
+        className="w-[38px] items-center justify-center p-2 flex gap-1 rounded-lg bg-bg-section text-sm outline-none duration-150 text-foreground"
       >
         {/* Filter
         <Select.Icon className="transition-transform duration-200 group-data-[state=open]:rotate-180">
@@ -47,7 +53,7 @@ export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
         <ArrowUpDown className="w-4 h-4" />
       </Select.Trigger>
 
-      <Select.Portal>
+      <Select.Portal container={themeContainer}>
         <Select.Content
           position="popper"
           align="end"
@@ -61,7 +67,7 @@ export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
         >
           <Select.Viewport className="p-2 flex flex-col gap-1">
             {/* Sort by */}
-            <div className="px-2 py-1 text-xs text-orange-400">Sort by</div>
+            <div className="px-2 py-1 text-xs text-warning">Sort by</div>
             {sortByField.map((item) => (
               <Select.Item
                 disabled={item.disabled}
@@ -70,8 +76,8 @@ export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
                 className={cn(
                   'p-2 text-sm rounded-lg',
                   item.disabled
-                    ? 'text-gray-500 cursor-not-allowed'
-                    : 'cursor-pointer data-[highlighted]:bg-bg-section',
+                    ? 'text-grey-disabled cursor-not-allowed'
+                    : 'cursor-pointer data-[highlighted]:bg-bg-section text-foreground',
                 )}
               >
                 <Select.ItemText>
@@ -83,12 +89,12 @@ export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
             ))}
 
             {/* Order */}
-            <div className="px-2 py-1 text-xs text-orange-400 mt-2">Order</div>
+            <div className="px-2 py-1 text-xs text-warning mt-2">Order</div>
             {orderField.map((item) => (
               <Select.Item
                 key={item.value}
                 value={item.value}
-                className="p-2 text-sm cursor-pointer data-[highlighted]:bg-bg-section rounded-lg"
+                className="p-2 text-sm cursor-pointer data-[highlighted]:bg-bg-section rounded-lg text-foreground"
               >
                 <Select.ItemText>
                   <div className="flex gap-1">

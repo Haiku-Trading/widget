@@ -89,7 +89,7 @@ const ImageGroup = (props: ImageGroupProps) => {
           const isLastItem = index === images.length - 1
           const style = {
             zIndex: images.length - index,
-            '--avatar-color': image.color ?? '#0000003d',
+            '--avatar-color': image.color ?? 'hsl(var(--bg-section) / 0.24)',
           } as React.CSSProperties
 
           return (
@@ -614,7 +614,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   persist: () => {},
                 } as unknown as React.ChangeEvent<HTMLInputElement>)
               }
-              className="text-14px-normal text-grey-medium dark:text-[#B2B2B2] whitespace-nowrap cursor-pointer hover:cursor-pointer"
+              className="text-14px-normal text-grey-medium whitespace-nowrap cursor-pointer hover:cursor-pointer"
             >
               Balance:{' '}
               {isShowBalance
@@ -633,10 +633,10 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                 placeholderChar={'\u2000'}
                 // disabled={!BigNumber(balance).abs().isGreaterThan('0')}
                 className={cn(
-                  `text-[32px] font-medium outline-none bg-transparent w-full max-w-[75%] h-7 placeholder:text-[#B2B2B2] dark:placeholder:text-[#B2B2B2]   disabled:text-muted-foreground`,
+                  `text-[32px] font-medium outline-none bg-transparent w-full max-w-[75%] h-7 placeholder:text-grey-secondary disabled:text-muted-foreground`,
                   Number(inputValue) > Math.abs(Number(isTokenView ? balance : usdBalance))
                     ? 'text-failed'
-                    : 'text-[#B2B2B2] dark:text-[#FFFFFF]',
+                    : 'text-grey-secondary',
                 )}
                 placeholder="0.00"
                 value={inputValue === '0' ? '' : inputValue}
@@ -686,10 +686,10 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
               <div
                 style={{ padding: '0px', marginTop: '7px' }}
                 className={cn(
-                  'text-grey-medium dark:text-[#B2B2B2]  text-[32px] font-medium leading-none text-nowrap',
+                  'text-grey-medium text-[32px] font-medium leading-none text-nowrap',
                   formatWithZeroCountSubscript(oppositeOutputValue, 8) === '0'
-                    ? 'text-grey-medium dark:text-[#B2B2B2]'
-                    : 'text-[#B2B2B2] dark:text-[#FFFFFF]',
+                    ? 'text-grey-medium'
+                    : 'text-grey-secondary',
                 )}
               >
                 {formatWithZeroCountSubscript(oppositeOutputValue, 8) === '0'
@@ -701,14 +701,14 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
             )}
 
             <div className="flex items-center gap-1 mt-[5px]">
-              <p className="text-grey-normal dark:text-[#B2B2B2]  text-14px-normal">
+              <p className="text-grey-normal text-14px-normal">
                 {tokenCategory == TokenType.VarDebt && '-'}
                 {isShowBalance ? formatWithZeroCountSubscript(oppositeValue, 8) : '$***'}
               </p>
             </div>
             {minApr && maxApr && (
               <div className="flex items-center gap-1">
-                <p className="text-grey-medium dark:text-[#B2B2B2] text-14px-normal text-nowrap">
+                <p className="text-grey-medium text-14px-normal text-nowrap">
                   {formatAPR(minApr ?? '0', maxApr ?? '0')} APY
                 </p>
               </div>

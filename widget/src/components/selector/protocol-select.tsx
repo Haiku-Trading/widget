@@ -4,7 +4,7 @@ import { TextField } from '../text-field'
 import { SearchX } from 'lucide-react'
 import React from 'react'
 import { MagniferIcon } from '../icons'
-import { getProtocolIcon } from '../../utils'
+import { getProtocolIcon, cn } from '../../utils'
 import { useConfig as useWidgetConfig } from '../../providers/config-provider'
 
 type ProtocolSelectProps = {
@@ -93,15 +93,10 @@ export function ProtocolSelect({ value, onValueChange, chain }: ProtocolSelectPr
                     onValueChange([...value, protocol.symbol])
                   }
                 }}
-                className="p-2 text-sm cursor-pointer rounded-lg hover:bg-bg-section flex items-center gap-1 border border-transparent"
-                style={
-                  isSelected
-                    ? {
-                        background: 'rgba(112, 69, 54, 0.1)',
-                        borderColor: 'rgba(112, 69, 54, 0.7)',
-                      }
-                    : undefined
-                }
+                className={cn(
+                  "p-2 text-sm cursor-pointer rounded-lg hover:bg-bg-section flex items-center gap-1 border border-transparent text-foreground",
+                  isSelected && "bg-primary/10 border-primary/70"
+                )}
               >
                 {getProtocolIcon(protocol.symbol)}
                 {protocol.name}

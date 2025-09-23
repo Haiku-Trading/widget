@@ -464,7 +464,7 @@ export function TradeBody() {
                 <Dialog.Trigger>
                   <Button
                     size="lg"
-                    className="w-full bg-primary rounded-full text-[#F2F2F2]  disabled:bg-disabled"
+                    className="w-full bg-primary rounded-full text-primary-foreground disabled:bg-disabled"
                     disabled={
                       disableWithVarDebt ||
                       !!solveIntentQuery.isFetching ||
@@ -599,7 +599,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
 
           <div className="flex flex-col gap-1">
             {/* <p className="text-xs text-grey-muted mb-1">Bal: $0.00</p> */}
-            <p className="text-3xl font-medium text-[#B2B2B2]">0.00</p>
+            <p className="text-3xl font-medium text-grey-secondary">0.00</p>
             {/* <p className="text-grey-secondary text-xs">≈ $0.00</p> */}
           </div>
         </div>

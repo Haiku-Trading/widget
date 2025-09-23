@@ -109,10 +109,10 @@ type HealthFactorProps = {
 }
 export const HealthFactor = ({ health, maxLTV = 75, currentLTV }: HealthFactorProps) => {
   const segments = [
-    { color: '#D32F2F', min: 0.1, max: 1.0 },
-    { color: '#F59E0B', min: 1.1, max: 1.5 },
-    { color: '#10B981', min: 1.5 },
-    { color: '#3B434E', min: 0, max: 0.5 },
+    { color: 'hsl(var(--failed))', min: 0.1, max: 1.0 },
+    { color: 'hsl(var(--warning))', min: 1.1, max: 1.5 },
+    { color: 'hsl(var(--success))', min: 1.5 },
+    { color: 'hsl(var(--neutral))', min: 0, max: 0.5 },
   ]
   const markerPosition = Math.min((currentLTV / maxLTV) * maxLTV, maxLTV)
   return (

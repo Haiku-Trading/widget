@@ -8,6 +8,7 @@ import { cn } from '../utils'
 import { IconButton } from './icon-button/icon-button'
 import { ScrollArea } from './scroll-area'
 import { CloseIcon } from './icons'
+import { useTheme } from '../providers/theme-provider'
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -72,8 +73,15 @@ const DialogContent = forwardRef<ContentElement, ContentProps>((props, ref) => {
     sideElement,
     ...contentProps
   } = props
+  
+  // Get the theme container to use as portal container
+  const { theme } = useTheme()
+  const themeContainer = typeof document !== 'undefined' 
+    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+    : null
+  
   return (
-    <DialogPrimitive.Portal container={container}>
+    <DialogPrimitive.Portal container={container || themeContainer}>
       <DialogPrimitive.Overlay
         className={cn(
           position === 'fixed' ? 'fixed' : 'absolute',
@@ -113,8 +121,15 @@ type DrawerContentProps = ComponentPropsWithoutRef<typeof Drawer.Content>
 
 const DrawerContent = forwardRef<DrawerContentElement, DrawerContentProps>((props, ref) => {
   const { className, ...contentProps } = props
+  
+  // Get the theme container to use as portal container
+  const { theme } = useTheme()
+  const themeContainer = typeof document !== 'undefined' 
+    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+    : null
+  
   return (
-    <Drawer.Portal>
+    <Drawer.Portal container={themeContainer}>
       <Drawer.Overlay className="fixed inset-0 bg-overlay/50" />
       <Drawer.Content
         className={cn(
