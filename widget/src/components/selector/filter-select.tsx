@@ -67,7 +67,7 @@ export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
         >
           <Select.Viewport className="p-2 flex flex-col gap-1">
             {/* Sort by */}
-            <div className="px-2 py-1 text-xs text-warning">Sort by</div>
+            <div className="px-2 py-1 text-xs text-primary">Sort by</div>
             {sortByField.map((item) => (
               <Select.Item
                 disabled={item.disabled}
@@ -89,7 +89,7 @@ export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
             ))}
 
             {/* Order */}
-            <div className="px-2 py-1 text-xs text-warning mt-2">Order</div>
+            <div className="px-2 py-1 text-xs text-primary mt-2">Order</div>
             {orderField.map((item) => (
               <Select.Item
                 key={item.value}
