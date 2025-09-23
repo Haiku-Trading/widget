@@ -652,15 +652,15 @@ function CollapsedTokensList({
               className="size-[38px] rounded-full ring-[6px] ring-bg-section bg-bg-surface flex items-center justify-center"
               style={{ ['--index' as string]: '3' }}
             >
-              +{tokens.length - 2}
+              <span className="text-foreground">+{tokens.length - 2}</span>
             </li>
           )}
         </ul>
       </div>
 
       <div className="flex flex-col gap-2 text-right">
-        <p className="font-medium text-sm">{label}</p>
-        <p className="font-medium text-lg">{usdFormatter.fullValue.format(usdTotal)}</p>
+        <p className="font-medium text-sm text-foreground">{label}</p>
+        <p className="font-medium text-lg text-foreground">{usdFormatter.fullValue.format(usdTotal)}</p>
       </div>
 
       {isMultiSelectAllowed && !isLocked && (
@@ -668,7 +668,7 @@ function CollapsedTokensList({
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger>
               <button className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary absolute bottom-[-15px] left-1/2 -translate-x-1/2">
-                <RiAddLine size={14} />
+                <RiAddLine size={14} className="text-foreground" />
               </button>
             </Dialog.Trigger>
             <ChosenTokenDialogContent

@@ -27,7 +27,7 @@ export function CardToken(props: CardTokenProps) {
       <div className={cn('flex justify-between gap-4')}>
         <div className="flex flex-col w-full gap-2">
           <div className="flex justify-between items-center gap-1 w-full">
-            <p title={amountToken} className="text-xl max-w-[79%] truncate">
+            <p title={amountToken} className="text-xl max-w-[79%] truncate text-foreground">
               {amountToken}
             </p>
             <div className="flex flex-col items-center justify-center gap-2">

@@ -583,7 +583,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                 disabled={isLocked}
               >
                 <ImageGroup images={images} branches={branches} />
-                <p className="text-sm  font-medium whitespace-nowrap">
+                <p className="text-sm  font-medium whitespace-nowrap text-foreground">
                   {isMobile && symbol.length > 5 ? `${symbol.slice(0, 5)}...` : symbol}
                 </p>
                 <div className="flex items-center justify-center gap-2">
@@ -599,7 +599,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary"
                   onClick={() => setOpen(true)}
                 >
-                  <RiAddLine size={14} />
+                  <RiAddLine size={14} className="text-foreground" />
                 </button>
               )}
             </div>
@@ -614,7 +614,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   persist: () => {},
                 } as unknown as React.ChangeEvent<HTMLInputElement>)
               }
-              className="text-14px-normal text-grey-medium whitespace-nowrap cursor-pointer hover:cursor-pointer"
+              className="text-14px-normal text-grey-secondary whitespace-nowrap cursor-pointer hover:cursor-pointer"
             >
               Balance:{' '}
               {isShowBalance
@@ -701,7 +701,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
             )}
 
             <div className="flex items-center gap-1 mt-[5px]">
-              <p className="text-grey-normal text-14px-normal">
+              <p className="text-grey-secondary text-14px-normal">
                 {tokenCategory == TokenType.VarDebt && '-'}
                 {isShowBalance ? formatWithZeroCountSubscript(oppositeValue, 8) : '$***'}
               </p>

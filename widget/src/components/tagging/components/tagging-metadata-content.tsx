@@ -240,7 +240,7 @@ const TokenItem = ({ tokenName, metadata, images, branches }: TokenItemProps) =>
                       {displayName.length > 15 ? `${displayName.slice(0, 15)}...` : displayName}
                     </span>
                     <div className="w-full text-start font-bold text-wrap flex gap-2 justify-start items-center">
-                      <span className="w-full text-start text-wrap flex gap-2 justify-between items-center">
+                      <span className="w-full text-start text-wrap flex gap-2 justify-between items-center text-foreground">
                         $
                         {priceUSD > 1
                           ? millify(priceUSD)
@@ -267,28 +267,28 @@ const TokenItem = ({ tokenName, metadata, images, branches }: TokenItemProps) =>
           </div>
           <div className="w-full h-1/2 flex justify-center items-center">
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {!metadata?.metadata?.volume24h || metadata?.metadata?.volume24h == 0
                   ? '-'
                   : `$${millify(metadata?.metadata?.volume24h ?? 0)}`}
               </span>
-              <span className="text-xs opacity-50">24H Volume</span>
+              <span className="text-xs opacity-50 text-foreground">24H Volume</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {!metadata?.metadata?.mcap || metadata?.metadata?.mcap == 0
                   ? '-'
                   : `$${millify(metadata?.metadata?.mcap ?? 0)}`}
               </span>
-              <span className="text-xs opacity-50">Market Cap</span>
+              <span className="text-xs opacity-50 text-foreground">Market Cap</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {!metadata?.metadata?.fdv || metadata?.metadata?.fdv == 0
                   ? '-'
                   : `$${millify(metadata?.metadata?.fdv ?? 0)}`}
               </span>
-              <span className="text-xs opacity-50">FDV</span>
+              <span className="text-xs opacity-50 text-foreground">FDV</span>
             </div>
           </div>
         </div>

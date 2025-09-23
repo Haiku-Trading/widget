@@ -195,8 +195,8 @@ export function CollapsedTokensList({
       </div>
 
       <div className="flex items-center gap-2 text-right">
-        <p className="text-16px-normal ">Total</p>
-        <p className="text-24px-normal ">
+        <p className="text-16px-normal text-foreground">Total</p>
+        <p className="text-24px-normal text-foreground">
           {Number.isNaN(Number(usdTotal)) ? '$0' : usdFormatter.fullValue.format(usdTotal)}
         </p>
       </div>
