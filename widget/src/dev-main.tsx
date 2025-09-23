@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import ReactDOM from "react-dom/client";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -52,111 +52,314 @@ const config = getDefaultConfig({
   chains: chains as any,
 });
 
+// Available chains for the playground
+const availableChains = [
+  { id: 1, name: "Ethereum", chain: mainnet },
+  { id: 10, name: "Optimism", chain: optimism },
+  { id: 56, name: "BSC", chain: bsc },
+  { id: 100, name: "Gnosis", chain: gnosis },
+  { id: 137, name: "Polygon", chain: polygon },
+  { id: 42161, name: "Arbitrum", chain: arbitrum },
+  { id: 43114, name: "Avalanche", chain: avalanche },
+  { id: 8453, name: "Base", chain: base },
+  { id: 534352, name: "Scroll", chain: scroll },
+  { id: 80094, name: "Berachain", chain: berachain },
+  { id: 1329, name: "Sei", chain: sei },
+  { id: 480, name: "Worldchain", chain: worldchain },
+  { id: 747474, name: "Katana", chain: katana },
+];
+
+// Available protocols for testing
+const availableProtocols = [
+  "AAVE_V3",
+  "UNISWAP_V3",
+  "SUSHISWAP",
+  "CURVE",
+  "BALANCER",
+  "COMPOUND",
+  "MAKER",
+  "LIDO",
+];
+
 function DevApp() {
-  // Define different theme examples for testing
-  const defaultTheme: WidgetTheme = {
-    mode: "dark",
+  // Theme state
+  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'auto'>('dark');
+  const [primaryColor, setPrimaryColor] = useState('#3B82F6');
+  const [secondaryColor, setSecondaryColor] = useState('#10B981');
+
+  // Widget configuration state
+  const [hiddenChains, setHiddenChains] = useState<number[]>([]);
+  const [hiddenProtocols, setHiddenProtocols] = useState<string[]>([]);
+  const [multiInput, setMultiInput] = useState(false);
+  const [multiOutput, setMultiOutput] = useState(true);
+  const [lockedInputs, setLockedInputs] = useState(false);
+  const [lockedOutputs, setLockedOutputs] = useState(false);
+
+  // Preselected tokens state
+  const [preselectedInputs, setPreselectedInputs] = useState<Record<string, number>>({});
+  const [preselectedOutputs, setPreselectedOutputs] = useState<Record<string, number>>({});
+
+  // Computed widget config
+  const widgetConfig = useMemo((): WidgetConfig => {
+    const theme: WidgetTheme = {
+      mode: themeMode,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
+    };
+
+    return {
+      theme,
+      hiddenChains: hiddenChains.length > 0 ? hiddenChains : undefined,
+      hiddenProtocols: hiddenProtocols.length > 0 ? hiddenProtocols : undefined,
+      multiInput,
+      multiOutput,
+      lockedInputs,
+      lockedOutputs,
+      preselectedInputs: Object.keys(preselectedInputs).length > 0 ? preselectedInputs : undefined,
+      preselectedOutputs: Object.keys(preselectedOutputs).length > 0 ? preselectedOutputs : undefined,
+    };
+  }, [
+    themeMode,
+    primaryColor,
+    secondaryColor,
+    hiddenChains,
+    hiddenProtocols,
+    multiInput,
+    multiOutput,
+    lockedInputs,
+    lockedOutputs,
+    preselectedInputs,
+    preselectedOutputs,
+  ]);
+
+  // Helper functions
+  const toggleHiddenChain = (chainId: number) => {
+    setHiddenChains(prev => 
+      prev.includes(chainId) 
+        ? prev.filter(id => id !== chainId)
+        : [...prev, chainId]
+    );
   };
 
-  const blueTheme: WidgetTheme = {
-    mode: "light",
-    primaryColor: "#3B82F6", // Blue
-    secondaryColor: "#10B981", // Green
+  const toggleHiddenProtocol = (protocol: string) => {
+    setHiddenProtocols(prev => 
+      prev.includes(protocol) 
+        ? prev.filter(p => p !== protocol)
+        : [...prev, protocol]
+    );
   };
 
-  const purpleTheme: WidgetTheme = {
-    mode: "dark",
-    primaryColor: "#8B5CF6", // Purple
-    secondaryColor: "#F59E0B", // Amber
-  };
-
-  const redTheme: WidgetTheme = {
-    mode: "auto",
-    primaryColor: "#EF4444", // Red
-    secondaryColor: "#06B6D4", // Cyan
-  };
-
-  const orangeTheme: WidgetTheme = {
-    primaryColor: "#F97316", // Orange
-    secondaryColor: "#84CC16", // Lime
+  const resetConfig = () => {
+    setThemeMode('dark');
+    setPrimaryColor('#3B82F6');
+    setSecondaryColor('#10B981');
+    setHiddenChains([]);
+    setHiddenProtocols([]);
+    setMultiInput(false);
+    setMultiOutput(true);
+    setLockedInputs(false);
+    setLockedOutputs(false);
+    setPreselectedInputs({});
+    setPreselectedOutputs({});
   };
 
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <div className="min-h-screen bg-gray-50 p-8">
-            <div className="mx-auto">
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                  Haiku Swap Widget - Development
+          <div className="min-h-screen bg-gray-50 p-4">
+            <div className="max-w-7xl mx-auto">
+              {/* Header */}
+              <div className="text-center mb-6">
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  Haiku Swap Widget Playground
                 </h1>
-                <p className="text-xl text-gray-600 mb-6">
-                  Live reloading enabled! Make changes to see them instantly.
+                <p className="text-lg text-gray-600 mb-4">
+                  Experiment with real-time configuration changes
                 </p>
-                <div className="flex justify-center mb-8">
+                <div className="flex justify-center mb-4">
                   <ConnectButton />
                 </div>
+                <button
+                  onClick={resetConfig}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium border border-red-600"
+                  style={{ backgroundColor: '#ef4444', color: 'white' }}
+                >
+                  Reset All Settings
+                </button>
               </div>
 
-              {/* Theme Examples */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Default Theme */}
-                <div className="bg-white rounded-lg p-6 shadow-sm border">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Default Theme
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Original widget styling
-                  </p>
-                  <div className="border rounded-lg p-4">
-                    <HaikuWidget config={{ theme: defaultTheme }} />
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Controls Panel */}
+                <div className="lg:col-span-1 space-y-6">
+                  {/* Theme Controls */}
+                  <div className="bg-white rounded-lg p-4 shadow-sm border">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Theme</h3>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Mode
+                        </label>
+                        <select
+                          value={themeMode}
+                          onChange={(e) => setThemeMode(e.target.value as 'light' | 'dark' | 'auto')}
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                          <option value="light">Light</option>
+                          <option value="dark">Dark</option>
+                          <option value="auto">Auto</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Primary Color
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={primaryColor}
+                            onChange={(e) => setPrimaryColor(e.target.value)}
+                            className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={primaryColor}
+                            onChange={(e) => setPrimaryColor(e.target.value)}
+                            className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="#3B82F6"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Secondary Color
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="color"
+                            value={secondaryColor}
+                            onChange={(e) => setSecondaryColor(e.target.value)}
+                            className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={secondaryColor}
+                            onChange={(e) => setSecondaryColor(e.target.value)}
+                            className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="#10B981"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Widget Behavior Controls */}
+                  <div className="bg-white rounded-lg p-4 shadow-sm border">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Widget Behavior</h3>
+                    
+                    <div className="space-y-3">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={multiInput}
+                          onChange={(e) => setMultiInput(e.target.checked)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm text-gray-700">Multi Input</span>
+                      </label>
+
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={multiOutput}
+                          onChange={(e) => setMultiOutput(e.target.checked)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm text-gray-700">Multi Output</span>
+                      </label>
+
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={lockedInputs}
+                          onChange={(e) => setLockedInputs(e.target.checked)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm text-gray-700">Locked Inputs</span>
+                      </label>
+
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={lockedOutputs}
+                          onChange={(e) => setLockedOutputs(e.target.checked)}
+                          className="mr-2"
+                        />
+                        <span className="text-sm text-gray-700">Locked Outputs</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Hidden Chains */}
+                  <div className="bg-white rounded-lg p-4 shadow-sm border">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Hidden Chains</h3>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {availableChains.map((chain) => (
+                        <label key={chain.id} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={hiddenChains.includes(chain.id)}
+                            onChange={() => toggleHiddenChain(chain.id)}
+                            className="mr-2"
+                          />
+                          <span className="text-sm text-gray-700">
+                            {chain.name} ({chain.id})
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Hidden Protocols */}
+                  <div className="bg-white rounded-lg p-4 shadow-sm border">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Hidden Protocols</h3>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {availableProtocols.map((protocol) => (
+                        <label key={protocol} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={hiddenProtocols.includes(protocol)}
+                            onChange={() => toggleHiddenProtocol(protocol)}
+                            className="mr-2"
+                          />
+                          <span className="text-sm text-gray-700">{protocol}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Config JSON */}
+                  <div className="bg-white rounded-lg p-4 shadow-sm border">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Current Config</h3>
+                    <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-40">
+                      {JSON.stringify(widgetConfig, null, 2)}
+                    </pre>
                   </div>
                 </div>
 
-                {/* Hidden Chains Example */}
-                <div className="bg-white rounded-lg p-6 shadow-sm border">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Hidden Chains & Protocols
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Hiding Ethereum (1), Optimism (10), and AAVE_V3 protocol
-                  </p>
-                  <div className="border rounded-lg p-4">
-                    <HaikuWidget
-                      config={{
-                        theme: blueTheme,
-                        hiddenChains: [1, 10], // Hide Ethereum and Optimism
-                        hiddenProtocols: ["AAVE_V3"], // Hide Aave V3
-                        multiInput: false,
-                        multiOutput: true,
-                        // preselectedInputs: {
-                        //   "uni:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 1,
-                        // },
-                        // preselectedOutputs: {
-                        //   "base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 0.4,
-                        //   "base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": 0.6,
-                        // },
-                        // lockedInputs: true,
-                        // lockedOutputs: true,
-                      }}
-                    />
+                {/* Widget Display */}
+                <div className="lg:col-span-2">
+                  <div className="bg-white rounded-lg p-6 shadow-sm border">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Live Widget Preview
+                    </h3>
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                      <HaikuWidget config={widgetConfig} />
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Development Info */}
-              <div className="mt-8 bg-blue-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                  Development Mode
-                </h3>
-                <div className="text-sm text-blue-800 space-y-1">
-                  <p>✅ Hot Module Replacement (HMR) enabled</p>
-                  <p>✅ Fast rebuilds with Vite</p>
-                  <p>✅ Source maps for debugging</p>
-                  <p>✅ Multiple theme examples</p>
-                  <p>✅ Hidden chains & protocols configuration</p>
-                  <p>✅ Wallet connection ready</p>
                 </div>
               </div>
             </div>
