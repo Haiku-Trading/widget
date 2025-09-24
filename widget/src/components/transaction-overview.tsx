@@ -53,18 +53,13 @@ export function TransactionOverview({ isClassicModal = true }: ITransactionOverv
   const networkFee = useMemo(() => {
     if (resetTransactionData || !solveIntentQuery.data) return 0
 
-    return solveIntentQuery.data.fees.reduce((total, fee) => {
-      return total + parseFloat(fee.amount)
-    }, 0)
+    return parseFloat(solveIntentQuery.data.gas.usd)
   }, [resetTransactionData, solveIntentQuery.data])
 
   const txnOverview = [
     {
       label: 'Transaction fee',
-      value: [
-        `${tokenFormatter.fullValue(4).format(fee.total)} ETH`,
-        usdFormatter.fullValue.format(fee.usd),
-      ],
+      value: usdFormatter.fullValue.format(fee.usd),
       tooltip:
         'Fees are collected from each input token to support platform functionality and are included in this quote. Eligible $veHKU holders may receive discounts. ',
     },

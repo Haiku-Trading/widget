@@ -225,6 +225,10 @@ export type SolveIntentResponse = {
     unsignedTypeV4Digest: ExecutionBatchDetailsType
   }
   isEIP7702: boolean
+  gas: {
+    amount: number
+    usd: string
+  }
 }
 
 export type MigrateVaultPayload = {
