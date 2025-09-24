@@ -396,7 +396,6 @@ export function TradeBody() {
 
           {inputTokens.length > 0 && (
             <SelectedTokensHeader
-              // label="I want to start here"
               label="From"
               isExpanded={inputExpand}
               onToggle={() => setInputExpand(!inputExpand)}
@@ -431,7 +430,6 @@ export function TradeBody() {
 
             {outputTokens.length > 0 && (
               <SelectedTokensHeader
-                // label="I want to end here"
                 label="To"
                 isExpanded={outputExpand}
                 onToggle={() => setOutputExpand(!outputExpand)}
@@ -464,7 +462,7 @@ export function TradeBody() {
                 <Dialog.Trigger>
                   <Button
                     size="lg"
-                    className="w-full bg-primary rounded-full text-primary-foreground disabled:bg-disabled"
+                    className="w-full bg-primary rounded-full text-white disabled:bg-disabled disabled:text-white"
                     disabled={
                       disableWithVarDebt ||
                       !!solveIntentQuery.isFetching ||

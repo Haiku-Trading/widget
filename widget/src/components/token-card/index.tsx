@@ -614,7 +614,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   persist: () => {},
                 } as unknown as React.ChangeEvent<HTMLInputElement>)
               }
-              className="text-14px-normal text-grey-secondary whitespace-nowrap cursor-pointer hover:cursor-pointer"
+              className="text-sm text-grey-secondary whitespace-nowrap cursor-pointer hover:cursor-pointer"
             >
               Balance:{' '}
               {isShowBalance

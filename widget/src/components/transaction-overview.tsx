@@ -126,14 +126,14 @@ function TransactionOverViewItem({ label, value, tooltip, href }: TransactionOve
         }
       >
         <div className="flex items-center justify-center">
-          <span className="text-14px-normal flex items-center text-foreground">{label}</span>
+          <span className="text-sm flex items-center text-foreground">{label}</span>
           <button>
             <InfoIcon className="size-[18px] text-muted-foreground" />
           </button>
         </div>
       </Popup>
 
-      <span className="text-14px-medium text-foreground">
+      <span className="text-sm text-foreground">
         {!Array.isArray(value) ? (
           value
         ) : (

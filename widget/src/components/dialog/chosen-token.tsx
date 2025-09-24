@@ -1328,13 +1328,13 @@ export const TokenCard = memo(function TokenCard({
                     </p>
                     <div className="flex gap-1 items-center">
                       {Number(balance) > 0 && (
-                        <p className="text-12px-normal opacity-55 text-grey-secondary">
+                        <p className="text-xs opacity-55 text-grey-secondary">
                           {formatTokenAmount(Number(balance), Number(token.priceUSD) || 0)}
                         </p>
                       )}
                       <p
                         title={token.symbol}
-                        className="text-left text-12px-normal opacity-55 truncate max-w-[77px] text-grey-secondary"
+                        className="text-left text-xs opacity-55 truncate max-w-[77px] text-grey-secondary"
                       >
                         {token.symbol}
                       </p>
@@ -1370,7 +1370,7 @@ export const TokenCard = memo(function TokenCard({
                   </p> */}
                   {token.type === TokenType.Token ? (
                     <p
-                      className={`flex items-center gap-1 text-12px-normal ${
+                      className={`flex items-center gap-1 text-xs ${
                         Number.parseFloat(token.metadata?.pricePercentage24h ?? '0') < 0
                           ? 'text-failed'
                           : 'text-success'
@@ -1384,7 +1384,7 @@ export const TokenCard = memo(function TokenCard({
                       {Number.parseFloat(token.metadata?.pricePercentage24h ?? '0').toFixed(2)}%
                     </p>
                   ) : (
-                    <p className="text-12px-normal text-grey-secondary">
+                    <p className="text-xs text-grey-secondary">
                       APY{' '}
                       {token?.apy !== undefined
                         ? `${parseFloat(token.apy ?? 0).toFixed(2)}%`
