@@ -582,7 +582,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
                     <p className="text-sm font-medium whitespace-nowrap text-foreground">
                       {isMultiSelectAllowed ? 'Select Assets' : 'Select Asset'}
                     </p>
-                    <RiAddLine size={16} />
+                    <RiAddLine size={16} className="text-foreground" />
                   </button>
                 </Dialog.Trigger>
                 <ChosenTokenDialogContent

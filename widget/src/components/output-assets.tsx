@@ -198,7 +198,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
         <Dialog.Root open={open} onOpenChange={setOpen}>
           {/* <Dialog.Trigger>
             <button className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary absolute bottom-[-15px] left-1/2 -translate-x-1/2">
-              <RiAddLine size={14} />
+              <RiAddLine size={14} className="text-foreground" />
             </button>
           </Dialog.Trigger> */}
           <ChosenTokenDialogContent

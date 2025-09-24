@@ -257,7 +257,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                     {selectedValue === 'Custom' ? (
                       <TextField
                         placeholder="1.5%"
-                        containerClassName="cursor-pointer text-xs rounded-lg flex items-center justify-center h-8 disabled:opacity-50 disabled:cursor-not-allowed w-[58px]"
+                        containerClassName="cursor-pointer text-xs rounded-lg flex items-center justify-center h-8 disabled:opacity-50 disabled:cursor-not-allowed w-[58px] bg-bg-surface"
                         onChange={handleCustomInputChange}
                         value={customValue}
                         type="text"

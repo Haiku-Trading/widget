@@ -28,7 +28,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, re
     <>
       <div
         className={cn(
-          'border border-border bg-white rounded-lg overflow-hidden w-auto flex items-center',
+          'border border-border bg-bg-surface rounded-lg overflow-hidden w-auto flex items-center',
           containerClassName,
           feedback === 'error' && 'border-failed',
           feedback === 'success' && 'border-success',
@@ -43,7 +43,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, re
         )}
         <input
           className={cn(
-            'p-2 m-0 placeholder:text-grey-secondary outline-none w-full text-foreground text-sm',
+            'p-2 m-0 placeholder:text-grey-secondary outline-none w-full text-grey-primary text-sm',
             className,
           )}
           ref={ref}

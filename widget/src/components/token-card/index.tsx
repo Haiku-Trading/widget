@@ -771,7 +771,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
             className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary absolute bottom-[-15px] left-1/2 -translate-x-1/2"
             onClick={() => setOpen(true)}
           >
-            <RiAddLine size={14} />
+            <RiAddLine size={14} className="text-foreground" />
           </button>
         )} */}
       </div>
