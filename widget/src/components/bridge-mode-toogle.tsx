@@ -31,8 +31,8 @@ const BridgeModeToogle = () => {
                 <button
                     onClick={() => setBridgeMode(BridgeMode.Fast)}
                     className={`flex-1 p-1 rounded-lg text-sm font-medium transition-all duration-200 ${bridgeMode === BridgeMode.Fast
-                        ? 'bg-primary text-white shadow-md'
-                        : 'bg-filled text-gray-600 hover:bg-gray-200'
+                        ? 'bg-bg-section border border-primary text-primary shadow-md'
+                        : 'bg-bg-section text-foreground hover:bg-bg-section/75 border border-transparent'
                         }`}
                 >
                     Fast
@@ -40,8 +40,8 @@ const BridgeModeToogle = () => {
                 <button
                     onClick={() => setBridgeMode(BridgeMode.Economy)}
                     className={`flex-1 p-1 rounded-lg text-sm font-medium transition-all duration-200 ${bridgeMode === BridgeMode.Economy
-                        ? 'bg-primary text-white shadow-md'
-                        : 'bg-filled text-gray-600 hover:bg-gray-200'
+                        ? 'bg-bg-section border border-primary text-primary shadow-md'
+                        : 'bg-bg-section text-foreground hover:bg-bg-section/75 border border-transparent'
                         }`}
                 >
                     Economy
