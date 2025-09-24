@@ -2,13 +2,14 @@
 
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { Dialog as DialogPrimitive } from 'radix-ui'
-import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef, useEffect, useRef } from 'react'
 import { Drawer } from 'vaul'
 import { cn } from '../utils'
 import { IconButton } from './icon-button/icon-button'
 import { ScrollArea } from './scroll-area'
 import { CloseIcon } from './icons'
 import { useTheme } from '../providers/theme-provider'
+import { applyThemeToElement } from '../utils/theme-utils'
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -64,6 +65,25 @@ export const Content = forwardRef<ContentElement, ContentProps>((props, ref) => 
 
 Content.displayName = 'DialogContent'
 
+// Theme wrapper component for portaled content
+const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Apply theme to the wrapper when theme changes
+  useEffect(() => {
+    if (wrapperRef.current) {
+      applyThemeToElement(wrapperRef.current, theme)
+    }
+  }, [theme])
+
+  return (
+    <div ref={wrapperRef} className="haiku-widget-theme-container">
+      {children}
+    </div>
+  )
+}
+
 const DialogContent = forwardRef<ContentElement, ContentProps>((props, ref) => {
   const {
     className,
@@ -74,42 +94,42 @@ const DialogContent = forwardRef<ContentElement, ContentProps>((props, ref) => {
     ...contentProps
   } = props
   
-  // Get the theme container to use as portal container
-  const { theme } = useTheme()
-  const themeContainer = typeof document !== 'undefined' 
-    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-    : null
+  // Always portal to document body to ensure modal is always visible
+  // regardless of parent container constraints
+  const portalContainer = container || (typeof document !== 'undefined' ? document.body : null)
   
   return (
-    <DialogPrimitive.Portal container={container || themeContainer}>
-      <DialogPrimitive.Overlay
-        className={cn(
-          position === 'fixed' ? 'fixed' : 'absolute',
-          'inset-0 bg-overlay/35 flex items-center justify-center px-4',
-          'data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide',
-          overlayClassName,
-        )}
-      >
-        <div className="flex gap-[8px]">
-          {sideElement && sideElement}
-          <DialogPrimitive.Content
-            className={cn(
-              'bg-bg-primary border border-border rounded-2xl max-h-[95vh] flex flex-col',
-              'data-[state=open]:animate-dialogShow data-[state=closed]:animate-dialogHide',
-              className,
-            )}
-            {...contentProps}
-            onPointerDownOutside={(event) => {
-              contentProps.onPointerDownOutside?.(event)
-              const target = event.target as HTMLElement
-              if (target.closest('[data-sonner-toast]')) {
-                event.preventDefault()
-              }
-            }}
-            ref={ref}
-          />
-        </div>
-      </DialogPrimitive.Overlay>
+    <DialogPrimitive.Portal container={portalContainer}>
+      <ThemeWrapper>
+        <DialogPrimitive.Overlay
+          className={cn(
+            position === 'fixed' ? 'fixed' : 'absolute',
+            'inset-0 bg-overlay/35 flex items-center justify-center px-4',
+            'data-[state=open]:animate-overlayShow data-[state=closed]:animate-overlayHide',
+            overlayClassName,
+          )}
+        >
+          <div className="flex gap-[8px]">
+            {sideElement && sideElement}
+            <DialogPrimitive.Content
+              className={cn(
+                'bg-bg-primary border border-border rounded-2xl max-h-[95vh] flex flex-col',
+                'data-[state=open]:animate-dialogShow data-[state=closed]:animate-dialogHide',
+                className,
+              )}
+              {...contentProps}
+              onPointerDownOutside={(event) => {
+                contentProps.onPointerDownOutside?.(event)
+                const target = event.target as HTMLElement
+                if (target.closest('[data-sonner-toast]')) {
+                  event.preventDefault()
+                }
+              }}
+              ref={ref}
+            />
+          </div>
+        </DialogPrimitive.Overlay>
+      </ThemeWrapper>
     </DialogPrimitive.Portal>
   )
 })
@@ -122,31 +142,31 @@ type DrawerContentProps = ComponentPropsWithoutRef<typeof Drawer.Content>
 const DrawerContent = forwardRef<DrawerContentElement, DrawerContentProps>((props, ref) => {
   const { className, ...contentProps } = props
   
-  // Get the theme container to use as portal container
-  const { theme } = useTheme()
-  const themeContainer = typeof document !== 'undefined' 
-    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-    : null
+  // Always portal to document body to ensure modal is always visible
+  // regardless of parent container constraints
+  const portalContainer = typeof document !== 'undefined' ? document.body : null
   
   return (
-    <Drawer.Portal container={themeContainer}>
-      <Drawer.Overlay className="fixed inset-0 bg-overlay/50" />
-      <Drawer.Content
-        className={cn(
-          'bg-bg-primary flex flex-col rounded-t-2xl max-h-[96%] h-full fixed bottom-0 left-0 right-0 border border-border',
-          className,
-        )}
-        {...contentProps}
-        onOpenAutoFocus={(event) => {
-          contentProps.onOpenAutoFocus?.(event)
-          event.preventDefault()
-        }}
-        // style={{
-        //   ...contentProps.style,
-        //   touchAction: 'none',
-        // }}
-        ref={ref}
-      />
+    <Drawer.Portal container={portalContainer}>
+      <ThemeWrapper>
+        <Drawer.Overlay className="fixed inset-0 bg-overlay/50" />
+        <Drawer.Content
+          className={cn(
+            'bg-bg-primary flex flex-col rounded-t-2xl max-h-[96%] h-full fixed bottom-0 left-0 right-0 border border-border',
+            className,
+          )}
+          {...contentProps}
+          onOpenAutoFocus={(event) => {
+            contentProps.onOpenAutoFocus?.(event)
+            event.preventDefault()
+          }}
+          // style={{
+          //   ...contentProps.style,
+          //   touchAction: 'none',
+          // }}
+          ref={ref}
+        />
+      </ThemeWrapper>
     </Drawer.Portal>
   )
 })

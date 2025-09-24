@@ -489,7 +489,7 @@ export function TradeBody() {
                   </Button>
                 </Dialog.Trigger>
                 <Dialog.Content
-                  position="absolute"
+                  position="fixed"
                   // className="max-w-[440px] w-full z-50"
                   className="w-[440px]"
                   overlayClassName="bg-overlay/75"

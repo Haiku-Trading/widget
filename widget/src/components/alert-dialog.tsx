@@ -1,11 +1,12 @@
 
-import { ComponentProps, ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef } from 'react'
+import { ComponentProps, ComponentPropsWithoutRef, ElementRef, ReactNode, forwardRef, useEffect, useRef } from 'react'
 import { Dialog as AlertDialogPrimitive } from 'radix-ui'
 import { Drawer } from 'vaul'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { cn } from '../utils'
 import { InfoOutlineIcon } from './icons'
 import { useTheme } from '../providers/theme-provider'
+import { applyThemeToElement } from '../utils/theme-utils'
 
 
 /* -------------------------------------------------------------------------------------------------
@@ -64,6 +65,25 @@ export const Content = forwardRef<ContentElement, ContentProps>((props, ref) => 
 
 Content.displayName = 'AlertDialogContent'
 
+// Theme wrapper component for portaled content
+const AlertThemeWrapper = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Apply theme to the wrapper when theme changes
+  useEffect(() => {
+    if (wrapperRef.current) {
+      applyThemeToElement(wrapperRef.current, theme)
+    }
+  }, [theme])
+
+  return (
+    <div ref={wrapperRef} className="haiku-widget-theme-container">
+      {children}
+    </div>
+  )
+}
+
 /* -------------------------------------------------------------------------------------------------
  * Portal
  * -----------------------------------------------------------------------------------------------*/
@@ -76,14 +96,14 @@ type PortalProps = {
 
 function AlertPortal({ children, position, container }: PortalProps) {
   if (position === 'fixed') {
-    // Get the theme container to use as portal container
-    const { theme } = useTheme()
-    const themeContainer = typeof document !== 'undefined' 
-      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-      : null
+    // Always portal to document body to ensure modal is always visible
+    // regardless of parent container constraints
+    const portalContainer = container || (typeof document !== 'undefined' ? document.body : null)
     
     return (
-      <AlertDialogPrimitive.Portal container={container || themeContainer}>{children}</AlertDialogPrimitive.Portal>
+      <AlertDialogPrimitive.Portal container={portalContainer}>
+        <AlertThemeWrapper>{children}</AlertThemeWrapper>
+      </AlertDialogPrimitive.Portal>
     )
   }
   return children
@@ -122,23 +142,23 @@ type DrawerContentProps = ComponentPropsWithoutRef<typeof Drawer.Content>
 const DrawerContent = forwardRef<DrawerContentElement, DrawerContentProps>((props, ref) => {
   const { className, ...contentProps } = props
   
-  // Get the theme container to use as portal container
-  const { theme } = useTheme()
-  const themeContainer = typeof document !== 'undefined' 
-    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-    : null
+  // Always portal to document body to ensure modal is always visible
+  // regardless of parent container constraints
+  const portalContainer = typeof document !== 'undefined' ? document.body : null
   
   return (
-    <Drawer.Portal container={themeContainer}>
-      <Drawer.Overlay className="fixed inset-0 bg-black/80" />
-      <Drawer.Content
-        className={cn(
-          'bg-bg-primary flex flex-col rounded-t-[20px] h-[96%] fixed bottom-0 left-0 right-0 border border-border',
-          className,
-        )}
-        {...contentProps}
-        ref={ref}
-      />
+    <Drawer.Portal container={portalContainer}>
+      <AlertThemeWrapper>
+        <Drawer.Overlay className="fixed inset-0 bg-black/80" />
+        <Drawer.Content
+          className={cn(
+            'bg-bg-primary flex flex-col rounded-t-[20px] h-[96%] fixed bottom-0 left-0 right-0 border border-border',
+            className,
+          )}
+          {...contentProps}
+          ref={ref}
+        />
+      </AlertThemeWrapper>
     </Drawer.Portal>
   )
 })
