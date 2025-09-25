@@ -26,11 +26,77 @@ The widget will use your existing wallet connection and share the same state wit
 ## Installation
 
 ```bash
-npm install @haiku/swap-widget
+npm install @haiku-trade/widget
 # or
-yarn add @haiku/swap-widget
+yarn add @haiku-trade/widget
 # or
-pnpm add @haiku/swap-widget
+pnpm add @haiku-trade/widget
+```
+
+## Peer Dependencies
+
+The widget requires the following peer dependencies to be installed in your project:
+
+### Required Dependencies
+
+```bash
+npm install react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0
+```
+
+### Optional Dependencies (Recommended)
+
+For the best experience, we also recommend installing RainbowKit for wallet connection UI:
+
+```bash
+npm install @rainbow-me/rainbowkit@>=2.0.0
+```
+
+### Complete Installation
+
+Here's the complete installation command for a new project:
+
+```bash
+# Install the widget and all required dependencies
+npm install @haiku-trade/widget react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0 @rainbow-me/rainbowkit@>=2.0.0
+
+# Or with yarn
+yarn add @haiku-trade/widget react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0 @rainbow-me/rainbowkit@>=2.0.0
+
+# Or with pnpm
+pnpm add @haiku-trade/widget react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0 @rainbow-me/rainbowkit@>=2.0.0
+```
+
+### Quick Setup for Different Project Types
+
+#### New React Project (Create React App, Vite, Next.js)
+```bash
+# Create a new project
+npx create-react-app my-defi-app
+# or
+npm create vite@latest my-defi-app -- --template react-ts
+# or
+npx create-next-app@latest my-defi-app
+
+# Install the widget and dependencies
+npm install @haiku-trade/widget wagmi@^2.0.0 @tanstack/react-query@^5.0.0 @rainbow-me/rainbowkit@^2.0.0
+```
+
+#### Existing React Project
+```bash
+# Check if you already have the required dependencies
+npm list react wagmi @tanstack/react-query
+
+# Install missing dependencies
+npm install wagmi@^2.0.0 @tanstack/react-query@^5.0.0 @rainbow-me/rainbowkit@^2.0.0
+
+# Install the widget
+npm install @haiku-trade/widget
+```
+
+#### TypeScript Project
+Make sure you have TypeScript types installed:
+```bash
+npm install --save-dev @types/react @types/react-dom
 ```
 
 ## Quick Start
@@ -38,7 +104,7 @@ pnpm add @haiku/swap-widget
 The Haiku Swap Widget requires WagmiProvider and QueryClientProvider from the host application. Here's how to set it up:
 
 ```tsx
-import { HaikuWidget } from '@haiku/swap-widget';
+import { HaikuWidget } from '@haiku-trade/widget';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
@@ -88,7 +154,7 @@ The widget accepts a `config` prop with the following options:
 The widget supports custom theming through the `theme` prop:
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget'
+import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget'
 
 const config: WidgetConfig = {
   theme: {
@@ -150,7 +216,7 @@ The widget supports the following blockchain networks:
 ### Basic Usage with Configuration
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget';
+import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget';
 
 function App() {
   const config: WidgetConfig = {
@@ -178,7 +244,7 @@ function App() {
 ### Preselected Tokens
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget';
+import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget';
 
 function App() {
   const config: WidgetConfig = {
@@ -199,7 +265,7 @@ function App() {
 ### Chain-Restricted Configuration
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget';
+import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget';
 
 function App() {
   const config: WidgetConfig = {

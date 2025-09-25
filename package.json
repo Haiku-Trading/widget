@@ -4,11 +4,11 @@
   "description": "Haiku Swap Widget - Development Workspace",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @haiku/swap-widget-demo dev",
-    "build:widget": "pnpm --filter @haiku/swap-widget build",
-    "build:app": "pnpm --filter @haiku/swap-widget-demo build",
+    "dev": "pnpm --filter @haiku-trade/widget-demo dev",
+    "build:widget": "pnpm --filter @haiku-trade/widget build",
+    "build:app": "pnpm --filter @haiku-trade/widget-demo build",
     "build": "pnpm build:widget && pnpm build:app",
-    "clean": "pnpm --filter @haiku/swap-widget clean && pnpm --filter @haiku/swap-widget-demo clean",
+    "clean": "pnpm --filter @haiku-trade/widget clean && pnpm --filter @haiku-trade/widget-demo clean",
     "install:all": "pnpm install"
   },
   "devDependencies": {

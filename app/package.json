@@ -1,5 +1,5 @@
 {
-  "name": "@haiku/swap-widget-demo",
+  "name": "@haiku-trade/widget-demo",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@haiku/swap-widget": "workspace:*",
+    "@haiku-trade/widget": "workspace:*",
     "@rainbow-me/rainbowkit": "^2.0.0",
     "@tanstack/react-query": "^5.85.8",
     "clsx": "^2.0.0",

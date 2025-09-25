@@ -17,7 +17,7 @@ interface WidgetConfig {
 ### Basic Configuration
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget'
+import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget'
 
 const config: WidgetConfig = {
   theme: {

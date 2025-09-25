@@ -16,11 +16,11 @@ A powerful, customizable swap widget for DeFi applications that allows users to 
 ## Installation
 
 ```bash
-npm install @haiku/swap-widget
+npm install @haiku-trade/widget
 # or
-yarn add @haiku/swap-widget
+yarn add @haiku-trade/widget
 # or
-pnpm add @haiku/swap-widget
+pnpm add @haiku-trade/widget
 ```
 
 ## Quick Start
@@ -28,7 +28,7 @@ pnpm add @haiku/swap-widget
 ### Basic Usage
 
 ```tsx
-import { HaikuWidget } from '@haiku/swap-widget';
+import { HaikuWidget } from '@haiku-trade/widget';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
@@ -63,7 +63,7 @@ function App() {
 ### Advanced Configuration
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget';
+import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget';
 
 function App() {
   const config: WidgetConfig = {

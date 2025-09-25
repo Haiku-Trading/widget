@@ -17,7 +17,7 @@ importers:
 
   app:
     dependencies:
-      '@haiku/swap-widget':
+      '@haiku-trade/widget':
         specifier: workspace:*
         version: link:../widget
       '@rainbow-me/rainbowkit':

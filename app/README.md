@@ -6,7 +6,7 @@ This is a demo application for testing the Haiku Swap Widget locally during deve
 
 - **Wallet Connection**: Connect with MetaMask, WalletConnect, Coinbase Wallet, and more via RainbowKit
 - **Multi-Chain Support**: Test the widget across 18+ supported networks
-- **Real Widget Integration**: Uses the actual `@haiku/swap-widget` package from the workspace
+- **Real Widget Integration**: Uses the actual `@haiku-trade/widget` package from the workspace
 - **Local Development**: Perfect for testing widget functionality before publishing to npm
 
 ## Getting Started
@@ -45,7 +45,7 @@ This is a demo application for testing the Haiku Swap Widget locally during deve
 - **Framework**: Vite + React + TypeScript
 - **Styling**: Tailwind CSS
 - **Wallet Connection**: RainbowKit + wagmi
-- **Widget**: Local `@haiku/swap-widget` package
+- **Widget**: Local `@haiku-trade/widget` package
 
 ## Notes
 

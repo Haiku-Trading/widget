@@ -17,8 +17,8 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider, getDefaultConfig, ConnectButton } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
-import { HaikuWidget, WidgetTheme } from '@haiku/swap-widget'
-// import '@haiku/swap-widget/dist/styles.css'
+import { HaikuWidget, WidgetTheme } from '@haiku-trade/widget'
+// import '@haiku-trade/widget/dist/styles.css'
 
 
 // Create a client
