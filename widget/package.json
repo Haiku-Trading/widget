@@ -1,7 +1,7 @@
 {
   "name": "@haiku-trade/widget",
-  "version": "0.0.2",
-  "description": "Haiku web3 Widget",
+  "version": "0.0.3",
+  "description": "Haiku Widget",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
