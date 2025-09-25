@@ -1,13 +1,15 @@
 {
-  "name": "@haiku/swap-widget",
-  "version": "1.0.0",
-  "description": "Haiku Swap Widget - A standalone trading interface widget",
+  "name": "@haiku-trade/widget",
+  "version": "0.0.2",
+  "description": "Haiku web3 Widget",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
+    "dist/index.esm.js",
+    "dist/index.d.ts",
+    "dist/styles.css",
     "README.md"
   ],
   "scripts": {
@@ -123,9 +125,9 @@
     "blockchain"
   ],
   "author": "Haiku",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haiku/swap-widget"
+    "url": "https://github.com/Haiku-Trading/widget"
   }
 }

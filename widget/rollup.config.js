@@ -59,7 +59,7 @@ export default [
     output: {
       dir: 'dist',
       format: 'esm',
-      sourcemap: true,
+      sourcemap: isDev,
       entryFileNames: 'index.esm.js',
       chunkFileNames: '[name]-[hash].js',
       assetFileNames: '[name].[ext]',
@@ -128,11 +128,11 @@ export default [
       }),
       typescript({ 
         tsconfig: './tsconfig.json',
-        sourceMap: true,
-        inlineSources: true,
+        sourceMap: !isDev,
+        inlineSources: false,
       }),
       // Only use terser in production
-      ...(isDev ? [] : [terser({ sourceMap: true })]),
+      ...(isDev ? [] : [terser({ sourceMap: false })]),
     ],
   },
   {
@@ -152,6 +152,6 @@ export default [
       'text-mask-addons/dist/createNumberMask',
       'ethers5'
     ],
-    plugins: [dts()],
+    plugins: [dts({ sourceMap: false })],
   },
 ];

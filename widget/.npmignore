@@ -1,0 +1,65 @@
+# Source files
+src/
+*.ts
+*.tsx
+*.js
+*.jsx
+
+# Development files
+*.config.js
+*.config.ts
+vite.config.ts
+rollup.config.js
+postcss.config.js
+tailwind.config.js
+tsconfig.json
+tsconfig.node.json
+
+# Development dependencies
+node_modules/
+.env*
+
+# Build artifacts we don't want
+dist/*.map
+dist/**/*.map
+dist/**/*.d.ts.map
+
+# Exclude chunk directories (only include the main entry files)
+dist/components/
+dist/constants/
+dist/enums/
+dist/hooks/
+dist/models/
+dist/providers/
+dist/queries/
+dist/services/
+dist/stores/
+dist/types/
+dist/utils/
+dist/dev-main.d.ts
+dist/dev-main.d.ts.map
+
+# Large assets that shouldn't be in the package
+dist/*.gif
+dist/haiku-bird.gif
+
+# Development files
+index.html
+Procfile
+dev-main.tsx
+
+# Git and other
+.git/
+.gitignore
+*.log
+.DS_Store
+
+# Test files
+__tests__/
+*.test.*
+*.spec.*
+
+# Documentation (keep README.md)
+CHANGELOG.md
+THEMING.md
+CONFIGURATION.md

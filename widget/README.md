@@ -1,14 +1,17 @@
 # Haiku Swap Widget
 
-A standalone, embeddable trading interface widget that can be integrated into any website or application.
+A powerful, self-contained swap widget for DeFi applications that allows users to easily integrate Haiku's swap functionality into their websites. The widget includes built-in HTTP client and session management.
 
 ## Features
 
-- **Wallet Integration**: Built-in support for multiple wallets via RainbowKit
-- **Multi-Chain Support**: Supports Ethereum, Polygon, Arbitrum, Optimism, Base, ...
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Customizable**: Configurable themes, colors, and supported chains
-- **Host Integration**: Designed to work with your existing WagmiProvider and QueryClientProvider
+- 🚀 **Easy Integration** - Simple React component that works with any React application
+- 🎨 **Fully Customizable** - Theme support with light/dark modes and custom colors
+- 🔗 **Multi-Chain Support** - Works with 13+ supported networks including Ethereum, Berachain, and more
+- 💰 **Smart Routing** - Advanced swap routing for optimal prices and gas efficiency
+- 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
+- 🔒 **Secure** - Built with security best practices and wallet integration
+- ⚡ **Self-Contained** - Includes HTTP client and session management
+- 🎛️ **Flexible Configuration** - Control chains, protocols, and token preselection
 
 ## Requirements
 
@@ -16,6 +19,7 @@ The widget requires the following providers to be set up in your host applicatio
 
 - **WagmiProvider**: For wallet connection and blockchain interactions
 - **QueryClientProvider**: For React Query state management
+- **RainbowKitProvider**: For wallet connection UI (optional but recommended)
 
 The widget will use your existing wallet connection and share the same state with your application.
 
@@ -34,18 +38,29 @@ pnpm add @haiku/swap-widget
 The Haiku Swap Widget requires WagmiProvider and QueryClientProvider from the host application. Here's how to set it up:
 
 ```tsx
-import { WagmiProvider } from 'wagmi'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { HaikuWidget } from '@haiku/swap-widget'
-import { config } from './wagmi-config' // Your wagmi configuration
+import { HaikuWidget } from '@haiku/swap-widget';
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { mainnet, arbitrum, base } from 'wagmi/chains';
 
-const queryClient = new QueryClient()
+// Create your Wagmi configuration
+const wagmiConfig = getDefaultConfig({
+  appName: "My DeFi App",
+  projectId: "your-walletconnect-project-id", // Get from https://cloud.walletconnect.com
+  chains: [mainnet, arbitrum, base],
+});
+
+// Create your query client
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <HaikuWidget />
+        <RainbowKitProvider>
+          <HaikuWidget />
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
@@ -54,25 +69,43 @@ function App() {
 
 ## Configuration Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `theme` | `WidgetTheme` | `{}` | Theme configuration object |
+The widget accepts a `config` prop with the following options:
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `theme` | `WidgetTheme` | `undefined` | Theme configuration with light/dark modes |
+| `hiddenChains` | `number[]` | `undefined` | Array of chain IDs to hide from selection |
+| `hiddenProtocols` | `string[]` | `undefined` | Array of protocol names to hide |
+| `multiInput` | `boolean` | `true` | Allow multiple input tokens |
+| `multiOutput` | `boolean` | `true` | Allow multiple output tokens |
+| `lockedInputs` | `boolean` | `false` | Lock input tokens from being changed |
+| `lockedOutputs` | `boolean` | `false` | Lock output tokens from being changed |
+| `preselectedInputs` | `Record<string, number>` | `undefined` | Pre-selected input tokens with amounts |
+| `preselectedOutputs` | `Record<string, number>` | `undefined` | Pre-selected output tokens with weights |
 
 ### Theme Configuration
 
 The widget supports custom theming through the `theme` prop:
 
 ```tsx
-import { HaikuWidget, WidgetTheme } from '@haiku/swap-widget'
+import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget'
 
-const theme: WidgetTheme = {
-  mode: 'light', // 'light' | 'dark' | 'auto'
-  primaryColor: '#3B82F6', // Hex color for primary elements
-  secondaryColor: '#10B981' // Hex color for secondary elements
+const config: WidgetConfig = {
+  theme: {
+    mode: 'dark', // 'light' | 'dark' | 'auto'
+    light: {
+      primaryColor: '#3B82F6', // Hex color for primary elements
+      secondaryColor: '#10B981' // Hex color for secondary elements
+    },
+    dark: {
+      primaryColor: '#60A5FA', // Hex color for primary elements in dark mode
+      secondaryColor: '#34D399' // Hex color for secondary elements in dark mode
+    }
+  }
 }
 
 function App() {
-  return <HaikuWidget theme={theme} />
+  return <HaikuWidget config={config} />
 }
 ```
 
@@ -82,86 +115,124 @@ function App() {
   - `'light'`: Forces light mode
   - `'dark'`: Forces dark mode  
   - `'auto'`: Uses system preference (default)
+- **`light`**: Color palette for light mode
+- **`dark`**: Color palette for dark mode
+
+#### Color Palette Properties
+
 - **`primaryColor`**: Hex color for primary elements (buttons, links, etc.)
 - **`secondaryColor`**: Hex color for secondary elements
-
-#### Theme Examples
-
-```tsx
-// Brand colors
-const brandTheme: WidgetTheme = {
-  primaryColor: '#FF6B6B', // Your brand red
-  secondaryColor: '#4ECDC4' // Your brand teal
-}
-
-// Dark mode
-const darkTheme: WidgetTheme = {
-  mode: 'dark',
-  primaryColor: '#8B5CF6', // Purple
-  secondaryColor: '#F59E0B' // Amber
-}
-
-// Auto mode (follows system preference)
-const autoTheme: WidgetTheme = {
-  mode: 'auto',
-  primaryColor: '#EF4444' // Red
-}
-```
+- **`accentColor`**: Hex color for accent elements
+- **`successColor`**: Hex color for success states
+- **`warningColor`**: Hex color for warning states
+- **`errorColor`**: Hex color for error states
 
 ## Supported Chains
 
-- **1** - Ethereum Mainnet
-- **137** - Polygon
-- **42161** - Arbitrum One
-- **10** - Optimism
-- **8453** - Base
+The widget supports the following blockchain networks:
 
-## Advanced Usage
+- **Ethereum** (Chain ID: 1)
+- **Optimism** (Chain ID: 10)
+- **BSC** (Chain ID: 56)
+- **Gnosis** (Chain ID: 100)
+- **Polygon** (Chain ID: 137)
+- **Arbitrum** (Chain ID: 42161)
+- **Avalanche** (Chain ID: 43114)
+- **Base** (Chain ID: 8453)
+- **Scroll** (Chain ID: 534352)
+- **Berachain** (Chain ID: 80094)
+- **Sei** (Chain ID: 1329)
+- **Worldchain** (Chain ID: 480)
+- **Katana** (Chain ID: 747474)
 
-### Custom Provider Setup
+## Examples
 
-If you need more control over the configuration, you can use the provider directly:
+### Basic Usage with Configuration
 
 ```tsx
-import { HaikuProvider } from '@haiku/swap-widget';
+import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget';
 
 function App() {
-  const config = {
-    apiKey: 'your-api-key',
-    baseUrl: 'https://custom-api.haiku.trade/v1',
-    theme: 'dark',
-    supportedChains: [1, 137, 42161]
+  const config: WidgetConfig = {
+    theme: {
+      mode: 'dark',
+      light: {
+        primaryColor: '#3B82F6',
+        secondaryColor: '#8B5CF6',
+      },
+      dark: {
+        primaryColor: '#60A5FA',
+        secondaryColor: '#A78BFA',
+      },
+    },
+    hiddenChains: [56, 137], // Hide BSC and Polygon
+    hiddenProtocols: ['SUSHISWAP', 'CURVE'],
+    multiInput: true,
+    multiOutput: true,
   };
 
-  return (
-    <HaikuProvider config={config}>
-      {/* Your custom components */}
-    </HaikuProvider>
-  );
+  return <HaikuWidget config={config} />;
 }
 ```
 
-### Styling
+### Preselected Tokens
 
-The widget uses Tailwind CSS classes and CSS custom properties for theming. You can override styles by targeting the widget's CSS classes or by using the `customStyles` prop.
+```tsx
+import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget';
+
+function App() {
+  const config: WidgetConfig = {
+    preselectedInputs: {
+      'base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee': 1.0, // 1 ETH on Base
+    },
+    preselectedOutputs: {
+      'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': 0.6, // 60% USDC
+      'base:0x4200000000000000000000000000000000000006': 0.4, // 40% WETH
+    },
+    lockedInputs: true, // Prevent changing input tokens
+  };
+
+  return <HaikuWidget config={config} />;
+}
+```
+
+### Chain-Restricted Configuration
+
+```tsx
+import { HaikuWidget, WidgetConfig } from '@haiku/swap-widget';
+
+function App() {
+  const config: WidgetConfig = {
+    hiddenChains: [1, 137, 42161], // Hide Ethereum, Polygon, Arbitrum
+    hiddenProtocols: ['SUSHISWAP', 'CURVE'],
+    multiInput: false, // Single input only
+    multiOutput: true,
+  };
+
+  return <HaikuWidget config={config} />;
+}
+```
+
+## What's Included
+
+The widget is self-contained and includes:
+
+- **Trading Interface**: Complete swap interface with token selection
+- **HTTP Client**: Built-in API client for Haiku's swap infrastructure
+- **Session Management**: Internal session and trade state management
+- **Multi-chain Support**: Works with any chains configured in your Wagmi setup
+- **Wallet Integration**: Uses your existing Wagmi/RainbowKit setup
+- **Theme System**: Light/dark mode support with custom color palettes
+
+## What You Need to Provide
+
+- **Wagmi Provider**: For wallet connection and blockchain interactions
+- **QueryClient Provider**: For data fetching and caching
+- **RainbowKit Provider**: For wallet connection UI (optional but recommended)
 
 ## Development
 
-### Building the Widget
 
-```bash
-# Install dependencies
-npm install
-
-# Build for production
-npm run build
-
-# Development mode with watch
-npm run dev
-
-# Type checking
-npm run type-check
-```
 
 ### Project Structure
 
@@ -184,9 +255,7 @@ src/
 - Safari 14+
 - Edge 90+
 
-## License
 
-MIT
 
 ## Support
 
