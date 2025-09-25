@@ -9,19 +9,33 @@ import url from '@rollup/plugin-url';
 import replace from '@rollup/plugin-replace';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const isDev = process.env.NODE_ENV === 'development';
 
-// Load environment configuration
-const envFile = isDev ? 'env.development.json' : 'env.production.json';
-const envPath = join(__dirname, envFile);
-const envConfig = JSON.parse(readFileSync(envPath, 'utf8'));
+// Environment configuration - hardcoded for public deployment
+const envConfig = {
+  TURN_OFF_EIP7702: "false",
+  VERCEL_ENV: isDev ? "development" : "production",
+  API_BASE_URL: isDev ? "http://localhost:5001/v1" : "https://api.haiku.trade/v1",
+  SOLVER_PERMIT2_TYPE: "permit",
+  ARB_RPC: "https://arb1.arbitrum.io/rpc",
+  BASE_RPC: "https://mainnet.base.org",
+  BERACHAIN_RPC: "https://artio.rpc.berachain.com",
+  BSC_RPC: "https://bsc-dataseed.binance.org",
+  SONIC_RPC: "https://rpc.soniclabs.com",
+  ETH_RPC: "https://eth.llamarpc.com",
+  HYPE_RPC: "https://rpc.hyperliquid.xyz",
+  POLYGON_RPC: "https://polygon-rpc.com",
+  OPTIMISM_RPC: "https://mainnet.optimism.io",
+  UNICHAIN_RPC: "https://rpc.unichain.org",
+  SEI_RPC: "https://evm-rpc.sei-apis.com",
+  AVAX_RPC: "https://api.avax.network/ext/bc/C/rpc",
+  GNOSIS_RPC: "https://rpc.gnosischain.com",
+  SCROLL_RPC: "https://rpc.scroll.io",
+  KATANA_RPC: "https://rpc.katana.roninchain.com",
+  APECHAIN_RPC: "https://rpc.apechain.io",
+  WORLDCHAIN_RPC: "https://worldchain-rpc.com"
+};
 
 export default [
   {
