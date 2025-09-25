@@ -14,7 +14,3 @@ export { Card } from './components/card'
 // Type exports
 export type { WidgetTheme } from './types/theme'
 export type { WidgetConfig } from './types/config'
-
-// Example exports
-export { StandaloneExample, MinimalExample } from './examples/standalone-example'
-export { ThemedExample } from './examples/themed-example'
