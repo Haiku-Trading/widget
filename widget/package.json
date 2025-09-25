@@ -13,10 +13,12 @@
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "build:dev": "NODE_ENV=development rollup -c",
+    "build:playground": "NODE_ENV=production vite build",
     "dev": "NODE_ENV=development rollup -c -w",
     "dev:vite": "vite",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "start": "vite preview --port $PORT --host 0.0.0.0"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5.0.0",

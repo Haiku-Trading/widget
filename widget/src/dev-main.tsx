@@ -101,19 +101,9 @@ function DevApp() {
   
   // Light mode colors
   const [lightPrimaryColor, setLightPrimaryColor] = useState('#3B82F6');
-  const [lightSecondaryColor, setLightSecondaryColor] = useState('#10B981');
-  const [lightAccentColor, setLightAccentColor] = useState('#EC4899');
-  const [lightSuccessColor, setLightSuccessColor] = useState('#10B981');
-  const [lightWarningColor, setLightWarningColor] = useState('#F59E0B');
-  const [lightErrorColor, setLightErrorColor] = useState('#EF4444');
   
   // Dark mode colors
   const [darkPrimaryColor, setDarkPrimaryColor] = useState('#60A5FA');
-  const [darkSecondaryColor, setDarkSecondaryColor] = useState('#34D399');
-  const [darkAccentColor, setDarkAccentColor] = useState('#F472B6');
-  const [darkSuccessColor, setDarkSuccessColor] = useState('#34D399');
-  const [darkWarningColor, setDarkWarningColor] = useState('#FBBF24');
-  const [darkErrorColor, setDarkErrorColor] = useState('#F87171');
 
   // Widget configuration state
   const [hiddenChains, setHiddenChains] = useState<number[]>([]);
@@ -139,19 +129,9 @@ function DevApp() {
       mode: themeMode,
       light: {
         primaryColor: lightPrimaryColor,
-        secondaryColor: lightSecondaryColor,
-        accentColor: lightAccentColor,
-        successColor: lightSuccessColor,
-        warningColor: lightWarningColor,
-        errorColor: lightErrorColor,
       },
       dark: {
         primaryColor: darkPrimaryColor,
-        secondaryColor: darkSecondaryColor,
-        accentColor: darkAccentColor,
-        successColor: darkSuccessColor,
-        warningColor: darkWarningColor,
-        errorColor: darkErrorColor,
       },
     };
 
@@ -169,17 +149,7 @@ function DevApp() {
   }, [
     themeMode,
     lightPrimaryColor,
-    lightSecondaryColor,
-    lightAccentColor,
-    lightSuccessColor,
-    lightWarningColor,
-    lightErrorColor,
     darkPrimaryColor,
-    darkSecondaryColor,
-    darkAccentColor,
-    darkSuccessColor,
-    darkWarningColor,
-    darkErrorColor,
     hiddenChains,
     hiddenProtocols,
     singleInput,
@@ -256,19 +226,9 @@ function DevApp() {
     
     // Reset light mode colors
     setLightPrimaryColor('#3B82F6');
-    setLightSecondaryColor('#10B981');
-    setLightAccentColor('#EC4899');
-    setLightSuccessColor('#10B981');
-    setLightWarningColor('#F59E0B');
-    setLightErrorColor('#EF4444');
     
     // Reset dark mode colors
     setDarkPrimaryColor('#60A5FA');
-    setDarkSecondaryColor('#34D399');
-    setDarkAccentColor('#F472B6');
-    setDarkSuccessColor('#34D399');
-    setDarkWarningColor('#FBBF24');
-    setDarkErrorColor('#F87171');
     
     setHiddenChains([]);
     setHiddenProtocols([]);
@@ -284,6 +244,34 @@ function DevApp() {
     setNewOutputWeight('');
   };
 
+  const copyConfig = async () => {
+    try {
+      const configString = JSON.stringify(widgetConfig, null, 2);
+      await navigator.clipboard.writeText(configString);
+      
+      // Show success feedback
+      const button = document.getElementById('copy-config-btn');
+      if (button) {
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        button.style.backgroundColor = '#10b981';
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.backgroundColor = '#3b82f6';
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Failed to copy config:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = JSON.stringify(widgetConfig, null, 2);
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+  };
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
@@ -295,19 +283,32 @@ function DevApp() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
                   Haiku Swap Widget Playground
                 </h1>
-                <p className="text-lg text-gray-600 mb-4">
+                <p className="text-lg text-gray-600 mb-2">
                   Experiment with real-time configuration changes
+                </p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Customize your widget settings and copy the generated config to use in your application
                 </p>
                 <div className="flex justify-center mb-4">
                   <ConnectButton />
                 </div>
-                <button
-                  onClick={resetConfig}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium border border-red-600"
-                  style={{ backgroundColor: '#ef4444', color: 'white' }}
-                >
-                  Reset All Settings
-                </button>
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={copyConfig}
+                    id="copy-config-btn"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium border border-blue-600"
+                    style={{ backgroundColor: '#3b82f6', color: 'white' }}
+                  >
+                    Copy Config
+                  </button>
+                  <button
+                    onClick={resetConfig}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium border border-red-600"
+                    style={{ backgroundColor: '#ef4444', color: 'white' }}
+                  >
+                    Reset All Settings
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -357,46 +358,6 @@ function DevApp() {
                               />
                             </div>
                           </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
-                              Secondary
-                            </label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={lightSecondaryColor}
-                                onChange={(e) => setLightSecondaryColor(e.target.value)}
-                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={lightSecondaryColor}
-                                onChange={(e) => setLightSecondaryColor(e.target.value)}
-                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="#10B981"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
-                              Accent
-                            </label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={lightAccentColor}
-                                onChange={(e) => setLightAccentColor(e.target.value)}
-                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={lightAccentColor}
-                                onChange={(e) => setLightAccentColor(e.target.value)}
-                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="#EC4899"
-                              />
-                            </div>
-                          </div>
                         </div>
                       </div>
 
@@ -421,46 +382,6 @@ function DevApp() {
                                 onChange={(e) => setDarkPrimaryColor(e.target.value)}
                                 className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="#60A5FA"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
-                              Secondary
-                            </label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={darkSecondaryColor}
-                                onChange={(e) => setDarkSecondaryColor(e.target.value)}
-                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={darkSecondaryColor}
-                                onChange={(e) => setDarkSecondaryColor(e.target.value)}
-                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="#34D399"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
-                              Accent
-                            </label>
-                            <div className="flex gap-2">
-                              <input
-                                type="color"
-                                value={darkAccentColor}
-                                onChange={(e) => setDarkAccentColor(e.target.value)}
-                                className="w-10 h-8 border border-gray-300 rounded cursor-pointer"
-                              />
-                              <input
-                                type="text"
-                                value={darkAccentColor}
-                                onChange={(e) => setDarkAccentColor(e.target.value)}
-                                className="flex-1 p-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="#F472B6"
                               />
                             </div>
                           </div>
@@ -714,10 +635,22 @@ function DevApp() {
 
                   {/* Config JSON */}
                   <div className="bg-white rounded-lg p-4 shadow-sm border">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Current Config</h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-lg font-semibold text-gray-900">Current Config</h3>
+                      <button
+                        onClick={copyConfig}
+                        className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors"
+                        style={{ backgroundColor: '#3b82f6', color: 'white' }}
+                      >
+                        Copy
+                      </button>
+                    </div>
                     <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-40">
                       {JSON.stringify(widgetConfig, null, 2)}
                     </pre>
+                    <div className="mt-2 text-xs text-gray-600">
+                      💡 Copy this config and paste it into your <code className="bg-gray-200 px-1 rounded">config</code> prop
+                    </div>
                   </div>
                 </div>
 

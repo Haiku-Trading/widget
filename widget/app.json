@@ -1,0 +1,25 @@
+{
+  "name": "Haiku Swap Widget Playground",
+  "description": "Interactive playground for customizing Haiku Swap Widget configuration",
+  "repository": "https://github.com/haiku/swap-widget",
+  "logo": "https://raw.githubusercontent.com/haiku/swap-widget/main/logo.png",
+  "keywords": ["haiku", "swap", "widget", "defi", "trading", "ethereum", "blockchain"],
+  "stack": "heroku-22",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  }
+}
