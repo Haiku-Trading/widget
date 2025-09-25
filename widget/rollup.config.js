@@ -68,15 +68,7 @@ export default [
       'react', 
       'react-dom', 
       'wagmi',
-      'viem',
-      '@tanstack/react-query',
-      '@wagmi/core',
-      '@ark-ui/react',
-      'match-sorter',
-      '@radix-ui/react-use-controllable-state',
-      'react-text-mask',
-      'text-mask-addons/dist/createNumberMask',
-      'ethers5'
+      '@tanstack/react-query'
     ],
     onwarn(warning, warn) {
       // Suppress "use client" directive warnings
@@ -142,15 +134,7 @@ export default [
       'react', 
       'react-dom', 
       'wagmi',
-      'viem',
-      '@tanstack/react-query',
-      '@wagmi/core',
-      '@ark-ui/react',
-      'match-sorter',
-      '@radix-ui/react-use-controllable-state',
-      'react-text-mask',
-      'text-mask-addons/dist/createNumberMask',
-      'ethers5'
+      '@tanstack/react-query'
     ],
     plugins: [dts({ sourceMap: false })],
   },
