@@ -217,13 +217,10 @@ export function ConfirmSwapContent({
                 const balance = solveIntentQuery.data?.balances.find(
                   (ot) => ot.token.address.toLowerCase() === token.address.toLowerCase(),
                 )
-                const outputToken = solveIntentQuery.data?.outputTokenUsdPrices.find(
-                  (ot) => ot.address === token.address,
-                )
-                if (!outputToken) return null
                 if (!balance) return null
 
-                const usdBalance = BigNumber(balance.amount).multipliedBy(outputToken.priceUSD)
+                // Using pre-calculated amountUSD from balances instead of calculating from outputTokenUsdPrices
+                const usdBalance = BigNumber(balance.amountUSD)
 
                 const percentage =
                   Math.round(
@@ -239,11 +236,11 @@ export function ConfirmSwapContent({
                     className="mb-3 w-[99%] mx-auto embla__slide flex-[0_0_100%] min-w-0"
                     type={token.type}
                     key={token.symbol}
-                    amountToken={formatTokenAmount(Number(balance.amount), Number(outputToken.priceUSD) || 0)}
+                    amountToken={formatTokenAmount(Number(balance.amount), Number(balance.amountUSD) / Number(balance.amount) || 0)}
                     amountUSD={usdFormatter.fullValue.format(usdBalance.toFixed())}
-                    icon={outputToken.logoURI ?? ''}
-                    color={outputToken.primaryColor ?? ''}
-                    symbol={outputToken.symbol}
+                    icon={'logoURI' in token ? token.logoURI ?? '' : ''}
+                    color={'primaryColor' in token ? token.primaryColor ?? '' : ''}
+                    symbol={token.symbol}
                     valuePercent={valuePercent}
                     chainId={token.network}
                   />

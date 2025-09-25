@@ -105,18 +105,14 @@ const SuccessTransaction = ({
             const balance = solveIntentSuccessData?.balances.find(
               (ot) => ot.token.address.toLowerCase() === token.address.toLowerCase(),
             )
-            const outputToken = solveIntentSuccessData?.outputTokenUsdPrices.find(
-              (ot) => ot.address === token.address,
-            )
-            if (!outputToken) return null
-
             if (!balance) return null
-            const usdBalance = BigNumber(balance.amount).multipliedBy(outputToken.priceUSD)
+            // Using pre-calculated amountUSD from balances instead of calculating from outputTokenUsdPrices
+            const usdBalance = BigNumber(balance.amountUSD)
 
             return (
               <TokenInformation
                 key={token.iid}
-                amountToken={formatTokenAmount(Number(balance.amount), Number(outputToken.priceUSD) || 0)}
+                amountToken={formatTokenAmount(Number(balance.amount), Number(balance.amountUSD) / Number(balance.amount) || 0)}
                 amountUSD={usdFormatter.fullValue.format(usdBalance.toFixed())}
                 symbol={token.symbol}
                 icon={'logoURI' in token ? token.logoURI || '' : ''}

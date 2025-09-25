@@ -90,9 +90,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               `${balance.token.chainId}:${balance.token.address.toLowerCase()}`
             )
           })
-          const outputToken = solveIntentQuery.data?.outputTokenUsdPrices.find(
-            (ot) => ot.iid === token.iid,
-          )
+          // Using balance.amountUSD instead of calculating from outputTokenUsdPrices
           const tokenValue = balance?.amount ? balance.amount : '0.00'
 
           const images = [
@@ -124,7 +122,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               tokenDecimal={token.decimals}
               address={token.address as Address}
               chainId={token.network}
-              usdPrice={outputToken?.priceUSD || '1'}
+              usdPrice={balance?.amountUSD ? (Number(balance.amountUSD) / Number(balance.amount)).toString() : '1'}
               tokenValue={tokenValue}
               onDismiss={() => removeOutputToken(token)}
               onValueChange={(value) => setTokenValue(token, value)}

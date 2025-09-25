@@ -6,6 +6,7 @@ import { Account, Chain, Client, erc20Abi, Transport } from 'viem'
 import { useAccount } from 'wagmi'
 import { useGetTokensQuery } from '../queries'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
+import { TokenType } from '../enums/token-type'
 
 type DepositedTokensProps = {
   tokenAddress?: string
@@ -100,18 +101,29 @@ export const useDepositValues = (txUrl: string, client: Client<Transport, Chain,
 
 export function useSwapOutputTotal() {
   const solveIntentQuery = useClassicSolveIntentQuery()
+  const tokensQuery = useGetTokensQuery()
+
+  const allTokens = [
+    ...(tokensQuery.data?.tokenList.tokens || []),
+    ...(tokensQuery.data?.tokenList.collateralTokens || []),
+    ...(tokensQuery.data?.tokenList.varDebtTokens || []),
+    ...(tokensQuery.data?.tokenList.weightedLiquidityTokens || []),
+    ...(tokensQuery.data?.tokenList.vaultTokens || []),
+  ]
 
   const outputTotal = solveIntentQuery.data?.balances.reduce((acc, balance) => {
-    const findToken = solveIntentQuery.data?.outputTokenUsdPrices.find(
-      (price) =>
-        `${price.network}:${price.address.toLowerCase()}` ===
-        `${balance.token.chainId}:${balance.token.address.toLowerCase()}`,
-    )
-    if (!findToken) return acc
-    // const tokenPrice = findToken.priceUSD
+    // Using pre-calculated amountMinUSD from balances instead of calculating from outputTokenUsdPrices
     const tokenAmount = balance.amountMinUSD
 
-    return findToken.tokenCategory === 'varDebt'
+    // Find the token to check if it's a varDebt token
+    const findToken = allTokens.find(
+      (token) =>
+        `${token.network}:${token.address.toLowerCase()}` ===
+        `${balance.token.chainId}:${balance.token.address.toLowerCase()}`,
+    )
+
+    // Apply minus for varDebt tokens since they represent debt
+    return findToken?.type === TokenType.VarDebt
       ? BigNumber(acc).minus(tokenAmount).toString()
       : BigNumber(tokenAmount).plus(acc).toString()
   }, '0')

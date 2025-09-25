@@ -217,7 +217,6 @@ export type SolveIntentResponse = {
   routerBatchLogics: RouterBatchLogics
   approvals: Approval[]
   permit2Datas: Permit2Datas
-  outputTokenUsdPrices: APIToken[]
   tokensReturn: string[]
   isComplexBridge: boolean
   destinationBridge?: {
