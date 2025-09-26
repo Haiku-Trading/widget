@@ -171,6 +171,9 @@ importers:
       framer-motion:
         specifier: ^11.9.0
         version: 11.18.2(react-dom@18.3.1)(react@18.3.1)
+      imask:
+        specifier: ^7.6.1
+        version: 7.6.1
       lexical:
         specifier: ^0.12.0
         version: 0.12.6
@@ -201,9 +204,6 @@ importers:
       react-slick:
         specifier: ^0.30.3
         version: 0.30.3(react-dom@18.3.1)(react@18.3.1)
-      react-text-mask:
-        specifier: ^5.5.0
-        version: 5.5.0(react@18.3.1)
       react-textarea-autosize:
         specifier: ^8.5.9
         version: 8.5.9(@types/react@18.3.24)(react@18.3.1)
@@ -219,9 +219,6 @@ importers:
       tailwind-variants:
         specifier: ^0.2.1
         version: 0.2.1(tailwindcss@3.4.17)
-      text-mask-addons:
-        specifier: ^3.8.0
-        version: 3.8.0
       ts-pattern:
         specifier: ^5.7.0
         version: 5.8.0
@@ -271,9 +268,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.0.0
         version: 18.3.7(@types/react@18.3.24)
-      '@types/react-text-mask':
-        specifier: ^5.4.14
-        version: 5.4.14
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.0.0
         version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.57.1)(typescript@5.9.2)
@@ -564,6 +558,13 @@ packages:
       '@babel/core': 7.28.3
       '@babel/helper-plugin-utils': 7.27.1
     dev: true
+
+  /@babel/runtime-corejs3@7.28.4:
+    resolution: {integrity: sha512-h7iEYiW4HebClDEhtvFObtPmIvrd1SSfpI9EhOeKk4CtIK/ngBWFpuhCzhdmRKtg71ylcue+9I6dv54XYO1epQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      core-js-pure: 3.45.1
+    dev: false
 
   /@babel/runtime@7.28.3:
     resolution: {integrity: sha512-9uIQ10o0WGdpP6GDhXcdOJPJuDgFtIDtN/9+ArJQ2NAfAmiuhTQdzkaTGR33v43GYS2UrSA0eX2pPPHoFVvpxA==}
@@ -4161,12 +4162,6 @@ packages:
     dependencies:
       '@types/react': 18.3.24
 
-  /@types/react-text-mask@5.4.14:
-    resolution: {integrity: sha512-VkQuH+7Ol+ue/EFe9EFqJAmDe3ay5VML29l3aJkdzAriMhiprJOmdAFjZ3jOT6p3+nBgEUHxaQtUgg8k8Sk5wA==}
-    dependencies:
-      '@types/react': 18.3.24
-    dev: true
-
   /@types/react@18.3.24:
     resolution: {integrity: sha512-0dLEBsA1kI3OezMBF8nSsb7Nk19ZnsyE1LLhB8r27KbgU5H4pvuqZLdtE+aUkJVoXgTVuA+iLIwmZ0TuK4tx6A==}
     dependencies:
@@ -6272,6 +6267,11 @@ packages:
     resolution: {integrity: sha512-+W7VmiVINB+ywl1HGXJXmrqkOhpKrIiVZV6tQuV54ZyQC7MMuBt81Vc336GMLoHBq5hV/F9eXgt5Mnx0Rha5Fg==}
     dev: false
 
+  /core-js-pure@3.45.1:
+    resolution: {integrity: sha512-OHnWFKgTUshEU8MK+lOs1H8kC8GkTi9Z1tvNkxrCcw9wl3MJIO7q2ld77wjWn4/xuGrVu2X+nME1iIIPBSdyEQ==}
+    requiresBuild: true
+    dev: false
+
   /core-js@3.45.1:
     resolution: {integrity: sha512-L4NPsJlCfZsPeXukyzHFlg/i7IIVwHSItR0wg0FLNqYClJ4MQYTYLbC7EkjKYRLZF2iof2MUgN0EGy7MdQFChg==}
     requiresBuild: true
@@ -7648,6 +7648,13 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
     dev: true
+
+  /imask@7.6.1:
+    resolution: {integrity: sha512-sJlIFM7eathUEMChTh9Mrfw/IgiWgJqBKq2VNbyXvBZ7ev/IlO6/KQTKlV/Fm+viQMLrFLG/zCuudrLIwgK2dg==}
+    engines: {npm: '>=4.0.0'}
+    dependencies:
+      '@babel/runtime-corejs3': 7.28.4
+    dev: false
 
   /import-cwd@3.0.0:
     resolution: {integrity: sha512-4pnzH16plW+hgvRECbDWpQl3cqtvSofHWh44met7ESfZ8UZOWWddm8hEyDTqREJ9RbYHY8gi8DqmaelApoOGMg==}
@@ -9708,6 +9715,7 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+    dev: true
 
   /property-information@7.1.0:
     resolution: {integrity: sha512-TwEZ+X+yCJmYfL7TPUOcvBZ4QfoT5YenQiJuX//0th53DE6w0xxLEtfK3iyryQFddXuvkIk51EEgrJQ0WJkOmQ==}
@@ -9881,6 +9889,7 @@ packages:
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+    dev: true
 
   /react-markdown@10.1.0(@types/react@18.3.24)(react@18.3.1):
     resolution: {integrity: sha512-qKxVopLT/TyA6BX3Ue5NwabOsAzm0Q7kAPwq6L+wWDwisYs7R8vZ0nRXqq6rkueboxpkjvLGU9fWifiX/ZZFxQ==}
@@ -9993,15 +10002,6 @@ packages:
       get-nonce: 1.0.1
       react: 18.3.1
       tslib: 2.8.1
-    dev: false
-
-  /react-text-mask@5.5.0(react@18.3.1):
-    resolution: {integrity: sha512-SLJlJQxa0uonMXsnXRpv5abIepGmHz77ylQcra0GNd7Jtk4Wj2Mtp85uGQHv1avba2uI8ZvRpIEQPpJKsqRGYw==}
-    peerDependencies:
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      prop-types: 15.8.1
-      react: 18.3.1
     dev: false
 
   /react-textarea-autosize@8.5.9(@types/react@18.3.24)(react@18.3.1):
@@ -10788,10 +10788,6 @@ packages:
       commander: 2.20.3
       source-map-support: 0.5.21
     dev: true
-
-  /text-mask-addons@3.8.0:
-    resolution: {integrity: sha512-VSZSdc/tKn4zGxgpJ+uNBzoW1t472AoAFIlbw1K7hSNXz0DfSBYDJNRxLqgxOfWw1BY2z6DQpm7g0sYZn5qLpg==}
-    dev: false
 
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}

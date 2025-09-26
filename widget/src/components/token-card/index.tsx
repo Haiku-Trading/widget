@@ -8,9 +8,8 @@ import { RiAddLine, RiCloseLine, RiLockFill, RiLockUnlockFill } from '@remixicon
 import { useMediaQuery } from '@uidotdev/usehooks'
 import BigNumber from 'bignumber.js'
 import millify from 'millify'
-import React, { ComponentRef, forwardRef, useEffect, useMemo, useState } from 'react'
-import MaskedInput, { type PipeConfig } from 'react-text-mask'
-import createNumberMask from 'text-mask-addons/dist/createNumberMask'
+import React, { ComponentRef, forwardRef, useEffect, useMemo, useRef, useState } from 'react'
+import IMask, { type InputMask } from 'imask'
 import { Address } from 'viem'
 import { useConfig } from 'wagmi'
 import { useShallow } from 'zustand/shallow'
@@ -188,34 +187,57 @@ const formatNumberFromScientific = (num: string): string => {
   }
   return num.toString()
 }
-const dollarMask = createNumberMask({
-  prefix: '$ ',
-  suffix: '',
-  includeThousandsSeparator: true,
-  thousandsSeparatorSymbol: ',',
-  allowDecimal: true,
-  decimalSymbol: '.',
-  decimalLimit: 2,
-  integerLimit: 32,
-  allowNegative: false,
-  allowLeadingZeroes: false,
-})
+const dollarMask = {
+  mask: '$ num',
+  blocks: {
+    num: {
+      mask: Number,
+      thousandsSeparator: ',',
+      radix: '.',
+      mapRadixTo: '.',
+      scale: 2,
+      min: 0,
+      max: 99999999999999999999999999999999,
+    }
+  }
+}
 
-const tokenMask = (decimal?: number, balance?: string) => {
-  return createNumberMask({
-    prefix: '',
-    suffix: '',
-    thousandsSeparatorSymbol: '',
-    allowDecimal: true,
-    decimalSymbol: '.',
-    decimalLimit: Math.min(
-      getSmartDecimalLimit(balance || '6', 6),
-      decimal || getSmartDecimalLimit(balance || '6', 6),
-    ),
-    integerLimit: 18,
-    allowNegative: false,
-    allowLeadingZeroes: true,
-  })
+const tokenMask = (decimal?: number, balance?: string, prefix?: string) => {
+  const decimalLimit = Math.min(
+    getSmartDecimalLimit(balance || '6', 6),
+    decimal || getSmartDecimalLimit(balance || '6', 6),
+  )
+  
+  if (prefix) {
+    return {
+      mask: `${prefix} num`,
+      blocks: {
+        num: {
+          mask: Number,
+          scale: decimalLimit,
+          thousandsSeparator: '',
+          radix: '.',
+          mapRadixTo: '.',
+          min: 0,
+          max: 99999999999999999999999999999999,
+          normalizeZeros: false,
+          padFractionalZeros: false,
+        }
+      }
+    }
+  }
+  
+  return {
+    mask: Number,
+    scale: decimalLimit,
+    thousandsSeparator: '',
+    radix: '.',
+    mapRadixTo: '.',
+    min: 0,
+    max: 99999999999999999999999999999999,
+    normalizeZeros: false,
+    padFractionalZeros: false,
+  }
 }
 
 type AssetCardElement = ComponentRef<'div'>
@@ -294,6 +316,9 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
         setIsTokenView: state.setIsTokenView,
       })),
     )
+    
+    const inputRef = useRef<HTMLInputElement>(null)
+    const maskRef = useRef<InputMask<any> | null>(null)
 
     const handlePercentageChange = useTradeStore((state) => state.handlePercentageChange)
     const isShortScreen = useIsShortScreen()
@@ -367,15 +392,6 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
       )
     }
 
-    const trailingDotPipe = (conformedValue: string, options: PipeConfig) => {
-      const { rawValue } = options
-
-      if (rawValue.endsWith('.') && !conformedValue.endsWith('.')) {
-        return conformedValue + '.'
-      }
-
-      return conformedValue
-    }
 
     const oppositeValue = useMemo(() => {
       if (isTokenView) {
@@ -491,6 +507,45 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
     }, [isTokenView, tokenDecimal, tokenValue, type, usdPrice, usdValue])
 
     const inputValue = isTokenView ? tokenValue : usdValue
+
+    // Initialize and update mask when view changes
+    useEffect(() => {
+      if (!inputRef.current) return
+
+      // Destroy existing mask
+      if (maskRef.current) {
+        maskRef.current.destroy()
+        maskRef.current = null
+      }
+
+      // Create new mask based on current view
+      const prefix = tokenCategory === TokenType.VarDebt ? '-' : undefined
+      const maskOptions = isTokenView ? tokenMask(tokenDecimal || 2, inputValue, prefix) : dollarMask
+      maskRef.current = IMask(inputRef.current, maskOptions)
+
+      // Set initial value
+      if (inputValue && inputValue !== '0') {
+        maskRef.current.unmaskedValue = inputValue
+      }
+
+      // Handle value changes
+      maskRef.current.on('accept', () => {
+        const unmaskedValue = maskRef.current?.unmaskedValue || '0'
+        handleInputChange({
+          target: { value: unmaskedValue },
+          preventDefault: () => {},
+          stopPropagation: () => {},
+          persist: () => {},
+        } as unknown as React.ChangeEvent<HTMLInputElement>)
+      })
+
+      return () => {
+        if (maskRef.current) {
+          maskRef.current.destroy()
+          maskRef.current = null
+        }
+      }
+    }, [isTokenView, tokenDecimal, inputValue, tokenCategory])
 
     const formatAPR = (minApr: string, maxApr: string) => {
       if (minApr === maxApr) {
@@ -626,12 +681,9 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
           </div>
           <div className="flex flex-col items-end justify-center gap-1">
             {type === 'input' ? (
-              <MaskedInput
+              <input
+                ref={inputRef}
                 style={{ textAlign: 'right', marginTop: '7px' }}
-                mask={isTokenView ? tokenMask(tokenDecimal || 2, inputValue) : dollarMask}
-                guide={false}
-                placeholderChar={'\u2000'}
-                // disabled={!BigNumber(balance).abs().isGreaterThan('0')}
                 className={cn(
                   `text-[32px] font-medium outline-none bg-transparent w-full max-w-[75%] h-7 placeholder:text-grey-secondary disabled:text-muted-foreground`,
                   Number(inputValue) > Math.abs(Number(isTokenView ? balance : usdBalance))
@@ -639,11 +691,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                     : 'text-grey-secondary',
                 )}
                 placeholder="0.00"
-                value={inputValue === '0' ? '' : inputValue}
-                onChange={handleInputChange}
-                pipe={isTokenView ? trailingDotPipe : undefined}
                 onClick={(e) => e.stopPropagation()}
-                prefix={tokenCategory == TokenType.VarDebt ? '-' : ''}
               />
             ) : (
               outputTokens.length > 1 && (
