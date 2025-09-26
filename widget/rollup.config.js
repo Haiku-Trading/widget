@@ -7,6 +7,7 @@ import dts from 'rollup-plugin-dts';
 import json from '@rollup/plugin-json';
 import url from '@rollup/plugin-url';
 import replace from '@rollup/plugin-replace';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 
@@ -61,15 +62,9 @@ export default [
       format: 'esm',
       sourcemap: isDev,
       entryFileNames: 'index.esm.js',
-      chunkFileNames: '[name]-[hash].js',
+      chunkFileNames: '[name].js',
       assetFileNames: '[name].[ext]',
     },
-    external: [
-      'react', 
-      'react-dom', 
-      'wagmi',
-      '@tanstack/react-query'
-    ],
     onwarn(warning, warn) {
       // Suppress "use client" directive warnings
       if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
@@ -95,6 +90,7 @@ export default [
       warn(warning);
     },
     plugins: [
+      peerDepsExternal(),
       replace({
         preventAssignment: true,
         values: Object.fromEntries(
@@ -130,12 +126,6 @@ export default [
   {
     input: 'src/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    external: [
-      'react', 
-      'react-dom', 
-      'wagmi',
-      '@tanstack/react-query'
-    ],
-    plugins: [dts({ sourceMap: false })],
+    plugins: [peerDepsExternal(), dts({ sourceMap: false })],
   },
 ];

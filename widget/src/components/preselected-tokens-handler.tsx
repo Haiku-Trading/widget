@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
 import { PreselectedTokensProvider } from '../providers/preselected-tokens-provider'
 import { useGetTokensQuery } from '../queries'
@@ -13,7 +14,12 @@ interface PreselectedTokensHandlerProps {
 export function PreselectedTokensHandler({ children }: PreselectedTokensHandlerProps) {
   const { config: widgetConfig } = useWidgetConfig()
   const getTokensQuery = useGetTokensQuery()
-  const { setPreselectedInputTokens, setPreselectedOutputTokens } = useTradeStore()
+  const { setPreselectedInputTokens, setPreselectedOutputTokens } = useTradeStore(
+    useShallow((state) => ({
+      setPreselectedInputTokens: state.setPreselectedInputTokens,
+      setPreselectedOutputTokens: state.setPreselectedOutputTokens,
+    }))
+  )
   const [preselectedTokensApplied, setPreselectedTokensApplied] = useState(false)
   const [isResolvingPreselectedTokens, setIsResolvingPreselectedTokens] = useState(false)
 

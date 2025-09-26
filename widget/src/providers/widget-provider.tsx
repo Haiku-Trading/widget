@@ -12,7 +12,7 @@ export function WidgetHttpProvider({ children }: { children: ReactNode }) {
   const [httpClient] = useState(
     () =>
       new AxiosAdapter({
-        baseURL: 'http://localhost:5001/v1',
+        baseURL: process.env.API_BASE_URL || 'https://api.haiku.trade/v1',
         request: {
           onIntercept(request) {
             if (request.url?.includes('inference')) return

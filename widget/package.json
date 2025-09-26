@@ -1,6 +1,6 @@
 {
   "name": "@haiku-trade/widget",
-  "version": "0.0.4",
+  "version": "0.0.10",
   "description": "Haiku Widget",
   "type": "module",
   "main": "dist/index.js",
@@ -10,6 +10,9 @@
     "dist/index.esm.js",
     "dist/index.d.ts",
     "dist/styles.css",
+    "dist/index.js",
+    "dist/index-*.js",
+    "dist/secp256k1.js",
     "README.md"
   ],
   "scripts": {
@@ -101,8 +104,6 @@
     "eslint-plugin-react": "^7.0.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "postcss": "^8.4.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
     "rollup": "^4.0.0",
     "rollup-plugin-dts": "^6.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
