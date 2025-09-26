@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
 import { PreselectedTokensProvider } from '../providers/preselected-tokens-provider'
@@ -6,6 +6,7 @@ import { useGetTokensQuery } from '../queries'
 import { useTradeStore } from '../providers'
 import { resolveTokensFromMap, type TokenListData } from '../utils'
 import { SwapContainer } from './swap'
+import { useSafeEffect, useStableCallback } from '../utils/react-19-compat'
 
 interface PreselectedTokensHandlerProps {
   children: React.ReactNode
@@ -20,12 +21,17 @@ export function PreselectedTokensHandler({ children }: PreselectedTokensHandlerP
       setPreselectedOutputTokens: state.setPreselectedOutputTokens,
     }))
   )
+
+  // Create stable callbacks to prevent React 19 re-render issues
+  const stableSetPreselectedInputTokens = useStableCallback(setPreselectedInputTokens)
+  const stableSetPreselectedOutputTokens = useStableCallback(setPreselectedOutputTokens)
   const [preselectedTokensApplied, setPreselectedTokensApplied] = useState(false)
   const [isResolvingPreselectedTokens, setIsResolvingPreselectedTokens] = useState(false)
+  const isProcessingRef = useRef(false)
 
-  useEffect(() => {
+  useSafeEffect(() => {
     // Only proceed if we have token data and haven't applied preselected tokens yet
-    if (!getTokensQuery.data?.tokenList || preselectedTokensApplied) {
+    if (!getTokensQuery.data?.tokenList || preselectedTokensApplied || isProcessingRef.current) {
       return
     }
 
@@ -38,6 +44,7 @@ export function PreselectedTokensHandler({ children }: PreselectedTokensHandlerP
       return
     }
 
+    isProcessingRef.current = true
     setIsResolvingPreselectedTokens(true)
 
     const tokenData: TokenListData = {
@@ -63,7 +70,7 @@ export function PreselectedTokensHandler({ children }: PreselectedTokensHandlerP
         : resolvedInputTokens.slice(0, 1)
 
       if (tokensToSet.length > 0) {
-        setPreselectedInputTokens(tokensToSet)
+        stableSetPreselectedInputTokens(tokensToSet)
       }
     }
 
@@ -82,12 +89,13 @@ export function PreselectedTokensHandler({ children }: PreselectedTokensHandlerP
         : resolvedOutputTokens.slice(0, 1)
 
       if (tokensToSet.length > 0) {
-        setPreselectedOutputTokens(tokensToSet)
+        stableSetPreselectedOutputTokens(tokensToSet)
       }
     }
 
     setPreselectedTokensApplied(true)
     setIsResolvingPreselectedTokens(false)
+    isProcessingRef.current = false
   }, [
     getTokensQuery.data,
     widgetConfig.preselectedInputs,
@@ -96,8 +104,6 @@ export function PreselectedTokensHandler({ children }: PreselectedTokensHandlerP
     widgetConfig.multiOutput,
     widgetConfig.hiddenChains,
     widgetConfig.hiddenProtocols,
-    setPreselectedInputTokens,
-    setPreselectedOutputTokens,
     preselectedTokensApplied,
   ])
 

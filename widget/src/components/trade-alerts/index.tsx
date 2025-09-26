@@ -107,7 +107,7 @@ const TradeAlerts = () => {
         type: TradeAlert.Warning,
       },
     ])
-  }, [inputPositions, inputTokens, outputTokens, addMoreAlerts, usdInputTotal])
+  }, [inputPositions, inputTokens, outputTokens, usdInputTotal])
 
   return (
     <AlertDialog.Content

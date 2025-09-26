@@ -460,14 +460,17 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
     }, [balance, isTokenView, tokenValue, type, usdBalance, usdPrice, usdValue])
 
     // Handle alert updates in useEffect to avoid setState during render
+    // Use React 19 safe pattern with stable callbacks
     useEffect(() => {
       if (type === 'input') {
+        const alertMessage = `You don't have enough funds to complete the transaction. (${symbol})`
+        
         if (isInsufficientBalance) {
           addMoreAlerts([
             {
               isActive: true,
               type: TradeAlert.Error,
-              message: `You don't have enough funds to complete the transaction. (${symbol})`,
+              message: alertMessage,
             },
           ])
         } else {
@@ -475,7 +478,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
             {
               isActive: true,
               type: TradeAlert.Error,
-              message: `You don't have enough funds to complete the transaction. (${symbol})`,
+              message: alertMessage,
             },
           ])
         }

@@ -329,21 +329,36 @@ export const createTradeStore = (initState: TradeState = defaultTradeInitState) 
     },
     updateTokensUSDPrice: (tokens) => {
       set((state) => {
+        // Early return if no tokens to update
+        if (!tokens || tokens.length === 0) {
+          return state
+        }
+
+        let hasChanges = false
         const newInputTokens = state.inputTokens.map((token) => {
-          const findedToken = tokens.find((t) => t.iid === token.iid)
-          if (findedToken) {
-            return { ...token, priceUSD: findedToken.priceUSD }
+          const foundToken = tokens.find((t) => t.iid === token.iid)
+          if (foundToken && foundToken.priceUSD !== token.priceUSD) {
+            hasChanges = true
+            return { ...token, priceUSD: foundToken.priceUSD }
           }
           return token
         })
+        
         const newOutputTokens = state.outputTokens.map((token) => {
-          const findedToken = tokens.find((t) => t.iid === token.iid)
-          if (findedToken) {
-            return { ...token, priceUSD: findedToken.priceUSD }
+          const foundToken = tokens.find((t) => t.iid === token.iid)
+          if (foundToken && foundToken.priceUSD !== token.priceUSD) {
+            hasChanges = true
+            return { ...token, priceUSD: foundToken.priceUSD }
           }
           return token
         })
-        return { inputTokens: newInputTokens, outputTokens: newOutputTokens }
+        
+        // Only update if there are actual changes to prevent unnecessary re-renders
+        if (hasChanges) {
+          return { inputTokens: newInputTokens, outputTokens: newOutputTokens }
+        }
+        
+        return state
       })
     },
     handleShowBalance: () => {

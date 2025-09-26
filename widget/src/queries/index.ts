@@ -3,13 +3,14 @@ import { useEIP7702 } from '../hooks/use-eip-7702'
 import { isValidWalletAddress } from '../utils/validate-wallet-address'
 import { useQuery } from '@tanstack/react-query'
 import { getTokens } from '../services/get-tokens'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTradeStore } from '../providers'
 import BigNumber from 'bignumber.js'
 import { useAccount } from 'wagmi'
 import { SolveIntentPayload } from '../services/solve-intent'
 import { TokenType } from '../enums/token-type'
 import { useHttpClient } from '../providers/http-client'
+import { useStableCallback } from '../utils/react-19-compat'
 
 // prettier-ignore
 export const tradeKeys = {
@@ -21,6 +22,10 @@ export const tradeKeys = {
 export function useGetTokensQuery() {
   const updateTokensUSDPrice = useTradeStore((state) => state.updateTokensUSDPrice)
   const httpClient = useHttpClient()
+  const lastUpdateRef = useRef<string>('')
+  
+  // Create stable callback to prevent React 19 re-render issues
+  const stableUpdateTokensUSDPrice = useStableCallback(updateTokensUSDPrice)
   const query = useQuery({
     queryKey: tradeKeys.tokens(),
     queryFn: async () => {
@@ -60,9 +65,16 @@ export function useGetTokensQuery() {
         query.data.tokenList?.varDebtTokens,
       ].flat()
 
-      updateTokensUSDPrice(allTokens)
+      // Only update if we have tokens to update and data has changed
+      if (allTokens.length > 0) {
+        const dataHash = JSON.stringify(query.data.tokenList)
+        if (dataHash !== lastUpdateRef.current) {
+          lastUpdateRef.current = dataHash
+          stableUpdateTokensUSDPrice(allTokens)
+        }
+      }
     }
-  }, [query.data, query.isRefetching, updateTokensUSDPrice])
+  }, [query.data?.tokenList, query.isRefetching, stableUpdateTokensUSDPrice])
 
   return query
 }

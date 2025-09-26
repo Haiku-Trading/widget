@@ -65,3 +65,6 @@ export { colorToHsl, isValidColor, generateThemeCSS, applyThemeToElement, genera
 
 // Token resolution utilities
 export { resolveTokensFromIids, resolveTokensFromMap, resolveTokenFromIid, type TokenListData, type AnyAPIToken } from './token-resolution'
+
+// React 19 compatibility utilities
+export { isReact19, useSafeEffect, useStableCallback, useDebouncedState, useSafeStoreSubscription } from './react-19-compat'

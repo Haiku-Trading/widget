@@ -166,9 +166,6 @@ export function TradeBody() {
     hasError,
     hasValidInputPositions,
     getErrorMessage,
-    addMoreAlerts,
-    removeAllErrorAlerts,
-    clearAlerts,
   ])
 
   const addInsufficientBalance = useCallback((insufficientBalance: boolean, symbol: string) => {
