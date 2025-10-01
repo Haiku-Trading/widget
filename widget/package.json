@@ -1,6 +1,6 @@
 {
   "name": "@haiku-trade/widget",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "description": "Haiku Widget",
   "type": "module",
   "main": "dist/index.js",
@@ -9,7 +9,6 @@
   "files": [
     "dist/index.esm.js",
     "dist/index.d.ts",
-    "dist/styles.css",
     "dist/index.js",
     "dist/index-*.js",
     "dist/secp256k1.js",

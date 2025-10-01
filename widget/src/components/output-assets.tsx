@@ -3,6 +3,7 @@ import { useShallow } from 'zustand/shallow'
 import { useTradeStore } from '../providers'
 import { AssetCard } from './token-card'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
+import { useStableCallback } from '../utils/react-19-compat'
 
 import { ClientOnly } from './client-only'
 import { Dialog } from './dialog'
@@ -49,6 +50,10 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
   }, [outputTokens])
 
   const clearSlider = useTradeStore((state) => state.clearSlider)
+
+  // Create stable callbacks to prevent React 19 re-render issues
+  const stableRemoveOutputToken = useStableCallback(removeOutputToken)
+  const stableSetTokenValue = useStableCallback(setTokenValue)
 
   const ref = useRef<HTMLDivElement>(null)
 
@@ -124,8 +129,8 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               chainId={token.network}
               usdPrice={balance?.amountUSD ? (Number(balance.amountUSD) / Number(balance.amount)).toString() : '1'}
               tokenValue={tokenValue}
-              onDismiss={() => removeOutputToken(token)}
-              onValueChange={(value) => setTokenValue(token, value)}
+              onDismiss={() => stableRemoveOutputToken(token)}
+              onValueChange={(value) => stableSetTokenValue(token, value)}
               name={token.name ?? token.symbol}
               symbol={token.symbol}
               logoURL={'logoURI' in token ? token.logoURI : ''}
@@ -208,7 +213,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               if (!widgetConfig.multiOutput && tokens.length > 0) {
                 // Remove all current output tokens and add the new one
                 const currentTokens = outputTokens
-                currentTokens.forEach(token => removeOutputToken(token))
+                currentTokens.forEach(token => stableRemoveOutputToken(token))
                 onSelectTokens?.(tokens)
               } else {
                 onSelectTokens?.(tokens)

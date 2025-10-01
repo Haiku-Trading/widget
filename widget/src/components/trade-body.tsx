@@ -13,6 +13,7 @@ import { getWalletClient } from '@wagmi/core'
 import { AxiosError } from 'axios'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useStableCallback } from '../utils/react-19-compat'
 
 import { useAccount, useConfig } from 'wagmi'
 import { mappingChainNameToChainId } from '../constants/constants'
@@ -171,6 +172,9 @@ export function TradeBody() {
   const addInsufficientBalance = useCallback((insufficientBalance: boolean, symbol: string) => {
     setInsufficientBalance((prev) => ({ ...prev, [symbol]: insufficientBalance }))
   }, [])
+
+  // Create stable callbacks to prevent React 19 re-render issues
+  const stableUpdateTransactionConfirming = useStableCallback(updateTransactionConfirming)
   const hasInsufficientBalance = Object.values(insufficientBalance).some((value) => value === true)
 
   const swapMutation = useSwapMutation(inputChainId)
@@ -184,7 +188,7 @@ export function TradeBody() {
   const handleSwap = () => {
     if (!solveIntentQuery.data) return
 
-    updateTransactionConfirming(true)
+    stableUpdateTransactionConfirming(true)
 
     swapMutation.mutate(solveIntentQuery.data, {
       onSuccess: (receipt) => {
@@ -195,14 +199,14 @@ export function TradeBody() {
         setTxHash(receipt.transactionHash)
         setTxURL(getTransactionURL(inputChainId, receipt.transactionHash))
         setIsSuccess(true)
-        updateTransactionConfirming(false)
+        stableUpdateTransactionConfirming(false)
         setInsufficientBalance({})
         queryClient.invalidateQueries({ queryKey: tradeKeys.tokens() })
         queryClient.invalidateQueries({ queryKey: [account.address, 'balances'] })
       },
       onError: (error: unknown) => {
         console.log('ERROR', error instanceof Error ? error.message : String(error))
-        updateTransactionConfirming(false)
+        stableUpdateTransactionConfirming(false)
       },
     })
   }
@@ -476,7 +480,7 @@ export function TradeBody() {
                       !!solveIntentQuery.error
                     }
                     onClick={() => {
-                      updateTransactionConfirming(true)
+                      stableUpdateTransactionConfirming(true)
                     }}
                   >
                     {solveIntentQuery.isFetching && !solveIntentQuery.failureReason && (

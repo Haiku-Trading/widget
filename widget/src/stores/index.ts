@@ -241,21 +241,36 @@ export const createTradeStore = (initState: TradeState = defaultTradeInitState) 
     },
     toggleSlider(iid: string, type: 'output' | 'input') {
       set((state) => {
-        const toggle = (tokens: typeof state.inputTokens) =>
-          tokens.map((token) =>
-            token.iid === iid
-              ? { ...token, showSlider: !token.showSlider }
-              : { ...token, showSlider: false },
-          )
+        const toggle = (tokens: typeof state.inputTokens) => {
+          let hasChanges = false
+          const newTokens = tokens.map((token) => {
+            if (token.iid === iid) {
+              // Only create new object if showSlider actually changes
+              if (token.showSlider !== !token.showSlider) {
+                hasChanges = true
+                return { ...token, showSlider: !token.showSlider }
+              }
+              return token
+            } else {
+              // Only create new object if showSlider is not already false
+              if (token.showSlider !== false) {
+                hasChanges = true
+                return { ...token, showSlider: false }
+              }
+              return token
+            }
+          })
+          
+          // Only return new array if there were actual changes
+          return hasChanges ? newTokens : tokens
+        }
 
         if (type === 'output') {
-          return {
-            outputTokens: toggle(state.outputTokens),
-          }
+          const newOutputTokens = toggle(state.outputTokens)
+          return newOutputTokens !== state.outputTokens ? { outputTokens: newOutputTokens } : {}
         } else {
-          return {
-            inputTokens: toggle(state.inputTokens),
-          }
+          const newInputTokens = toggle(state.inputTokens)
+          return newInputTokens !== state.inputTokens ? { inputTokens: newInputTokens } : {}
         }
       })
     },
@@ -372,16 +387,32 @@ export const createTradeStore = (initState: TradeState = defaultTradeInitState) 
       }))
     },
     clearSlider: (type: 'output' | 'input') =>
-      set((state) => ({
-        inputTokens: state.inputTokens.map((token) => ({
-          ...token,
-          showSlider: type === 'input' ? false : token.showSlider,
-        })),
-        outputTokens: state.outputTokens.map((token) => ({
-          ...token,
-          showSlider: type === 'output' ? false : token.showSlider,
-        })),
-      })),
+      set((state) => {
+        let hasInputChanges = false
+        let hasOutputChanges = false
+        
+        const newInputTokens = state.inputTokens.map((token) => {
+          if (type === 'input' && token.showSlider !== false) {
+            hasInputChanges = true
+            return { ...token, showSlider: false }
+          }
+          return token
+        })
+        
+        const newOutputTokens = state.outputTokens.map((token) => {
+          if (type === 'output' && token.showSlider !== false) {
+            hasOutputChanges = true
+            return { ...token, showSlider: false }
+          }
+          return token
+        })
+        
+        const changes: Partial<TradeState> = {}
+        if (hasInputChanges) changes.inputTokens = newInputTokens
+        if (hasOutputChanges) changes.outputTokens = newOutputTokens
+        
+        return changes
+      }),
     addMoreAlerts: (alerts) =>
       set((state) => {
         const existingAlerts = state.alerts
@@ -445,12 +476,23 @@ const redistributeEvenly = (tokenList: AnyAPIToken[]) => {
   const evenPersentage = Math.floor(100 / tokenList.length)
   const remainder = 100 - evenPersentage * tokenList.length
 
-  return tokenList.map((token, index) => ({
-    ...token,
-    percentage: Math.max(0, index < remainder ? evenPersentage + 1 : evenPersentage),
-    locked: false,
-    showSlider: false,
-  }))
+  return tokenList.map((token, index) => {
+    const newPercentage = Math.max(0, index < remainder ? evenPersentage + 1 : evenPersentage)
+    const newLocked = false
+    const newShowSlider = false
+    
+    // Only create new object if values actually change
+    if (token.percentage !== newPercentage || token.locked !== newLocked || token.showSlider !== newShowSlider) {
+      return {
+        ...token,
+        percentage: newPercentage,
+        locked: newLocked,
+        showSlider: newShowSlider,
+      }
+    }
+    
+    return token
+  })
 }
 
 const redistributePercentages = (
@@ -484,7 +526,11 @@ const redistributePercentages = (
 
   return updatedTokens.map((token) => {
     if (token.iid === changedTokenId) {
-      return { ...token, percentage: newPercentage }
+      // Only create new object if percentage actually changes
+      if (token.percentage !== newPercentage) {
+        return { ...token, percentage: newPercentage }
+      }
+      return token
     }
     if (token.locked) {
       return token
@@ -492,9 +538,16 @@ const redistributePercentages = (
 
     const index = unlockedTokens.findIndex((t) => t.iid === token.iid)
     const calculatedPercentage = index < remainder ? evenDistribution + 1 : evenDistribution
-    return {
-      ...token,
-      percentage: Math.max(1, calculatedPercentage),
+    const finalPercentage = Math.max(1, calculatedPercentage)
+    
+    // Only create new object if percentage actually changes
+    if (token.percentage !== finalPercentage) {
+      return {
+        ...token,
+        percentage: finalPercentage,
+      }
     }
+    
+    return token
   })
 }

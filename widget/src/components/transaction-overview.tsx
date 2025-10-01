@@ -2,12 +2,13 @@
 
 import { tokenFormatter, usdFormatter } from '../utils'
 import BigNumber from 'bignumber.js'
-import { Fragment, ReactNode, useEffect, useMemo, useState } from 'react'
+import { Fragment, ReactNode, useEffect, useMemo, useState, useCallback } from 'react'
 import { useSwapOutputTotal } from '../hooks'
 import { useTradeStore } from '../providers'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
 import { Popup } from './popup'
 import { InfoIcon } from './icons'
+import { useStableCallback } from '../utils/react-19-compat'
 
 interface ITransactionOverview {
   isClassicModal?: boolean
@@ -106,6 +107,9 @@ type TransactionOverViewItemProps = {
 }
 
 function TransactionOverViewItem({ label, value, tooltip, href }: TransactionOverViewItemProps) {
+  // Stable no-op handler to prevent React 19 infinite loops
+  const stableNoOpHandler = useStableCallback(() => {})
+  
   return (
     <div className="w-full flex items-center justify-between">
       <Popup
@@ -122,7 +126,7 @@ function TransactionOverViewItem({ label, value, tooltip, href }: TransactionOve
       >
         <div className="flex items-center justify-center">
           <span className="text-sm flex items-center text-foreground">{label}</span>
-          <button>
+          <button onClick={stableNoOpHandler}>
             <InfoIcon className="size-[18px] text-muted-foreground" />
           </button>
         </div>

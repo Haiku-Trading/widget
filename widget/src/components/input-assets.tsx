@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { useShallow } from 'zustand/shallow'
 import { useTradeStore } from '../providers'
 import { AssetCard } from './token-card'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
+import { useStableCallback } from '../utils/react-19-compat'
 
 import { Dialog } from './dialog'
 import { Avatar } from './avatar'
@@ -33,6 +34,11 @@ export function InputAssets({ onInsufficientBalance, onSelectTokens }: InputAsse
   const clearSlider = useTradeStore((state) => state.clearSlider)
 
   const ref = useRef<HTMLDivElement>(null)
+
+  // Create stable callbacks to prevent React 19 re-render issues
+  const stableRemoveInputToken = useStableCallback(removeInputToken)
+  const stableSetTokenValue = useStableCallback(setTokenValue)
+  const stableOnInsufficientBalance = useStableCallback(onInsufficientBalance)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -85,9 +91,9 @@ export function InputAssets({ onInsufficientBalance, onSelectTokens }: InputAsse
               chainId={token.network}
               usdPrice={token.priceUSD}
               tokenValue={inputPositions[token.iid]}
-              onDismiss={() => removeInputToken(token)}
-              onValueChange={(value) => setTokenValue(token, value)}
-              onInsufficientBalance={onInsufficientBalance}
+              onDismiss={() => stableRemoveInputToken(token)}
+              onValueChange={(value) => stableSetTokenValue(token, value)}
+              onInsufficientBalance={stableOnInsufficientBalance}
               name={token.name ?? token.symbol}
               symbol={token.symbol}
               logoURL={'logoURI' in token ? token.logoURI : ''}

@@ -1,3 +1,6 @@
+// Import styles to ensure they're included in the bundle
+import './styles.css'
+
 // Haiku Widget - Main export file
 export { HaikuWidget } from './components/haiku-widget'
 export { WidgetHttpProvider } from './providers/widget-provider'

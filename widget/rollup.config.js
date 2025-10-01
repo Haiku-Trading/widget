@@ -40,22 +40,6 @@ const envConfig = {
 
 export default [
   {
-    input: 'src/styles.css',
-    output: {
-      file: 'dist/styles.css',
-    },
-    plugins: [
-      postcss({
-        extract: true,
-        minimize: !isDev,
-        plugins: [
-          tailwindcss,
-          autoprefixer,
-        ],
-      }),
-    ],
-  },
-  {
     input: 'src/index.ts',
     output: {
       dir: 'dist',
@@ -113,6 +97,14 @@ export default [
         include: ['**/*.svg'],
         limit: 0, // Inline all SVGs
         fileName: '[name][extname]',
+      }),
+      postcss({
+        extract: false, // Inline CSS instead of extracting
+        minimize: !isDev,
+        plugins: [
+          tailwindcss,
+          autoprefixer,
+        ],
       }),
       typescript({ 
         tsconfig: './tsconfig.json',

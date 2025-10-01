@@ -17,6 +17,7 @@ import { RiEyeLine, RiEyeOffLine, RiResetLeftLine } from '@remixicon/react'
 // import { RiResetLeftLine, RiRefreshLine } from '@remixicon/react'
 import { useCallback, useMemo, useState } from 'react'
 import { useShallow } from 'zustand/shallow'
+import { useStableCallback } from '../utils/react-19-compat'
 import { baseSlippages } from '../constants/constants'
 import { TradeAlert } from '../enums/trade-alert'
 import { useTradeStore } from '../providers'
@@ -101,7 +102,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
   const warningSlippage = customValue && Number(customValue) > 1
   const errorSlippage = customValue && Number(customValue) >= 50
 
-  const handleSelectChange = (newValue: string) => {
+  const handleSelectChange = useCallback((newValue: string) => {
     if (!newValue) return
 
     if (newValue === 'Custom') {
@@ -113,13 +114,24 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
       setValue(newValue)
       setCustomValue('')
     }
-  }
+  }, [setValue])
 
-  const handleResetSlippage = () => {
+  const handleResetSlippage = useCallback(() => {
     setSelectedValue(defaultSlippage)
     setCustomValue('')
     setValue(defaultSlippage)
-  }
+  }, [setValue, defaultSlippage])
+
+  // Create stable callbacks to prevent React 19 re-render issues
+  const stableHandleSelectChange = useStableCallback(handleSelectChange)
+  const stableHandleResetSlippage = useStableCallback(handleResetSlippage)
+  
+  // Stable no-op handlers for buttons inside Tooltip/Popover to prevent infinite loops
+  const stableNoOpHandler = useStableCallback(() => {})
+  
+  // Stable handlers for other buttons
+  const stableResetHandler = useStableCallback(() => reset())
+  const stableToggleTokenViewHandler = useStableCallback(() => setIsTokenView(!isTokenView))
 
   const handleCustomInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value
@@ -160,7 +172,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
           {(inputTokens.length > 0 || outputTokens.length > 0) && (
             <Tooltip content="Reset">
               <button
-                onClick={() => reset()}
+                onClick={stableResetHandler}
                 className="border-[0.69px] border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
               >
                 <RiResetLeftLine className="w-[18px] h-[18px] text-muted-foreground" />
@@ -195,7 +207,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
             <PopoverTrigger>
               <Tooltip content="USD Input">
                 <button
-                  onClick={() => setIsTokenView(!isTokenView)}
+                  onClick={stableToggleTokenViewHandler}
                   // className="border-[0.69px] border-[#D9D9D9] rounded-[6.5px] w-7 h-7 flex items-center justify-center"
                   className="border-[0.69px] border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
                 >
@@ -214,7 +226,10 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
             <Tooltip content="Settings">
               <PopoverTrigger>
                 {/* <button className="border-[0.69px] border-[#D9D9D9] rounded-[6.5px] w-7 h-7 flex items-center justify-center"> */}
-                <button className="border-[0.69px]  border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center">
+                <button 
+                  className="border-[0.69px]  border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
+                  onClick={stableNoOpHandler}
+                >
                   <Setting2Icon className="w-[18px] h-[18px] text-muted-foreground" />
                 </button>
               </PopoverTrigger>
@@ -237,7 +252,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                 >
                   <div className="flex items-center gap-2">
                     <p className="text-sm text-foreground">Slippage</p>
-                    <button>
+                    <button onClick={stableNoOpHandler}>
                       <InfoIcon className="w-5 text-sec-border cursor-pointer" />
                     </button>
                   </div>
@@ -246,7 +261,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                   <ToggleGroupRoot
                     type="single"
                     value={selectedValue}
-                    onValueChange={handleSelectChange}
+                    onValueChange={stableHandleSelectChange}
                     className="gap-1 py-0 min-h-fit"
                   >
                     {baseSlippages.map((item) => (
@@ -306,7 +321,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
 
                     <p className="text-sm">
                       <span
-                        onClick={handleResetSlippage}
+                        onClick={stableHandleResetSlippage}
                         className="cursor-pointer font-medium underline"
                       >
                         Reset slippage settings

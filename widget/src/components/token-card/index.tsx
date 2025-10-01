@@ -8,7 +8,8 @@ import { RiAddLine, RiCloseLine, RiLockFill, RiLockUnlockFill } from '@remixicon
 import { useMediaQuery } from '@uidotdev/usehooks'
 import BigNumber from 'bignumber.js'
 import millify from 'millify'
-import React, { ComponentRef, forwardRef, useEffect, useMemo, useRef, useState } from 'react'
+import React, { ComponentRef, forwardRef, useEffect, useMemo, useRef, useState, useCallback } from 'react'
+import { useStableCallback } from '../../utils/react-19-compat'
 import IMask, { type InputMask } from 'imask'
 import { Address } from 'viem'
 import { useConfig } from 'wagmi'
@@ -329,6 +330,27 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
     const [usdValue, setUsdValue] = useState('0')
     const isShowBalance = useTradeStore((state) => state.isShowBalance)
 
+    // Create stable callbacks to prevent React 19 re-render issues
+    const stableOnDismiss = useStableCallback(() => {
+      onDismiss?.()
+      removeAlerts([
+        {
+          isActive: true,
+          type: TradeAlert.Error,
+          message: `You don't have enough funds to complete the transaction. (${symbol})`,
+        },
+      ])
+      Object.keys(mappingErrorCodeMessage).forEach((key) => {
+        removeAlerts([
+          {
+            isActive: true,
+            type: TradeAlert.Error,
+            message: mappingErrorCodeMessage[key],
+          },
+        ])
+      })
+    })
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
       let truncatedValue = value.replace(/[^0-9.]/g, '')
@@ -607,25 +629,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
       >
         {!isLocked && (
           <button
-            onClick={() => {
-              onDismiss?.()
-              removeAlerts([
-                {
-                  isActive: true,
-                  type: TradeAlert.Error,
-                  message: `You don't have enough funds to complete the transaction. (${symbol})`,
-                },
-              ])
-              Object.keys(mappingErrorCodeMessage).forEach((key) => {
-                removeAlerts([
-                  {
-                    isActive: true,
-                    type: TradeAlert.Error,
-                    message: mappingErrorCodeMessage[key],
-                  },
-                ])
-              })
-            }}
+            onClick={stableOnDismiss}
             className="bg-state-error-default size-5 rounded-full flex items-center justify-center absolute -top-2 -right-2 invisible group-hover:visible re"
           >
             <RiCloseLine size={16} />
