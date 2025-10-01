@@ -15,8 +15,9 @@
     "README.md"
   ],
   "scripts": {
-    "build": "NODE_ENV=production rollup -c",
-    "build:dev": "NODE_ENV=development rollup -c",
+    "build": "NODE_ENV=production rollup -c && npm run build:types",
+    "build:dev": "NODE_ENV=development rollup -c && npm run build:types",
+    "build:types": "tsc --declaration --emitDeclarationOnly --outDir dist --skipLibCheck",
     "build:playground": "NODE_ENV=production vite build",
     "dev": "NODE_ENV=development rollup -c -w",
     "dev:vite": "vite",

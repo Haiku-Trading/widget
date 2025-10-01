@@ -105,19 +105,16 @@ export default [
           tailwindcss,
           autoprefixer,
         ],
+        include: ['**/*.css'],
       }),
       typescript({ 
         tsconfig: './tsconfig.json',
         sourceMap: !isDev,
         inlineSources: false,
+        exclude: ['**/*.css'], // Exclude CSS files from TypeScript processing
       }),
       // Only use terser in production
       ...(isDev ? [] : [terser({ sourceMap: false })]),
     ],
-  },
-  {
-    input: 'src/index.ts',
-    output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    plugins: [peerDepsExternal(), dts({ sourceMap: false })],
   },
 ];
