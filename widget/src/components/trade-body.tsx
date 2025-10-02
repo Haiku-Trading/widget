@@ -115,7 +115,7 @@ export function TradeBody() {
   // Memoize the alert removal function with debouncing
   const removeAllErrorAlerts = useCallback(() => {
     // Debounce the alert removal to prevent rapid state updates
-    const timeoutId = setTimeout(() => {
+    setTimeout(() => {
       Object.keys(mappingErrorCodeMessage).forEach((key) => {
         removeAlerts([
           {
@@ -126,8 +126,6 @@ export function TradeBody() {
         ])
       })
     }, 100) // 100ms debounce
-
-    return () => clearTimeout(timeoutId)
   }, [removeAlerts])
 
   // Memoize the failure reason to prevent unnecessary re-renders
@@ -158,7 +156,12 @@ export function TradeBody() {
       ])
     } else if (!failureReason && !hasError) {
       // Remove all previous errors from the last request to path: /solveIntent
-      removeAllErrorAlerts()
+      // Use a timeout to prevent state updates during render
+      const timeoutId = setTimeout(() => {
+        removeAllErrorAlerts()
+      }, 0)
+      
+      return () => clearTimeout(timeoutId)
     }
   }, [
     inputTokens.length,
@@ -167,6 +170,7 @@ export function TradeBody() {
     hasError,
     hasValidInputPositions,
     getErrorMessage,
+    removeAllErrorAlerts,
   ])
 
   const addInsufficientBalance = useCallback((insufficientBalance: boolean, symbol: string) => {

@@ -6,7 +6,7 @@ import { useGetTokensQuery } from '../queries'
 import { useTradeStore } from '../providers'
 import { resolveTokensFromMap, type TokenListData } from '../utils'
 import { SwapContainer } from './swap'
-import { useSafeEffect, useStableCallback } from '../utils/react-19-compat'
+import { useStableCallback } from '../utils/react-19-compat'
 
 interface PreselectedTokensHandlerProps {
   children: React.ReactNode
@@ -29,7 +29,7 @@ export function PreselectedTokensHandler({ children }: PreselectedTokensHandlerP
   const [isResolvingPreselectedTokens, setIsResolvingPreselectedTokens] = useState(false)
   const isProcessingRef = useRef(false)
 
-  useSafeEffect(() => {
+  useEffect(() => {
     // Only proceed if we have token data and haven't applied preselected tokens yet
     if (!getTokensQuery.data?.tokenList || preselectedTokensApplied || isProcessingRef.current) {
       return

@@ -2,7 +2,7 @@
 
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { Dialog as DialogPrimitive } from 'radix-ui'
-import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef, useEffect, useRef } from 'react'
+import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef, useEffect, useMemo, useRef } from 'react'
 import { Drawer } from 'vaul'
 import { cn } from '../utils'
 import { IconButton } from './icon-button/icon-button'
@@ -10,7 +10,6 @@ import { ScrollArea } from './scroll-area'
 import { CloseIcon } from './icons'
 import { useTheme } from '../providers/theme-provider'
 import { applyThemeToElement } from '../utils/theme-utils'
-import { useSafeEffect } from '../utils/react-19-compat'
 
 /* -------------------------------------------------------------------------------------------------
  * Root
@@ -67,24 +66,23 @@ export const Content = forwardRef<ContentElement, ContentProps>((props, ref) => 
 Content.displayName = 'DialogContent'
 
 // Theme wrapper component for portaled content
-const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
+const ThemeWrapper = forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
   const { theme } = useTheme()
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   // Apply theme to the wrapper when theme changes
-  // Use useSafeEffect to prevent infinite loops in React 19
-  useSafeEffect(() => {
+  useEffect(() => {
     if (wrapperRef.current) {
       applyThemeToElement(wrapperRef.current, theme)
     }
   }, [theme])
 
   return (
-    <div ref={wrapperRef} className="haiku-widget-theme-container">
+    <div ref={ref || wrapperRef} className="haiku-widget-theme-container">
       {children}
     </div>
   )
-}
+})
 
 const DialogContent = forwardRef<ContentElement, ContentProps>((props, ref) => {
   const {
@@ -96,9 +94,16 @@ const DialogContent = forwardRef<ContentElement, ContentProps>((props, ref) => {
     ...contentProps
   } = props
   
-  // Always portal to document body to ensure modal is always visible
-  // regardless of parent container constraints
-  const portalContainer = container || (typeof document !== 'undefined' ? document.body : null)
+  // Get the theme container to use as portal container
+  // This ensures the portaled content stays within the theme context
+  const themeContainer = useMemo(() => {
+    return typeof document !== 'undefined' 
+      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+      : null
+  }, []) // Empty dependency array since the container doesn't change
+  
+  // Use the theme container if available, otherwise fall back to document.body
+  const portalContainer = container || themeContainer || (typeof document !== 'undefined' ? document.body : null)
   
   return (
     <DialogPrimitive.Portal container={portalContainer}>
@@ -144,9 +149,16 @@ type DrawerContentProps = ComponentPropsWithoutRef<typeof Drawer.Content>
 const DrawerContent = forwardRef<DrawerContentElement, DrawerContentProps>((props, ref) => {
   const { className, ...contentProps } = props
   
-  // Always portal to document body to ensure modal is always visible
-  // regardless of parent container constraints
-  const portalContainer = typeof document !== 'undefined' ? document.body : null
+  // Get the theme container to use as portal container
+  // This ensures the portaled content stays within the theme context
+  const themeContainer = useMemo(() => {
+    return typeof document !== 'undefined' 
+      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+      : null
+  }, []) // Empty dependency array since the container doesn't change
+  
+  // Use the theme container if available, otherwise fall back to document.body
+  const portalContainer = themeContainer || (typeof document !== 'undefined' ? document.body : null)
   
   return (
     <Drawer.Portal container={portalContainer}>
