@@ -7,6 +7,7 @@ import { cn } from '../utils'
 import { InfoOutlineIcon } from './icons'
 import { useTheme } from '../providers/theme-provider'
 import { applyThemeToElement } from '../utils/theme-utils'
+import { useSafeEffect } from '../utils/react-19-compat'
 
 
 /* -------------------------------------------------------------------------------------------------
@@ -71,7 +72,8 @@ const AlertThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   // Apply theme to the wrapper when theme changes
-  useEffect(() => {
+  // Use useSafeEffect to prevent infinite loops in React 19
+  useSafeEffect(() => {
     if (wrapperRef.current) {
       applyThemeToElement(wrapperRef.current, theme)
     }

@@ -1,5 +1,5 @@
 
-import React, { ReactNode, forwardRef } from 'react'
+import React, { ReactNode, forwardRef, useMemo } from 'react'
 import { Tooltip as TooltipPrimitive } from 'radix-ui'
 import { cn } from '../../utils'
 import { useTheme } from '../../providers/theme-provider'
@@ -24,10 +24,12 @@ export const Tooltip = forwardRef<HTMLButtonElement, TooltipProps>((props, ref) 
   } = props
 
   // Get the theme container to use as portal container
-  const { theme } = useTheme()
-  const themeContainer = typeof document !== 'undefined' 
-    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-    : null
+  // Memoize the DOM query to prevent side effects during render in React 19
+  const themeContainer = useMemo(() => {
+    return typeof document !== 'undefined' 
+      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+      : null
+  }, []) // Empty dependency array since the container doesn't change
 
   return (
     <TooltipPrimitive.Root delayDuration={delayDuration}>

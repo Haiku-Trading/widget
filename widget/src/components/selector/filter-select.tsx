@@ -4,6 +4,7 @@ import { ArrowUpDown } from 'lucide-react'
 import { Select } from 'radix-ui'
 import { FilterType } from '../dialog/chosen-token'
 import { useTheme } from '../../providers/theme-provider'
+import { useMemo } from 'react'
 
 type FilterSelectProps = {
   value: FilterType
@@ -26,9 +27,12 @@ const orderField = [
 
 export function FilterSelect({ value, onValueChange }: FilterSelectProps) {
   const { theme } = useTheme()
-  const themeContainer = typeof document !== 'undefined' 
-    ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-    : null
+  // Memoize the DOM query to prevent side effects during render in React 19
+  const themeContainer = useMemo(() => {
+    return typeof document !== 'undefined' 
+      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+      : null
+  }, []) // Empty dependency array since the container doesn't change
 
   const activeSort =
     Object.entries(value).find(
