@@ -4,6 +4,7 @@ import { HttpClient, RequestOptions } from '../models/http-client'
 interface AxiosAdapterOptions {
   baseURL?: string
   headers?: Record<string, string>
+  widgetKey?: string // Widget key for authentication
   request?: { onIntercept: (request: InternalAxiosRequestConfig) => void }
   response?: { onIntercept: (response: AxiosResponse) => void }
 }
@@ -16,6 +17,15 @@ export class AxiosAdapter implements HttpClient {
       baseURL: options?.baseURL,
       headers: options?.headers,
     })
+    
+    // Add widget key interceptor if provided
+    if (options?.widgetKey) {
+      this.axios.interceptors.request.use((req) => {
+        req.headers['x-widget-key'] = options.widgetKey
+        return req
+      })
+    }
+    
     if (options?.request) {
       this.axios.interceptors.request.use((req) => {
         options.request?.onIntercept(req)

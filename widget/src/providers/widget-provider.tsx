@@ -5,20 +5,18 @@ import { HttpClientProvider } from './http-client'
 import { SessionStoreProvider } from './session'
 import { TradeStoreProvider } from './index'
 import { TooltipProvider } from '../components/tooltip/tooltip'
+import { useWidgetKey } from './widget-key-provider'
 
 // Minimal provider that only provides HTTP client and session stores for the widget
 // The widget expects to be used within a WagmiProvider and QueryClientProvider from the host application
 export function WidgetHttpProvider({ children }: { children: ReactNode }) {
+  const { widgetKey } = useWidgetKey()
+  
   const [httpClient] = useState(
     () =>
       new AxiosAdapter({
         baseURL: process.env.API_BASE_URL || 'https://api.haiku.trade/v1',
-        request: {
-          onIntercept(request) {
-            if (request.url?.includes('inference')) return
-            request.headers['api-key'] = '002b827f-b1da-4135-ac68-9a24fdd67533'
-          },
-        },
+        widgetKey: widgetKey,
       }),
   )
 

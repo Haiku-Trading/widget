@@ -4,6 +4,8 @@ import './styles.css'
 // Haiku Widget - Main export file
 export { HaikuWidget } from './components/haiku-widget'
 export { WidgetHttpProvider } from './providers/widget-provider'
+export { WidgetKeyProvider } from './providers/widget-key-provider'
+export { useWidgetKey } from './providers/widget-key-provider'
 export { ThemeProvider } from './providers/theme-provider'
 export { useTheme } from './providers/theme-provider'
 

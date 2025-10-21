@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react'
 import { WidgetConfig } from '../types/config'
+import { useWidgetKey } from './widget-key-provider'
 
 interface ConfigContextType {
   config: WidgetConfig
@@ -7,9 +8,12 @@ interface ConfigContextType {
 
 const ConfigContext = createContext<ConfigContextType | null>(null)
 
-export function ConfigProvider({ config = {}, children }: { config?: WidgetConfig; children: React.ReactNode }) {
+export function ConfigProvider({ config = {}, children }: { config?: Omit<WidgetConfig, 'widgetKey'>; children: React.ReactNode }) {
+  const { widgetKey } = useWidgetKey()
+  
   const contextValue: ConfigContextType = {
     config: {
+      widgetKey,
       multiInput: true,
       multiOutput: true,
       lockedInputs: false,

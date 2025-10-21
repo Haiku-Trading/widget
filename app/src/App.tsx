@@ -49,29 +49,17 @@ const config = getDefaultConfig({
 
 function App() {
   // Define different theme examples
-  const defaultTheme: WidgetTheme = {}
   
-  const blueTheme: WidgetTheme = {
-    mode: 'light',
-    primaryColor: '#3B82F6', // Blue
-    secondaryColor: '#10B981' // Green
-  }
-
-  const purpleTheme: WidgetTheme = {
-    mode: 'dark',
-    primaryColor: '#8B5CF6', // Purple
-    secondaryColor: '#F59E0B' // Amber
-  }
-
   const redTheme: WidgetTheme = {
     mode: 'auto',
-    primaryColor: '#EF4444', // Red
-    secondaryColor: '#06B6D4' // Cyan
-  }
-
-  const orangeTheme: WidgetTheme = {
-    primaryColor: '#F97316', // Orange
-    secondaryColor: '#84CC16' // Lime
+    light: {
+      primaryColor: '#EF4444', // Red
+      secondaryColor: '#06B6D4' // Cyan
+    },
+    dark: {
+      primaryColor: '#EF4444', // Red
+      secondaryColor: '#06B6D4' // Cyan
+    }
   }
 
   return (
@@ -102,6 +90,25 @@ function App() {
                   </div>
                 </div>
 
+                <div className="card mb-8">
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                    Widget Authentication
+                  </h2>
+                  <p className="text-gray-600 mb-4">
+                    The Haiku Widget now requires a <code className="bg-gray-100 px-2 py-1 rounded">widgetKey</code> prop for authentication. 
+                    This key is used to authenticate requests to the Haiku backend API via the <code className="bg-gray-100 px-2 py-1 rounded">x-widget-key</code> header.
+                  </p>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-blue-900 mb-2">Integration Example:</h3>
+                    <pre className="text-sm text-blue-800 bg-blue-100 p-3 rounded overflow-x-auto">
+{`<HaikuWidget 
+  widgetKey="your-widget-key-here" 
+  config={{ theme: customTheme }} 
+/>`}
+                    </pre>
+                  </div>
+                </div>
+
                 {/* Theme Examples */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Default Theme */}
@@ -113,7 +120,10 @@ function App() {
                       Original widget styling
                     </p>
                     <div className="border rounded-lg p-4 bg-white">
-                      <HaikuWidget theme={redTheme} />
+                      <HaikuWidget 
+                        widgetKey="demo-widget-key-12345" 
+                        config={{ theme: redTheme }} 
+                      />
                     </div>
                   </div>
 
@@ -128,6 +138,7 @@ function App() {
                       <p>✅ Hex color support (#3B82F6)</p>
                       <p>✅ Automatic color conversion</p>
                       <p>✅ TypeScript support</p>
+                      <p>✅ Widget key authentication</p>
                       <p>✅ Backward compatible</p>
                     </div>
                   </div>

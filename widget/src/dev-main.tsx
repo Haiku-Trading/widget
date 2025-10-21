@@ -136,6 +136,7 @@ function DevApp() {
     };
 
     return {
+      widgetKey: 'dev-widget-key-12345', // Demo widget key for development
       theme,
       hiddenChains: hiddenChains.length > 0 ? hiddenChains : undefined,
       hiddenProtocols: hiddenProtocols.length > 0 ? hiddenProtocols : undefined,
@@ -663,7 +664,18 @@ function DevApp() {
                     <div className="border rounded-lg p-4 bg-gray-50">
                       <HaikuWidget 
                         key={JSON.stringify(widgetConfig)} 
-                        config={widgetConfig} 
+                        widgetKey={widgetConfig.widgetKey}
+                        config={{
+                          theme: widgetConfig.theme,
+                          hiddenChains: widgetConfig.hiddenChains,
+                          hiddenProtocols: widgetConfig.hiddenProtocols,
+                          multiInput: widgetConfig.multiInput,
+                          multiOutput: widgetConfig.multiOutput,
+                          lockedInputs: widgetConfig.lockedInputs,
+                          lockedOutputs: widgetConfig.lockedOutputs,
+                          preselectedInputs: widgetConfig.preselectedInputs,
+                          preselectedOutputs: widgetConfig.preselectedOutputs,
+                        }}
                       />
                     </div>
                   </div>
