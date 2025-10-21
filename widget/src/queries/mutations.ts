@@ -31,7 +31,7 @@ export function useFeedbackMutation() {
       ...payload 
     }: FeedbackPayload) => {
       const data = await httpClient.post(
-        `/saveSessionData`,
+        `/widget/saveSessionData`,
         { operation, payload },
         { 
           headers: { 

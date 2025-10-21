@@ -48,7 +48,7 @@ const SuccessTransaction = ({
     <div className="flex w-full flex-col gap-2 items-center rounded-2xl pt-4">
       <SuccessIcon />
       <div className="flex flex-col items-center gap-2 py-4">
-        <span className="text-18px-normal ">Transaction successful</span>
+        <span className="text-lg text-foreground">Transaction successful</span>
       </div>
       {/* {!isRefunded && (
         <span className="text-14px-normal ">
@@ -56,7 +56,7 @@ const SuccessTransaction = ({
         </span>
       )} */}
       <div className="bg-bg-section  flex flex-col w-full p-3 rounded-[12px] gap-[8px]">
-        <span className="text-14px-normal ">You paid with</span>
+        <span className="text-sm text-foreground">You paid with</span>
         {filteredInputTokens.map((token) => {
           const tokenValue = inputPositionSuccessData[token.iid]
           const usdBalance = BigNumber(tokenValue).multipliedBy(token.priceUSD).toFixed()
@@ -76,7 +76,7 @@ const SuccessTransaction = ({
         })}
       </div>
       <div className="bg-bg-section  p-3 w-full rounded-[12px]">
-        <span className="text-14px-normal ">
+        <span className="text-sm text-foreground">
           {transactionData?.destinationTx?.status === 'REFUNDED'
             ? 'Refunded amount'
             : 'You received'}
@@ -134,7 +134,7 @@ const SuccessTransaction = ({
           <Accordion.Header>
             <Accordion.Trigger className="w-full">
               <div className="flex w-full justify-between">
-                <span className=" text-14px-medium">
+                <span className="text-sm font-medium text-foreground">
                   {isOpen ? 'Hide Details' : 'Show Details'}
                 </span>
                 <RiArrowDownSLine
@@ -162,12 +162,12 @@ const TokenInformation = (props: CardTokenProps) => {
     <div className="flex justify-between">
       <div className="flex gap-2 items-center justify-center">
         <Avatar alt="Token" src={icon} fallbackName={symbol} color={color} rootClassName="size-5" />
-        <span className="text-16px-medium">{amountToken}</span>
-        <span className="text-14px-medium">
+        <span className="text-base font-medium text-foreground">{amountToken}</span>
+        <span className="text-sm font-medium text-foreground">
           {String(symbol).length > 8 ? `${String(symbol).slice(0, 8)}...` : symbol}
         </span>
       </div>
-      <span className="text-16px-medium">
+      <span className="text-base font-medium text-foreground">
         {type === TokenType.VarDebt ? '-' : ''}
         {amountUSD}
       </span>
