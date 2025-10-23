@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { useShallow } from 'zustand/shallow'
 import { useTradeStore } from '../providers'
-import { AssetCard } from './token-card'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
 import { useStableCallback } from '../utils/react-19-compat'
+import { AssetCard } from './token-card'
 
-import { ClientOnly } from './client-only'
-import { Dialog } from './dialog'
-import { usdFormatter } from '../utils'
 import { RiArrowDownSLine } from '@remixicon/react'
 import { Accordion } from 'radix-ui'
 import { Address } from 'viem'
 import { useSwapOutputTotal } from '../hooks'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
 import { APIToken } from '../services/get-tokens'
+import { usdFormatter } from '../utils'
+import { ClientOnly } from './client-only'
+import { Dialog } from './dialog'
 import { ChosenTokenDialogContent, useIsShortScreen } from './dialog/chosen-token'
 import { CollapsedTokensList } from './input-assets'
 import { TransactionOverview } from './transaction-overview'
@@ -73,19 +73,7 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
   return (
     <div className="bg-bg-section rounded-[32px] relative" ref={ref}>
       <div className="p-4 flex flex-col gap-2 overflow-hidden">
-        {/* <LayoutGroup> */}
-        <div className="flex space-x-2 mb-4">
-          {outputTokens.map((token, index) => (
-            <div
-              key={token.iid}
-              className="h-6 bg-blue-500 rounded-full transition-all duration-300 ease-in-out"
-              style={{
-                backgroundColor: token.primaryColor,
-                width: `${token.percentage}%`,
-              }}
-            />
-          ))}
-        </div>
+
         {/* <AnimatePresence mode="popLayout"> */}
         {outputTokens.map((token, index) => {
           const isLast = outputTokens.length - 1 === index
@@ -154,6 +142,20 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
           )
         })}
         {/* </AnimatePresence> */}
+
+        {/* <LayoutGroup> */}
+        <div className="flex space-x-2 mb-4">
+          {outputTokens.map((token, index) => (
+            <div
+              key={token.iid}
+              className="h-6 bg-blue-500 rounded-full transition-all duration-300 ease-in-out"
+              style={{
+                backgroundColor: token.primaryColor,
+                width: `${token.percentage}%`,
+              }}
+            />
+          ))}
+        </div>
 
         <CollapsedTokensList
           tokens={outputTokens}

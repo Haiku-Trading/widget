@@ -664,45 +664,29 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                 </button>
               )}
             </div>
-            <span
-              onClick={() =>
-                handleInputChange({
-                  target: {
-                    value: isTokenView ? balance : usdBalance,
-                  },
-                  preventDefault: () => {},
-                  stopPropagation: () => {},
-                  persist: () => {},
-                } as unknown as React.ChangeEvent<HTMLInputElement>)
-              }
-              className="text-sm text-grey-secondary whitespace-nowrap cursor-pointer hover:cursor-pointer"
-            >
-              Balance:{' '}
-              {isShowBalance
-                ? balance
-                  ? formatTokenAmount(Number(balance), Number(usdPrice) || 0)
-                  : '0'
-                : '***'}
-            </span>
-          </div>
-          <div className="flex flex-col items-end justify-center gap-1">
-            {type === 'input' ? (
-              <input
-                ref={inputRef}
-                style={{ textAlign: 'right', marginTop: '7px' }}
-                className={cn(
-                  `text-[32px] font-medium outline-none bg-transparent w-full max-w-[75%] h-7 placeholder:text-grey-secondary disabled:text-muted-foreground`,
-                  Number(inputValue) > Math.abs(Number(isTokenView ? balance : usdBalance))
-                    ? 'text-failed'
-                    : 'text-grey-secondary',
-                )}
-                placeholder="0.00"
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : (
-              outputTokens.length > 1 && (
-                <div className="flex items-center space-x-2">
-                  <span style={{ color }} className="text-lg font-bold">
+            <div className='flex items-center gap-2'>
+              <span
+                onClick={() =>
+                  handleInputChange({
+                    target: {
+                      value: isTokenView ? balance : usdBalance,
+                    },
+                    preventDefault: () => {},
+                    stopPropagation: () => {},
+                    persist: () => {},
+                  } as unknown as React.ChangeEvent<HTMLInputElement>)
+                }
+                className="text-sm text-grey-secondary whitespace-nowrap cursor-pointer hover:cursor-pointer"
+              >
+                Balance:{' '}
+                {isShowBalance
+                  ? balance
+                    ? formatTokenAmount(Number(balance), Number(usdPrice) || 0)
+                    : '0'
+                  : '***'}
+              </span>
+              {type === 'output' && outputTokens.length > 1 && (<div className="flex items-center gap-1">
+                  <span style={{ color }} className="text-[14px] font-normal">
                     {percentage}%
                   </span>
                   <button
@@ -732,13 +716,28 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   >
                     {locked ? <RiLockFill size={16} /> : <RiLockUnlockFill size={16} />}
                   </button>
-                </div>
-              )
-            )}
+                </div>)}
+             </div>
+          </div>
+          <div className="flex flex-col items-end justify-center gap-1">
+            {type === 'input' &&(
+              <input
+                ref={inputRef}
+                style={{ textAlign: 'right', marginTop: '3px' }}
+                className={cn(
+                  `text-[32px] font-medium outline-none bg-transparent w-full max-w-[75%] h-7 placeholder:text-grey-secondary disabled:text-muted-foreground`,
+                  Number(inputValue) > Math.abs(Number(isTokenView ? balance : usdBalance))
+                    ? 'text-failed'
+                    : 'text-grey-secondary',
+                )}
+                placeholder="0.00"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) }
 
             {type === 'output' && (
-              <div
-                style={{ padding: '0px', marginTop: '7px' }}
+              <p
+                style={{ padding: '0px', marginTop: '3px' }}
                 className={cn(
                   'text-grey-medium text-[32px] font-medium leading-none text-nowrap',
                   formatWithZeroCountSubscript(oppositeOutputValue, 8) === '0'
@@ -751,7 +750,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                   : isTokenView
                     ? formatTokenAmount(Number(tokenValue || 0), Number(usdPrice) || 0)
                     : oppositeOutputValue}
-              </div>
+              </p>
             )}
 
             <div className="flex items-center gap-1 mt-[5px]">
