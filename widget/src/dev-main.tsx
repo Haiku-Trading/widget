@@ -1,30 +1,30 @@
-import React, { useState, useMemo } from "react";
-import ReactDOM from "react-dom/client";
-import { WagmiProvider } from "wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  ConnectButton,
   RainbowKitProvider,
   getDefaultConfig,
-  ConnectButton,
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { HaikuWidget, WidgetTheme, WidgetConfig } from "./index";
-import "./styles.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import React, { useMemo, useState } from "react";
+import ReactDOM from "react-dom/client";
+import { WagmiProvider } from "wagmi";
 import {
   arbitrum,
+  avalanche,
   base,
+  berachain,
   bsc,
+  gnosis,
+  katana,
   mainnet,
   optimism,
   polygon,
-  avalanche,
-  gnosis,
   scroll,
-  berachain,
   sei,
   worldchain,
-  katana,
 } from "wagmi/chains";
+import { HaikuWidget, WidgetConfig, WidgetTheme } from "./index";
+import "./styles.css";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -440,7 +440,7 @@ function DevApp() {
 
                   {/* Hidden Chains */}
                   <div className="bg-white rounded-lg p-4 shadow-sm border">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Hidden Chains</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Hide Chains</h3>
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {availableChains.map((chain) => (
                         <label key={chain.id} className="flex items-center">
@@ -460,7 +460,7 @@ function DevApp() {
 
                   {/* Hidden Protocols */}
                   <div className="bg-white rounded-lg p-4 shadow-sm border">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Hidden Protocols</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Hide Protocols</h3>
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {availableProtocols.map((protocol) => (
                         <label key={protocol} className="flex items-center">

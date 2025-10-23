@@ -1,29 +1,28 @@
-import { mappingErrorCodeMessage } from '../../constants/constants'
-import { getInitials } from '../../utils/get-initials'
-import { Tooltip } from '../tooltip/tooltip'
-import { useTokenBalanceQuery } from '../../queries'
-import { cn, tokenFormatter } from '../../utils'
 import { Avatar } from '@ark-ui/react'
 import { RiAddLine, RiCloseLine, RiLockFill, RiLockUnlockFill } from '@remixicon/react'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import BigNumber from 'bignumber.js'
-import millify from 'millify'
-import React, { ComponentRef, forwardRef, useEffect, useMemo, useRef, useState, useCallback } from 'react'
-import { useStableCallback } from '../../utils/react-19-compat'
 import IMask, { type InputMask } from 'imask'
+import millify from 'millify'
+import React, { ComponentRef, forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import { Address } from 'viem'
 import { useConfig } from 'wagmi'
 import { useShallow } from 'zustand/shallow'
-import { categoriesNamesByType, categoriesTypesBadge } from '../../constants/constants'
+import { categoriesNamesByType, categoriesTypesBadge, mappingErrorCodeMessage } from '../../constants/constants'
 import { TokenType } from '../../enums/token-type'
 import { TradeAlert } from '../../enums/trade-alert'
 import { useTradeStore } from '../../providers'
+import { useTokenBalanceQuery } from '../../queries'
+import { cn, tokenFormatter } from '../../utils'
+import { getChainIcon } from '../../utils/chain-utils'
+import { getInitials } from '../../utils/get-initials'
 import { formatTokenAmount, formatWithZeroCountSubscript } from '../../utils/numberFormatting'
+import { getProtocolIcon } from '../../utils/protocol-utils'
+import { useStableCallback } from '../../utils/react-19-compat'
 import { Badge } from '../badge'
 import { useIsShortScreen } from '../dialog/chosen-token'
 import CustomSlider from '../ruler-slider/CustomSlider'
-import { getChainIcon } from '../../utils/chain-utils'
-import { getProtocolIcon } from '../../utils/protocol-utils'
+import { Tooltip } from '../tooltip/tooltip'
 
 /* ----------------------------------------------------------------------------
  * ImageGroup
@@ -775,7 +774,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
         {!locked && !isLocked && (
           <div
             className={
-              'mt-2 w-full overflow-hidden transition-all duration-800 ease-in-out max-h-0 group-hover:max-h-32'
+              'mt-2 w-full overflow-hidden transition-all duration-[1000ms] ease-in-out max-h-0 group-hover:max-h-32'
             }
           >
             {(type === 'input' || (type === 'output' && outputTokens.length > 1)) && (
