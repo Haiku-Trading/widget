@@ -2,21 +2,11 @@
 
 
 
-import { getInitials } from '../../utils/get-initials'
-import { Dialog } from '../dialog'
-import { cn } from '../../utils'
-import { Tooltip } from '../tooltip/tooltip'
-import { TextField } from '../text-field'
-import { ToggleGroup } from '../toggle-group'
-import { Button } from '../button/button'
-import { useClassicTokensBalancesQuery, useTokenBalanceQuery } from '../../queries'
 import { Avatar } from '@ark-ui/react'
 import BigNumber from 'bignumber.js'
 import { Coins, TrendingUp, Triangle } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { HoverCard } from 'radix-ui'
-import { getChainIcon } from '../../utils/chain-utils'
-import { getProtocolIcon } from '../../utils/protocol-utils'
 import {
   ComponentProps,
   ElementRef,
@@ -33,7 +23,8 @@ import { useConfig } from 'wagmi'
 import { useShallow } from 'zustand/shallow'
 import { TokenCategory, categoriesNames, categoriesOrigNames, tokenBadge } from '../../constants/constants'
 import { useTradeStore } from '../../providers'
-import { useGetTokensQuery } from '../../queries'
+import { useConfig as useWidgetConfig } from '../../providers/config-provider'
+import { useClassicTokensBalancesQuery, useGetTokensQuery, useTokenBalanceQuery } from '../../queries'
 import {
   APICollateralToken,
   APIToken,
@@ -41,21 +32,29 @@ import {
   APIVaultToken,
   APIWeightedLiquidityToken,
 } from '../../services/get-tokens'
+import { cn } from '../../utils'
+import { getChainIcon } from '../../utils/chain-utils'
+import { getInitials } from '../../utils/get-initials'
+import { getProtocolIcon } from '../../utils/protocol-utils'
 import { Badge } from '../badge'
+import { Button } from '../button/button'
 import { Card } from '../card'
-import { useConfig as useWidgetConfig } from '../../providers/config-provider'
+import { Dialog } from '../dialog'
+import { TextField } from '../text-field'
+import { ToggleGroup } from '../toggle-group'
+import { Tooltip } from '../tooltip/tooltip'
 
-import TaggingMetadataContent from '../tagging/components/tagging-metadata-content'
 import millify from 'millify'
 import { TokenType } from '../../enums/token-type'
 import { enrichWeightedTokensWithLogos } from '../../utils/common'
 import { formatTokenAmount } from '../../utils/numberFormatting'
+import { CloseIcon, MagniferIcon } from '../icons'
 import { ChainSelect } from '../selector/chain-select'
 import { FilterSelect } from '../selector/filter-select'
 import { MobileChainSelect } from '../selector/mobile-chain-select'
 import { MobileProtocolSelect } from '../selector/mobile-protocol-select'
 import { ProtocolSelect } from '../selector/protocol-select'
-import { CloseIcon, MagniferIcon } from '../icons'
+import TaggingMetadataContent from '../tagging/components/tagging-metadata-content'
 
 interface APITokenWithBalance extends APIToken {
   balance: string
@@ -261,7 +260,7 @@ type FilterTokensProps = {
   search: string
   selectedCategories: string[]
   tokens: APIToken[]
-  collateralTokens: APICollateralToken[]
+  collateralTokens: APICollateralToken[] | any
   varDebtTokens: APIVarDebtToken[]
   weightedLiquidityTokens: APIWeightedLiquidityToken[]
   vaultTokens: APIVaultToken[]

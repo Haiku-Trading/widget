@@ -150,6 +150,7 @@ module.exports = {
         section: 'hsl(var(--section))',
         disabled: 'hsl(var(--disabled))',
         neutral: 'hsl(var(--neutral))',
+        'muted-background': 'hsl(var(--bg-section))',
         bar: 'hsl(var(--bar))',
         'footer-icons': 'hsl(var(--footer-icons))',
         'sec-btn': 'hsl(var(--sec-btn))',
