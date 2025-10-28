@@ -11,6 +11,11 @@ interface Props {
 const CustomColorComponent = ({ colorsObject, setColorsObject, nameObject, label }: Props) => {
     const [localColor, setLocalColor] = useState(colorsObject[nameObject] || "");
 
+    // Update local state when the prop changes (e.g., when reset button is clicked)
+    useEffect(() => {
+        setLocalColor(colorsObject[nameObject] || "");
+    }, [colorsObject[nameObject]]);
+
     useEffect(() => {
         const handler = setTimeout(() => {
             if (localColor !== colorsObject[nameObject]) {
