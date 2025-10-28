@@ -85,6 +85,9 @@ function DevApp() {
         mutedBackground: "#f5f5f5",
         primaryText: "#020817",
         secondaryText: "#666666",
+        swapButton: "#f8fafc",
+        iconsHeader: "#64748b",
+        swapIcon: "#020817",
     });
 
     // Dark mode colors
@@ -97,6 +100,9 @@ function DevApp() {
         mutedBackground: "#1e293b",
         primaryText: "#f8fafc",
         secondaryText: "#b2bdcc",
+        swapButton: "#f8fafc",
+        iconsHeader: "#94a3b8",
+        swapIcon: "#020817",
     });
 
     // Widget configuration state
@@ -128,7 +134,10 @@ function DevApp() {
                 borderColor: lightModeColors.borderColor,
                 mutedBackground: lightModeColors.mutedBackground,
                 primaryText: lightModeColors.primaryText,
-                secondaryText: lightModeColors.secondaryText
+                secondaryText: lightModeColors.secondaryText,
+                swapButton: lightModeColors.swapButton,
+                iconsHeader: lightModeColors.iconsHeader,
+                swapIcon: lightModeColors.swapIcon,
             },
             dark: {
                 primaryColor: darkModeColors.primaryColor,
@@ -137,7 +146,10 @@ function DevApp() {
                 borderColor: darkModeColors.borderColor,
                 mutedBackground: darkModeColors.mutedBackground,
                 primaryText: darkModeColors.primaryText,
-                secondaryText: darkModeColors.secondaryText
+                secondaryText: darkModeColors.secondaryText,
+                swapButton: darkModeColors.swapButton,
+                iconsHeader: darkModeColors.iconsHeader,
+                swapIcon: darkModeColors.swapIcon,
             },
         };
 
@@ -231,8 +243,11 @@ function DevApp() {
             button: "#f5f5f5",
             paper: "",
             mutedBackground: "#f5f5f5",
-            primaryText: "",
-            secondaryText: "",
+            primaryText: "#020817",
+            secondaryText: "#666666",
+            swapButton: "#f8fafc",
+            iconsHeader: "#64748b",
+            swapIcon: "#020817",
         });
 
         setDarkModeColors({
@@ -242,8 +257,11 @@ function DevApp() {
             button: "#f5f5f5",
             paper: "",
             mutedBackground: "#1e293b",
-            primaryText: "",
-            secondaryText: "",
+            primaryText: "#f8fafc",
+            secondaryText: "#b2bdcc",
+            swapButton: "#f8fafc",
+            iconsHeader: "#94a3b8",
+            swapIcon: "#020817",
         });
 
         // Reset dark mode colors
@@ -371,8 +389,8 @@ function DevApp() {
                                                     </div>
 
                                                     {/* Content */}
-                                                    <div className="p-4 bg-white rounded-b-lg">
-                                                        {themeMode === "light" ? (
+                                                    <div className="h-[500px] p-4 bg-white rounded-b-lg overflow-auto">
+                                                    {themeMode === "light" ? (
                                                             <CustomLightColor colorsObject={lightModeColors} setColorsObject={setLightModeColors} />
                                                         ) : (
                                                             <CustomDarkColor colorsObject={darkModeColors} setColorsObject={setDarkModeColors} />

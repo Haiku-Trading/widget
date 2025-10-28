@@ -10,9 +10,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
     <div className="space-y-2">
         <div className="flex items-center gap-2 mt-4 mb-1">
             <div className="h-px flex-1 bg-gray-200" />
-            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                {title}
-            </h3>
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">{title}</h3>
             <div className="h-px flex-1 bg-gray-200" />
         </div>
         {children}
@@ -36,12 +34,7 @@ const CustomDarkColor = ({ colorsObject, setColorsObject }: Props) => {
                     label="Muted Background"
                     nameObject="mutedBackground"
                 />
-                <CustomColorComponent
-                    colorsObject={colorsObject}
-                    setColorsObject={setColorsObject}
-                    label="Border"
-                    nameObject="borderColor"
-                />
+                <CustomColorComponent colorsObject={colorsObject} setColorsObject={setColorsObject} label="Border" nameObject="borderColor" />
                 {/* <CustomColorComponent
                     colorsObject={colorsObject}
                     setColorsObject={setColorsObject}
@@ -52,12 +45,7 @@ const CustomDarkColor = ({ colorsObject, setColorsObject }: Props) => {
 
             {/* Text */}
             <Section title="Text">
-                <CustomColorComponent
-                    colorsObject={colorsObject}
-                    setColorsObject={setColorsObject}
-                    label="Primary Text"
-                    nameObject="primaryText"
-                />
+                <CustomColorComponent colorsObject={colorsObject} setColorsObject={setColorsObject} label="Primary Text" nameObject="primaryText" />
                 <CustomColorComponent
                     colorsObject={colorsObject}
                     setColorsObject={setColorsObject}
@@ -68,18 +56,13 @@ const CustomDarkColor = ({ colorsObject, setColorsObject }: Props) => {
 
             {/* Buttons */}
             <Section title="Buttons">
-                <CustomColorComponent
-                    colorsObject={colorsObject}
-                    setColorsObject={setColorsObject}
-                    label="Button"
-                    nameObject="button"
-                />
-                {/* <CustomColorComponent
-                    colorsObject={colorsObject}
-                    setColorsObject={setColorsObject}
-                    label="Button Text"
-                    nameObject="buttonText"
-                /> */}
+                <CustomColorComponent colorsObject={colorsObject} setColorsObject={setColorsObject} label="Button" nameObject="button" />
+                <CustomColorComponent colorsObject={colorsObject} setColorsObject={setColorsObject} label="Swap Button" nameObject="swapButton" />
+            </Section>
+            {/* Icons */}
+            <Section title="Icons">
+                <CustomColorComponent colorsObject={colorsObject} setColorsObject={setColorsObject} label="Swap Icon" nameObject="swapIcon" />
+                <CustomColorComponent colorsObject={colorsObject} setColorsObject={setColorsObject} label="Header Icons" nameObject="iconsHeader" />
             </Section>
         </div>
     );

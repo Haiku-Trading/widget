@@ -146,6 +146,16 @@ export function generatePaletteCSS(palette: ColorPalette): Record<string, string
         const buttonColor = chroma(palette.button);
         cssVars["--button-hover"] = colorToHsl(buttonColor.darken(0.1).hex());
     }
+    // Handle swap button color
+    if (palette.swapButton && isValidColor(palette.swapButton)) {
+        cssVars["--button-swap-bg"] = colorToHsl(palette.swapButton);
+    }
+    if (palette.swapIcon && isValidColor(palette.swapIcon)) {
+        cssVars["--button-swap-icon"] = colorToHsl(palette.swapIcon);
+    }
+    if (palette.iconsHeader && isValidColor(palette.iconsHeader)) {
+        cssVars["--button-header-icon"] = colorToHsl(palette.iconsHeader);
+    }
 
     // Handle border color
     if (palette.borderColor && isValidColor(palette.borderColor)) {

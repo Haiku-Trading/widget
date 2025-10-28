@@ -137,6 +137,11 @@
     --button-bg: 222.2 84% 4.9%;
     --button-text: 0 0% 98%;
     --button-hover: 222.2 84% 2%;
+
+    --button-swap-bg: 223 84% 5%;
+    --button-swap-icon: 223 84% 5%;
+
+    --button-header-icon:215.4 16.3% 46.9%
 }
 
 .dark {

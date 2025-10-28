@@ -12,6 +12,9 @@ export interface ColorPalette {
     mutedBackground?: string;
     primaryText?: string;
     secondaryText?: string;
+    swapButton?: string;
+    iconsHeader?: string;
+    swapIcon?: string;
 }
 
 export interface WidgetTheme {

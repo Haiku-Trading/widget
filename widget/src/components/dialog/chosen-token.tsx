@@ -1180,6 +1180,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
               <Button
                 className="flex-1 text-base disabled:grayscale disabled:opacity-30"
                 size="lg"
+                variant='primary'
                 onClick={() => {
                   onSelectTokens?.(selectedTokens)
                   setSelectedTokens([])
