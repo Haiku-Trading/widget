@@ -1030,7 +1030,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
               <ToggleGroup.Root
                 type="multiple"
                 value={selectedCategories}
-                className="overflow-x-auto"
+                className="overflow-x-auto pl-[2px]"
                 onValueChange={(value) => {
                   const hasAll = value.includes('all')
 
