@@ -8,12 +8,9 @@ interface ConfigContextType {
 
 const ConfigContext = createContext<ConfigContextType | null>(null)
 
-export function ConfigProvider({ config = {}, children }: { config?: Omit<WidgetConfig, 'widgetKey'>; children: React.ReactNode }) {
-  const { widgetKey } = useWidgetKey()
-  
+export function ConfigProvider({ config = {}, children }: { config?: WidgetConfig; children: React.ReactNode }) {
   const contextValue: ConfigContextType = {
     config: {
-      widgetKey,
       multiInput: true,
       multiOutput: true,
       lockedInputs: false,

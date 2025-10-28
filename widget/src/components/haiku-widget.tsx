@@ -7,7 +7,7 @@ import { WidgetConfig } from "../types/config";
 
 interface HaikuWidgetProps {
   widgetKey: string; // Required widget key for authentication
-  config?: Omit<WidgetConfig, 'widgetKey'>; // Config without widgetKey since it's passed separately
+  config?: WidgetConfig;
 }
 
 export function HaikuWidget({ widgetKey, config }: HaikuWidgetProps) {

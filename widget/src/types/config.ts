@@ -1,7 +1,6 @@
 import { WidgetTheme } from './theme'
 
 export interface WidgetConfig {
-  widgetKey: string // Required widget key for authentication
   theme?: WidgetTheme
   hiddenChains?: number[]
   hiddenProtocols?: string[]

@@ -154,7 +154,6 @@ function DevApp() {
         };
 
         return {
-            widgetKey: "dev-widget-key-12345", // Demo widget key for development
             theme,
             hiddenChains: hiddenChains.length > 0 ? hiddenChains : undefined,
             hiddenProtocols: hiddenProtocols.length > 0 ? hiddenProtocols : undefined,
@@ -280,10 +279,19 @@ function DevApp() {
         setNewOutputWeight("");
     };
 
+    // Generate the component snippet for display and copying
+    const generateComponentSnippet = () => {
+        const configString = JSON.stringify(widgetConfig, null, 2);
+        return `<HaikuWidget
+  widgetKey="<YOUR_WIDGET_KEY>"
+  config={${configString.replace(/"/g, '"')}}
+/>`;
+    };
+
     const copyConfig = async () => {
         try {
-            const configString = JSON.stringify(widgetConfig, null, 2);
-            await navigator.clipboard.writeText(configString);
+            const componentSnippet = generateComponentSnippet();
+            await navigator.clipboard.writeText(componentSnippet);
 
             // Show success feedback
             const button = document.getElementById("copy-config-btn");
@@ -299,8 +307,9 @@ function DevApp() {
         } catch (err) {
             console.error("Failed to copy config:", err);
             // Fallback for older browsers
+            const componentSnippet = generateComponentSnippet();
             const textArea = document.createElement("textarea");
-            textArea.value = JSON.stringify(widgetConfig, null, 2);
+            textArea.value = componentSnippet;
             document.body.appendChild(textArea);
             textArea.select();
             document.execCommand("copy");
@@ -634,10 +643,10 @@ function DevApp() {
                                         </div>
                                     </div>
 
-                                    {/* Config JSON */}
+                                    {/* Component Code */}
                                     <div className="bg-white rounded-lg p-4 shadow-sm border">
                                         <div className="flex items-center justify-between mb-3">
-                                            <h3 className="text-lg font-semibold text-gray-900">Current Config</h3>
+                                            <h3 className="text-lg font-semibold text-gray-900">Component Code</h3>
                                             <button
                                                 onClick={copyConfig}
                                                 className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 transition-colors"
@@ -646,10 +655,10 @@ function DevApp() {
                                             </button>
                                         </div>
                                         <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-40">
-                                            {JSON.stringify(widgetConfig, null, 2)}
+                                            {generateComponentSnippet()}
                                         </pre>
                                         <div className="mt-2 text-xs text-gray-600">
-                                            💡 Copy this config and paste it into your <code className="bg-gray-200 px-1 rounded">config</code> prop
+                                            💡 Click "Copy" for your ready-to-use Haiku widget React component
                                         </div>
                                     </div>
                                 </div>
@@ -661,18 +670,8 @@ function DevApp() {
                                         <div className="border rounded-lg p-4 bg-gray-50">
                                             <HaikuWidget
                                                 key={JSON.stringify(widgetConfig)}
-                                                widgetKey={widgetConfig.widgetKey}
-                                                config={{
-                                                    theme: widgetConfig.theme,
-                                                    hiddenChains: widgetConfig.hiddenChains,
-                                                    hiddenProtocols: widgetConfig.hiddenProtocols,
-                                                    multiInput: widgetConfig.multiInput,
-                                                    multiOutput: widgetConfig.multiOutput,
-                                                    lockedInputs: widgetConfig.lockedInputs,
-                                                    lockedOutputs: widgetConfig.lockedOutputs,
-                                                    preselectedInputs: widgetConfig.preselectedInputs,
-                                                    preselectedOutputs: widgetConfig.preselectedOutputs,
-                                                }}
+                                                widgetKey="dev-widget-key-12345"
+                                                config={widgetConfig}
                                             />
                                         </div>
                                     </div>
