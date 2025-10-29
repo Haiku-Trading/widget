@@ -7,6 +7,7 @@ import { WagmiProvider } from "wagmi";
 import { arbitrum, avalanche, base, berachain, bsc, gnosis, katana, mainnet, optimism, polygon, scroll, sei, worldchain } from "wagmi/chains";
 import CustomDarkColor from "./components/custom-colors/custom-dark-color";
 import CustomLightColor from "./components/custom-colors/custom-light-color";
+import { DEFAULT_CONFIG } from "./components/haiku-widget";
 import { HaikuWidget, WidgetConfig, WidgetTheme } from "./index";
 import "./styles.css";
 import { ColorPalette } from "./types/theme";
@@ -279,14 +280,61 @@ function DevApp() {
         setNewOutputWeight("");
     };
 
-    // Generate the component snippet for display and copying
-    const generateComponentSnippet = () => {
-        const configString = JSON.stringify(widgetConfig, null, 2);
+    function getDiff(current: any, defaults: any): any {
+        if (typeof current !== "object" || current === null) {
+            return current === defaults ? undefined : current;
+        }
+
+        if (Array.isArray(current)) {
+            return current.length > 0 ? current : undefined;
+        }
+
+        const diff: any = {};
+        let hasChanges = false;
+
+        for (const key in current) {
+            const currentValue = current[key];
+            const defaultValue = defaults?.[key];
+
+            if (Array.isArray(currentValue)) {
+                if (currentValue.length > 0) {
+                    diff[key] = currentValue;
+                    hasChanges = true;
+                }
+                continue;
+            }
+
+            if (typeof currentValue === "object" && currentValue !== null) {
+                const nestedDiff = getDiff(currentValue, defaultValue);
+                if (nestedDiff && Object.keys(nestedDiff).length > 0) {
+                    diff[key] = nestedDiff;
+                    hasChanges = true;
+                }
+                continue;
+            }
+
+            if (currentValue !== defaultValue) {
+                diff[key] = currentValue;
+                hasChanges = true;
+            }
+        }
+
+        return hasChanges ? diff : undefined;
+    }
+
+    function generateComponentSnippet() {
+        const configDiff = getDiff(widgetConfig, DEFAULT_CONFIG);
+
+        if (!configDiff || Object.keys(configDiff).length === 0) {
+            return `<HaikuWidget widgetKey="<YOUR_WIDGET_KEY>" />`;
+        }
+
+        const configString = JSON.stringify(configDiff, null, 2);
         return `<HaikuWidget
-  widgetKey="<YOUR_WIDGET_KEY>"
-  config={${configString.replace(/"/g, '"')}}
-/>`;
-    };
+      widgetKey="<YOUR_WIDGET_KEY>"
+      config={${configString}}
+    />`;
+    }
 
     const copyConfig = async () => {
         try {
@@ -399,7 +447,7 @@ function DevApp() {
 
                                                     {/* Content */}
                                                     <div className="h-[500px] p-4 bg-white rounded-b-lg overflow-auto">
-                                                    {themeMode === "light" ? (
+                                                        {themeMode === "light" ? (
                                                             <CustomLightColor colorsObject={lightModeColors} setColorsObject={setLightModeColors} />
                                                         ) : (
                                                             <CustomDarkColor colorsObject={darkModeColors} setColorsObject={setDarkModeColors} />
@@ -654,9 +702,7 @@ function DevApp() {
                                                 Copy
                                             </button>
                                         </div>
-                                        <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-40">
-                                            {generateComponentSnippet()}
-                                        </pre>
+                                        <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-40">{generateComponentSnippet()}</pre>
                                         <div className="mt-2 text-xs text-gray-600">
                                             💡 Click "Copy" for your ready-to-use Haiku widget React component
                                         </div>
@@ -668,11 +714,7 @@ function DevApp() {
                                     <div className="bg-white rounded-lg p-6 shadow-sm border">
                                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Widget Preview</h3>
                                         <div className="border rounded-lg p-4 bg-gray-50">
-                                            <HaikuWidget
-                                                key={JSON.stringify(widgetConfig)}
-                                                widgetKey="dev-widget-key-12345"
-                                                config={widgetConfig}
-                                            />
+                                            <HaikuWidget key={JSON.stringify(widgetConfig)} widgetKey="dev-widget-key-12345" config={widgetConfig} />
                                         </div>
                                     </div>
                                 </div>
