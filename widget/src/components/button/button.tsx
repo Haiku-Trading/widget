@@ -1,23 +1,23 @@
-import React from 'react'
+import React from "react";
 
-import { Slot, Slottable } from '@radix-ui/react-slot'
-import { buttonStyles } from './variants'
-import { VariantProps } from 'tailwind-variants'
+import { Slot, Slottable } from "@radix-ui/react-slot";
+import { VariantProps } from "tailwind-variants";
+import { buttonStyles } from "./variants";
 
-import { cn } from '../../utils'
-import { AlertIcon } from '../icons'
+import { cn } from "../../utils";
+import { AlertIcon } from "../icons";
 
 /* -----------------------------------------------------------------------------
  * Button Types
  * ---------------------------------------------------------------------------*/
 
-type ButtonElements = React.ElementRef<'button'>
-type ButtonPrimitiveProps = React.ComponentPropsWithoutRef<'button'>
-type ButtonVariants = VariantProps<typeof buttonStyles>
+type ButtonElements = React.ElementRef<"button">;
+type ButtonPrimitiveProps = React.ComponentPropsWithoutRef<"button">;
+type ButtonVariants = VariantProps<typeof buttonStyles>;
 
 interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {
-  asChild?: boolean
-  alert?: boolean
+    asChild?: boolean;
+    alert?: boolean;
 }
 
 /* ----------------------------------------------------------------------------
@@ -25,47 +25,33 @@ interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {
  * ---------------------------------------------------------------------------*/
 
 const Button = React.forwardRef<ButtonElements, ButtonProps>((props, ref) => {
-  const {
-    asChild = false,
-    alert = false,
-    variant,
-    className,
-    size,
-    children,
-    type = 'button',
-    ...buttonProps
-  } = props
+    const { asChild = false, alert = false, variant, className, size, children, type = "button", ...buttonProps } = props;
 
-  const Comp = asChild ? Slot : 'button'
+    const Comp = asChild ? Slot : "button";
 
-  return (
-    <Comp
-      type={type}
-      className={buttonStyles({ variant, size, className })}
-      ref={ref}
-      {...buttonProps}
-    >
-      {alert && (
-        <AlertIcon
-          className={cn(
-            'size-5',
-            variant === 'failure'
-              ? 'text-failed'
-              : variant === 'warning'
-                ? 'text-warning-text'
-                : '',
-          )}
-        />
-      )}
-      <Slottable>{children}</Slottable>
-    </Comp>
-  )
-})
+    // Apply custom button styling for primary variant
+    const style =
+        variant === "primary" && !asChild
+            ? {
+                  backgroundColor: "hsl(var(--button-bg))",
+                  color: "hsl(var(--button-text))",
+              }
+            : undefined;
 
-Button.displayName = 'Button'
+    return (
+        <Comp type={type} className={buttonStyles({ variant, size, className })} style={style} ref={ref} {...buttonProps}>
+            {alert && (
+                <AlertIcon className={cn("size-5", variant === "failure" ? "text-failed" : variant === "warning" ? "text-warning-text" : "")} />
+            )}
+            <Slottable>{children}</Slottable>
+        </Comp>
+    );
+});
+
+Button.displayName = "Button";
 
 /* ----------------------------------------------------------------------------
  * Export
  * ---------------------------------------------------------------------------*/
 
-export { Button }
+export { Button };

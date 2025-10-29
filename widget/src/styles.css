@@ -3,202 +3,217 @@
 @tailwind utilities;
 
 :root {
-  /* Background colors - controlled by light/dark mode only */
-  --bg-primary: 0 0% 100%;
-  --bg-surface: 0 0% 98%;
-  --bg-section: 0 0% 96%;
-  --stroke-grey-primary: 0 0% 90%;
-  --stroke-grey-secondary: 0 0% 85%;
-  
-  /* Theme colors - will be overridden by user theme */
-  --primary: 222.2 84% 4.9%;
-  --primary-foreground: 0 0% 98%;
-  --primary-50: 239 246% 255%;
-  --primary-100: 221 214% 255%;
-  --primary-200: 203 182% 255%;
-  --primary-300: 185 150% 255%;
-  --primary-400: 167 118% 255%;
-  --primary-500: 149 86% 255%;
-  --primary-600: 131 54% 255%;
-  --primary-700: 113 22% 255%;
-  --primary-800: 95 0% 255%;
-  --primary-900: 77 0% 255%;
-  --primary-950: 59 0% 255%;
-  
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 0 0% 9%;
-  --secondary-50: 239 246% 255%;
-  --secondary-100: 221 214% 255%;
-  --secondary-200: 203 182% 255%;
-  --secondary-300: 185 150% 255%;
-  --secondary-400: 167 118% 255%;
-  --secondary-500: 149 86% 255%;
-  --secondary-600: 131 54% 255%;
-  --secondary-700: 113 22% 255%;
-  --secondary-800: 95 0% 255%;
-  --secondary-900: 77 0% 255%;
-  --secondary-950: 59 0% 255%;
-  
-  --accent: 210 40% 96%;
-  --accent-foreground: 0 0% 9%;
-  --accent-50: 239 246% 255%;
-  --accent-100: 221 214% 255%;
-  --accent-200: 203 182% 255%;
-  --accent-300: 185 150% 255%;
-  --accent-400: 167 118% 255%;
-  --accent-500: 149 86% 255%;
-  --accent-600: 131 54% 255%;
-  --accent-700: 113 22% 255%;
-  --accent-800: 95 0% 255%;
-  --accent-900: 77 0% 255%;
-  --accent-950: 59 0% 255%;
-  
-  --success: 142 76% 36%;
-  --success-foreground: 0 0% 98%;
-  --success-50: 246 255% 246%;
-  --success-100: 214 255% 214%;
-  --success-200: 182 255% 182%;
-  --success-300: 150 255% 150%;
-  --success-400: 118 255% 118%;
-  --success-500: 86 255% 86%;
-  --success-600: 54 255% 54%;
-  --success-700: 22 255% 22%;
-  --success-800: 0 255% 0%;
-  --success-900: 0 255% 0%;
-  --success-950: 0 255% 0%;
-  
-  --warning: 38 92% 50%;
-  --warning-foreground: 0 0% 9%;
-  --warning-50: 255 255% 246%;
-  --warning-100: 255 255% 214%;
-  --warning-200: 255 255% 182%;
-  --warning-300: 255 255% 150%;
-  --warning-400: 255 255% 118%;
-  --warning-500: 255 255% 86%;
-  --warning-600: 255 255% 54%;
-  --warning-700: 255 255% 22%;
-  --warning-800: 255 255% 0%;
-  --warning-900: 255 255% 0%;
-  --warning-950: 255 255% 0%;
-  --warning-bg: 38 92% 50% / 0.1;
-  --warning-border: 38 92% 50% / 0.2;
-  
-  --error: 0 84% 60%;
-  --error-foreground: 0 0% 98%;
-  --error-50: 255 246% 246%;
-  --error-100: 255 214% 214%;
-  --error-200: 255 182% 182%;
-  --error-300: 255 150% 150%;
-  --error-400: 255 118% 118%;
-  --error-500: 255 86% 86%;
-  --error-600: 255 54% 54%;
-  --error-700: 255 22% 22%;
-  --error-800: 255 0% 0%;
-  --error-900: 255 0% 0%;
-  --error-950: 255 0% 0%;
-  
-  /* System colors */
-  --background: 0 0% 100%;
-  --overlay: 0 0% 100% / 0.8;
-  --tertiary: 210 40% 96%;
-  --foreground: 222.2 84% 4.9%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --border: 214.3 31.8% 91.4%;
-  --active: 210 40% 96%;
-  --active-border: 214.3 31.8% 91.4%;
-  --filled: 210 40% 96%;
-  --scroll-bar: 0 0% 90%;
-  --sec-border: 0 0% 85%;
-  --base-static-black: 0 0% 0%;
-  --base-static-white: 0 0% 100%;
-  --failed: 0 84% 60%;
-  --info: 221 83% 53%;
-  --divider: 0 0% 90%;
-  --section: 0 0% 96%;
-  --disabled: 0 0% 75%;
-  --neutral: 0 0% 50%;
-  --bar: 0 0% 90%;
-  --footer-icons: 0 0% 45%;
-  --sec-btn: 0 0% 85%;
-  --text-grey-primary: 0 0% 20%;
-  --text-grey-secondary: 0 0% 40%;
-  --text-grey-muted: 0 0% 60%;
-  --text-grey-disabled: 0 0% 75%;
-  --icon-primary: 0 0% 9%;
-  --icon-subtle: 0 0% 45%;
-  --icon-disabled: 0 0% 75%;
-  --state-error-default: 0 84% 60%;
-  --slippage-warning-bg: 38 92% 50% / 0.1;
-  --slippage-warning-text: 38 92% 50%;
-  --slippage-error-bg: 0 84% 60% / 0.1;
-  --slippage-error-text: 0 84% 60%;
+    /* Background colors - controlled by light/dark mode only */
+    --bg-primary: 0 0% 100%;
+    --bg-surface: 0 0% 98%;
+    --bg-section: 0 0% 96%;
+    --stroke-grey-primary: 0 0% 90%;
+    --stroke-grey-secondary: 0 0% 85%;
+
+    /* Theme colors - will be overridden by user theme */
+    --primary: 222.2 84% 4.9%;
+    --primary-foreground: 0 0% 98%;
+    --primary-50: 239 246% 255%;
+    --primary-100: 221 214% 255%;
+    --primary-200: 203 182% 255%;
+    --primary-300: 185 150% 255%;
+    --primary-400: 167 118% 255%;
+    --primary-500: 149 86% 255%;
+    --primary-600: 131 54% 255%;
+    --primary-700: 113 22% 255%;
+    --primary-800: 95 0% 255%;
+    --primary-900: 77 0% 255%;
+    --primary-950: 59 0% 255%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --secondary-50: 239 246% 255%;
+    --secondary-100: 221 214% 255%;
+    --secondary-200: 203 182% 255%;
+    --secondary-300: 185 150% 255%;
+    --secondary-400: 167 118% 255%;
+    --secondary-500: 149 86% 255%;
+    --secondary-600: 131 54% 255%;
+    --secondary-700: 113 22% 255%;
+    --secondary-800: 95 0% 255%;
+    --secondary-900: 77 0% 255%;
+    --secondary-950: 59 0% 255%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 0 0% 9%;
+    --accent-50: 239 246% 255%;
+    --accent-100: 221 214% 255%;
+    --accent-200: 203 182% 255%;
+    --accent-300: 185 150% 255%;
+    --accent-400: 167 118% 255%;
+    --accent-500: 149 86% 255%;
+    --accent-600: 131 54% 255%;
+    --accent-700: 113 22% 255%;
+    --accent-800: 95 0% 255%;
+    --accent-900: 77 0% 255%;
+    --accent-950: 59 0% 255%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    --success-50: 246 255% 246%;
+    --success-100: 214 255% 214%;
+    --success-200: 182 255% 182%;
+    --success-300: 150 255% 150%;
+    --success-400: 118 255% 118%;
+    --success-500: 86 255% 86%;
+    --success-600: 54 255% 54%;
+    --success-700: 22 255% 22%;
+    --success-800: 0 255% 0%;
+    --success-900: 0 255% 0%;
+    --success-950: 0 255% 0%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 9%;
+    --warning-50: 255 255% 246%;
+    --warning-100: 255 255% 214%;
+    --warning-200: 255 255% 182%;
+    --warning-300: 255 255% 150%;
+    --warning-400: 255 255% 118%;
+    --warning-500: 255 255% 86%;
+    --warning-600: 255 255% 54%;
+    --warning-700: 255 255% 22%;
+    --warning-800: 255 255% 0%;
+    --warning-900: 255 255% 0%;
+    --warning-950: 255 255% 0%;
+    --warning-bg: 38 92% 50% / 0.1;
+    --warning-border: 38 92% 50% / 0.2;
+
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 98%;
+    --error-50: 255 246% 246%;
+    --error-100: 255 214% 214%;
+    --error-200: 255 182% 182%;
+    --error-300: 255 150% 150%;
+    --error-400: 255 118% 118%;
+    --error-500: 255 86% 86%;
+    --error-600: 255 54% 54%;
+    --error-700: 255 22% 22%;
+    --error-800: 255 0% 0%;
+    --error-900: 255 0% 0%;
+    --error-950: 255 0% 0%;
+
+    /* System colors */
+    --background: 0 0% 100%;
+    --overlay: 0 0% 100% / 0.8;
+    --tertiary: 210 40% 96%;
+    --foreground: 222.2 84% 4.9%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+    --active: 210 40% 96%;
+    --active-border: 214.3 31.8% 91.4%;
+    --filled: 210 40% 96%;
+    --scroll-bar: 0 0% 90%;
+    --sec-border: 0 0% 85%;
+    --base-static-black: 0 0% 0%;
+    --base-static-white: 0 0% 100%;
+    --failed: 0 84% 60%;
+    --info: 221 83% 53%;
+    --divider: 0 0% 90%;
+    --section: 0 0% 96%;
+    --disabled: 0 0% 75%;
+    --neutral: 0 0% 50%;
+    --bar: 0 0% 90%;
+    --footer-icons: 0 0% 45%;
+    --sec-btn: 0 0% 85%;
+    --text-grey-primary: 0 0% 20%;
+    --text-grey-secondary: 0 0% 40%;
+    --text-grey-muted: 0 0% 60%;
+    --text-grey-disabled: 0 0% 75%;
+    --icon-primary: 0 0% 9%;
+    --icon-subtle: 0 0% 45%;
+    --icon-disabled: 0 0% 75%;
+    --state-error-default: 0 84% 60%;
+    --slippage-warning-bg: 38 92% 50% / 0.1;
+    --slippage-warning-text: 38 92% 50%;
+    --slippage-error-bg: 0 84% 60% / 0.1;
+    --slippage-error-text: 0 84% 60%;
+
+    /* Button colors */
+    --button-bg: 222.2 84% 4.9%;
+    --button-text: 0 0% 98%;
+    --button-hover: 222.2 84% 2%;
+
+    --button-swap-bg: 223 84% 5%;
+    --button-swap-icon: 223 84% 5%;
+
+    --button-header-icon:215.4 16.3% 46.9%
 }
 
 .dark {
-  /* Background colors - controlled by light/dark mode only */
-  --bg-primary: 222.2 84% 4.9%;
-  --bg-surface: 222.2 84% 4.9%;
-  --bg-section: 217.2 32.6% 17.5%;
-  --stroke-grey-primary: 217.2 32.6% 17.5%;
-  --stroke-grey-secondary: 215.3 25% 27%;
-  
-  /* System colors for dark mode */
-  --background: 222.2 84% 4.9%;
-  --overlay: 222.2 84% 4.9% / 0.8;
-  --tertiary: 215.3 25% 27%;
-  --foreground: 210 40% 98%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --border: 217.2 32.6% 17.5%;
-  --active: 217.2 32.6% 17.5%;
-  --active-border: 215.3 25% 27%;
-  --filled: 217.2 32.6% 17.5%;
-  --scroll-bar: 215.3 25% 27%;
-  --sec-border: 215.3 25% 27%;
-  --base-static-black: 0 0% 0%;
-  --base-static-white: 0 0% 100%;
-  --divider: 215.3 25% 27%;
-  --section: 217.2 32.6% 17.5%;
-  --disabled: 215.3 25% 27%;
-  --neutral: 215 20.2% 65.1%;
-  --bar: 215.3 25% 27%;
-  --footer-icons: 215 20.2% 65.1%;
-  --sec-btn: 215.3 25% 27%;
-  --text-grey-primary: 210 40% 98%;
-  --text-grey-secondary: 215 20.2% 75%;
-  --text-grey-muted: 215 20.2% 70%;
-  --text-grey-disabled: 215.3 25% 50%;
-  --icon-primary: 210 40% 98%;
-  --icon-subtle: 215 20.2% 65.1%;
-  --icon-disabled: 215.3 25% 27%;
-  --state-error-default: 0 84% 60%;
-  --state-subtle: 215 20.2% 65.1%;
-  --state-disabled: 215.3 25% 27%;
-  --state-highlight-light: 210 40% 98%;
-  --slippage-warning-bg: 38 92% 50% / 0.1;
-  --slippage-warning-text: 38 92% 50%;
-  --slippage-error-bg: 0 84% 60% / 0.1;
-  --slippage-error-text: 0 84% 60%;
-  
-  /* Warning colors for dark mode - ensure good contrast */
-  --warning: 38 92% 60%;
-  --warning-bg: 38 92% 50% / 0.15;
-  --warning-border: 38 92% 50% / 0.3;
-  
-  /* Support for auto mode with user-defined warning colors */
-  --warning: var(--warning-dark, 38 92% 60%);
-  --warning-bg: var(--warning-bg-dark, 38 92% 50% / 0.15);
-  --warning-border: var(--warning-border-dark, 38 92% 50% / 0.3);
-  
-  /* Note: Theme colors (primary, secondary, accent, success, warning, error) 
+    /* Background colors - controlled by light/dark mode only */
+    --bg-primary: 222.2 84% 4.9%;
+    --bg-surface: 222.2 84% 4.9%;
+    --bg-section: 217.2 32.6% 17.5%;
+    --stroke-grey-primary: 217.2 32.6% 17.5%;
+    --stroke-grey-secondary: 215.3 25% 27%;
+
+    /* System colors for dark mode */
+    --background: 222.2 84% 4.9%;
+    --overlay: 222.2 84% 4.9% / 0.8;
+    --tertiary: 215.3 25% 27%;
+    --foreground: 210 40% 98%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --border: 217.2 32.6% 17.5%;
+    --active: 217.2 32.6% 17.5%;
+    --active-border: 215.3 25% 27%;
+    --filled: 217.2 32.6% 17.5%;
+    --scroll-bar: 215.3 25% 27%;
+    --sec-border: 215.3 25% 27%;
+    --base-static-black: 0 0% 0%;
+    --base-static-white: 0 0% 100%;
+    --divider: 215.3 25% 27%;
+    --section: 217.2 32.6% 17.5%;
+    --disabled: 215.3 25% 27%;
+    --neutral: 215 20.2% 65.1%;
+    --bar: 215.3 25% 27%;
+    --footer-icons: 215 20.2% 65.1%;
+    --sec-btn: 215.3 25% 27%;
+    --text-grey-primary: 210 40% 98%;
+    --text-grey-secondary: 215 20.2% 75%;
+    --text-grey-muted: 215 20.2% 70%;
+    --text-grey-disabled: 215.3 25% 50%;
+    --icon-primary: 210 40% 98%;
+    --icon-subtle: 215 20.2% 65.1%;
+    --icon-disabled: 215.3 25% 27%;
+    --state-error-default: 0 84% 60%;
+    --state-subtle: 215 20.2% 65.1%;
+    --state-disabled: 215.3 25% 27%;
+    --state-highlight-light: 210 40% 98%;
+    --slippage-warning-bg: 38 92% 50% / 0.1;
+    --slippage-warning-text: 38 92% 50%;
+    --slippage-error-bg: 0 84% 60% / 0.1;
+    --slippage-error-text: 0 84% 60%;
+
+    /* Button colors for dark mode */
+    --button-bg: 210 40% 98%;
+    --button-text: 222.2 84% 4.9%;
+    --button-hover: 210 40% 90%;
+
+    /* Warning colors for dark mode - ensure good contrast */
+    --warning: 38 92% 60%;
+    --warning-bg: 38 92% 50% / 0.15;
+    --warning-border: 38 92% 50% / 0.3;
+
+    /* Support for auto mode with user-defined warning colors */
+    --warning: var(--warning-dark, 38 92% 60%);
+    --warning-bg: var(--warning-bg-dark, 38 92% 50% / 0.15);
+    --warning-border: var(--warning-border-dark, 38 92% 50% / 0.3);
+
+    /* Note: Theme colors (primary, secondary, accent, success, warning, error) 
      and their scales will be overridden by user theme configuration */
 }
 
 /* Media query for auto mode dark theme support */
 @media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    /* Use dark mode warning colors when system prefers dark and no explicit light mode */
-    --warning: var(--warning-dark, 38 92% 60%);
-    --warning-bg: var(--warning-bg-dark, 38 92% 50% / 0.15);
-    --warning-border: var(--warning-border-dark, 38 92% 50% / 0.3);
-  }
+    :root:not(.light) {
+        /* Use dark mode warning colors when system prefers dark and no explicit light mode */
+        --warning: var(--warning-dark, 38 92% 60%);
+        --warning-bg: var(--warning-bg-dark, 38 92% 50% / 0.15);
+        --warning-border: var(--warning-border-dark, 38 92% 50% / 0.3);
+    }
 }

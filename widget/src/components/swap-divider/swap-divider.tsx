@@ -5,6 +5,8 @@ type SwapDividerProps = {
   onSwap?: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 export function SwapDivider({ onSwap }: SwapDividerProps) {
+
+
   return (
     <div className="w-full flex items-center flex-col justify-center h-11 relative">
       <div className="w-full text-divider">
@@ -38,9 +40,10 @@ export function SwapDivider({ onSwap }: SwapDividerProps) {
       </div>
       <button
         onClick={onSwap}
+        style={{ backgroundColor: "hsl(var(--button-swap-bg))"}}
         className="bg-foreground size-11 text-divider absolute rounded-2xl flex items-center justify-center  hover:rotate-180 transition-transform duration-300"
       >
-        <SwitchIcon />
+        <SwitchIcon style={{color:"hsl(var(--button-swap-icon))"}} />
       </button>
     </div>
   )

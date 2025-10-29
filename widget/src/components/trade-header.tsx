@@ -1,31 +1,31 @@
+import { RiEyeLine, RiEyeOffLine, RiResetLeftLine } from '@remixicon/react'
 import { useEIP7702 } from '../hooks/use-eip-7702'
+import { useClassicTokensBalancesQuery } from '../queries'
+import { cn } from '../utils'
+import { AlertDialog } from './alert-dialog'
+import { Button } from './button/button'
+import { ClientOnly } from './client-only'
 import {
   Content as PopoverContent,
   PopoverRoot,
   Trigger as PopoverTrigger,
 } from './popover'
-import { Item as ToggleGroupItem, Root as ToggleGroupRoot } from './toggle-group'
-import { AlertDialog } from './alert-dialog'
-import { Button } from './button/button'
-import { ClientOnly } from './client-only'
-import { Tooltip } from './tooltip/tooltip'
-import { TextField } from './text-field'
-import { cn } from '../utils'
 import { Switch } from './switch'
-import { useClassicTokensBalancesQuery } from '../queries'
-import { RiEyeLine, RiEyeOffLine, RiResetLeftLine } from '@remixicon/react'
+import { TextField } from './text-field'
+import { Item as ToggleGroupItem, Root as ToggleGroupRoot } from './toggle-group'
+import { Tooltip } from './tooltip/tooltip'
 // import { RiResetLeftLine, RiRefreshLine } from '@remixicon/react'
 import { useCallback, useMemo, useState } from 'react'
 import { useShallow } from 'zustand/shallow'
-import { useStableCallback } from '../utils/react-19-compat'
 import { baseSlippages } from '../constants/constants'
 import { TradeAlert } from '../enums/trade-alert'
 import { useTradeStore } from '../providers'
 import { defaultTradeInitState } from '../stores'
+import { useStableCallback } from '../utils/react-19-compat'
 import BridgeModeToogle from './bridge-mode-toogle'
+import { ErrorIcon, InfoIcon, InfoOutlineIcon, Setting2Icon } from './icons'
 import { Popup } from './popup'
 import TradeAlerts from './trade-alerts'
-import { ErrorIcon, InfoOutlineIcon, InfoIcon, Setting2Icon } from './icons'
 
 const EIP7702Switch = ({
   isEIP7702,
@@ -175,7 +175,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                 onClick={stableResetHandler}
                 className="border-[0.69px] border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
               >
-                <RiResetLeftLine className="w-[18px] h-[18px] text-muted-foreground" />
+                <RiResetLeftLine style={{ color: "hsl(var(--button-header-icon))"}} className="w-[18px] h-[18px] text-muted-foreground" />
               </button>
             </Tooltip>
           )}
@@ -213,6 +213,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                 >
                   {/* <SettingsIcon className="w-4 text-[#191919]" /> */}
                   <span
+                    style={{ color: "hsl(var(--button-header-icon))"}}
                     className={`text-18px-normal ${isTokenView ? 'text-muted-foreground' : 'text-primary'} `}
                   >
                     $
@@ -230,7 +231,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                   className="border-[0.69px]  border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
                   onClick={stableNoOpHandler}
                 >
-                  <Setting2Icon className="w-[18px] h-[18px] text-muted-foreground" />
+                  <Setting2Icon style={{ color: "hsl(var(--button-header-icon))"}} className="w-[18px] h-[18px] text-muted-foreground" />
                 </button>
               </PopoverTrigger>
             </Tooltip>

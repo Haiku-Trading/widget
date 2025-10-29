@@ -1,30 +1,30 @@
 
 
-import { mappingErrorCodeMessage } from './../constants/constants'
-import { useEIP7702 } from '../hooks/use-eip-7702'
-import { Avatar } from './avatar'
-import { Button } from './button/button'
-import { ClientOnly } from './client-only'
-import { Dialog } from './dialog'
-import { Spinner } from './spinner'
-import { usdFormatter } from '../utils'
 import { RiAddLine } from '@remixicon/react'
 import { getWalletClient } from '@wagmi/core'
 import { AxiosError } from 'axios'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEIP7702 } from '../hooks/use-eip-7702'
+import { usdFormatter } from '../utils'
 import { useStableCallback } from '../utils/react-19-compat'
+import { mappingErrorCodeMessage } from './../constants/constants'
+import { Avatar } from './avatar'
+import { Button } from './button/button'
+import { ClientOnly } from './client-only'
+import { Dialog } from './dialog'
+import { Spinner } from './spinner'
 
+import { useQueryClient } from '@tanstack/react-query'
 import { useAccount, useConfig } from 'wagmi'
 import { mappingChainNameToChainId } from '../constants/constants'
-import { useConfig as useWidgetConfig } from '../providers/config-provider'
-import { usePreselectedTokensContext } from '../providers/preselected-tokens-provider'
 import { TokenType } from '../enums/token-type'
 import { TradeAlert } from '../enums/trade-alert'
 import { useSwapOutputTotal } from '../hooks'
 import { useGetTransactionURL } from '../hooks/use-get-transaction-url'
 import { useTradeStore } from '../providers'
-import { useQueryClient } from '@tanstack/react-query'
+import { useConfig as useWidgetConfig } from '../providers/config-provider'
+import { usePreselectedTokensContext } from '../providers/preselected-tokens-provider'
 import { tradeKeys } from '../queries'
 import { useSwapMutation } from '../queries/mutations'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
@@ -33,12 +33,12 @@ import { SolveIntentResponse } from '../services/solve-intent'
 import { useTransactionConfirmingStore } from '../stores/tx-confirming'
 import { ConfirmSwapContent } from './confirm-swap-content'
 import { ChosenTokenDialogContent } from './dialog/chosen-token'
+import { HaikuBirdIcon, InfoOutlineIcon } from './icons'
 import { InputAssets } from './input-assets'
 import { LimitAssetsWarningDialog } from './limit-assets-warning-dialog'
 import { OutputAssets } from './output-assets'
 import { SelectedTokensHeader } from './selected-tokens-header'
 import { SwapDivider } from './swap-divider/swap-divider'
-import { InfoOutlineIcon, HaikuBirdIcon } from './icons'
 
 export function TradeBody() {
   const account = useAccount()
@@ -467,6 +467,7 @@ export function TradeBody() {
                 <Dialog.Trigger>
                   <Button
                     size="lg"
+                    variant='primary'
                     className="w-full bg-primary rounded-full text-white disabled:bg-disabled disabled:text-white"
                     disabled={
                       disableWithVarDebt ||
@@ -562,7 +563,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
   return (
     <div>
       <span className="text-16px-normal mt-3 mb-3">{header}</span>
-      <div className="mt-3 bg-bg-section rounded-[32px] p-4">
+      <div className="mt-3 bg-muted-background rounded-[32px] p-4">
         <div className="bg-bg-surface rounded-[16px] p-4 flex items-center justify-between">
           {isResolvingPreselectedTokens ? (
             <div className="flex items-center gap-2">
@@ -581,7 +582,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
             <ClientOnly>
               <Dialog.Root open={open} onOpenChange={setOpen}>
                 <Dialog.Trigger>
-                  <button className="bg-bg-section rounded-[18px] h-10 px-3 flex items-center gap-2">
+                  <button className="bg-muted-background rounded-[18px] h-10 px-3 flex items-center gap-2">
                     <p className="text-sm font-medium whitespace-nowrap text-foreground">
                       {isMultiSelectAllowed ? 'Select Assets' : 'Select Asset'}
                     </p>
@@ -635,7 +636,7 @@ function CollapsedTokensList({
   const isLocked = type === 'input' ? widgetConfig.lockedInputs : widgetConfig.lockedOutputs
 
   return (
-    <div className="bg-bg-section rounded-[32px] p-4 flex justify-between items-center relative">
+    <div className="bg-muted-background rounded-[32px] p-4 flex justify-between items-center relative">
       <div className="flex flex-col gap-2">
         <p className="font-medium text-sm text-grey-secondary">{tokens.length} tokens selected</p>
         <ul className="flex items-center [&>li+li]:translate-x-[calc(4px*var(--index)*-1)]">
@@ -645,14 +646,14 @@ function CollapsedTokensList({
                 src={'logoURI' in token ? token.logoURI : ''}
                 alt={token.symbol}
                 fallbackName={token.symbol}
-                rootClassName="ring-[6px] ring-bg-section"
+                rootClassName="ring-[6px] ring-muted-background"
                 color={token.primaryColor}
               />
             </li>
           ))}
           {tokens.length > 2 && (
             <li
-              className="size-[38px] rounded-full ring-[6px] ring-bg-section bg-bg-surface flex items-center justify-center"
+              className="size-[38px] rounded-full ring-[6px] ring-muted-background bg-bg-surface flex items-center justify-center"
               style={{ ['--index' as string]: '3' }}
             >
               <span className="text-foreground">+{tokens.length - 2}</span>
