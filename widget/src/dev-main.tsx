@@ -74,7 +74,9 @@ const exampleTokens = {
 
 function DevApp() {
     // Theme state
-    const [themeMode, setThemeMode] = useState<"light" | "dark" | "auto">("dark");
+    const [configMode, setConfigMode] = useState<"light" | "dark" | "auto">("dark");
+    const [previewMode, setPreviewMode] = useState<"light" | "dark">("dark");
+    const [colorPaletteTab, setColorPaletteTab] = useState<"light" | "dark">("dark");
 
     // Light mode colors
     const [lightModeColors, setLightModeColors] = useState<ColorPalette>({
@@ -127,7 +129,7 @@ function DevApp() {
     // Computed widget config
     const widgetConfig = useMemo((): WidgetConfig => {
         const theme: WidgetTheme = {
-            mode: themeMode,
+            mode: configMode,
             light: {
                 primaryColor: lightModeColors.primaryColor,
                 backgroundColor: lightModeColors.backgroundColor,
@@ -166,7 +168,7 @@ function DevApp() {
             preselectedOutputs: Object.keys(preselectedOutputs).length > 0 ? preselectedOutputs : undefined,
         };
     }, [
-        themeMode,
+        configMode,
         lightModeColors,
         darkModeColors,
         hiddenChains,
@@ -178,6 +180,17 @@ function DevApp() {
         preselectedInputs,
         preselectedOutputs,
     ]);
+
+    // Preview config (uses previewMode for preview widget display)
+    const previewConfig = useMemo((): WidgetConfig => {
+        return {
+            ...widgetConfig,
+            theme: {
+                ...widgetConfig.theme,
+                mode: previewMode,
+            },
+        };
+    }, [widgetConfig, previewMode]);
 
     // Helper functions
     const toggleHiddenChain = (chainId: number) => {
@@ -233,7 +246,9 @@ function DevApp() {
     };
 
     const resetConfig = () => {
-        setThemeMode("dark");
+        setConfigMode("dark");
+        setPreviewMode("dark");
+        setColorPaletteTab("dark");
 
         // Reset light mode colors
         setLightModeColors({
@@ -422,8 +437,16 @@ ${indentedConfig}
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-1">Mode</label>
                                                 <select
-                                                    value={themeMode}
-                                                    onChange={(e) => setThemeMode(e.target.value as "light" | "dark" | "auto")}
+                                                    value={configMode}
+                                                    onChange={(e) => {
+                                                        const newMode = e.target.value as "light" | "dark" | "auto";
+                                                        setConfigMode(newMode);
+                                                        // Update preview tabs when light or dark is selected, but not for auto
+                                                        if (newMode === "light" || newMode === "dark") {
+                                                            setPreviewMode(newMode);
+                                                            setColorPaletteTab(newMode);
+                                                        }
+                                                    }}
                                                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                                     <option value="light">Light</option>
                                                     <option value="dark">Dark</option>
@@ -438,11 +461,15 @@ ${indentedConfig}
                                                     {/* Tabs */}
                                                     <div className="flex relative">
                                                         {["Light", "Dark"].map((tab) => {
-                                                            const isActive = themeMode === tab.toLowerCase();
+                                                            const tabValue = tab.toLowerCase() as "light" | "dark";
+                                                            const isActive = previewMode === tabValue;
                                                             return (
                                                                 <button
                                                                     key={tab}
-                                                                    onClick={() => setThemeMode(tab.toLowerCase() as "light" | "dark")}
+                                                                    onClick={() => {
+                                                                        setPreviewMode(tabValue);
+                                                                        setColorPaletteTab(tabValue);
+                                                                    }}
                                                                     className={`flex-1 px-4 py-2 text-sm font-medium transition-all duration-200 border-b ${
                                                                         isActive
                                                                             ? "bg-gray-100 text-gray-500 hover:text-gray-700 border-transparent"
@@ -460,7 +487,7 @@ ${indentedConfig}
 
                                                     {/* Content */}
                                                     <div className="h-[500px] p-4 bg-white rounded-b-lg overflow-auto">
-                                                        {themeMode === "light" ? (
+                                                        {colorPaletteTab === "light" ? (
                                                             <CustomLightColor colorsObject={lightModeColors} setColorsObject={setLightModeColors} />
                                                         ) : (
                                                             <CustomDarkColor colorsObject={darkModeColors} setColorsObject={setDarkModeColors} />
@@ -710,7 +737,7 @@ ${indentedConfig}
                                     <div className="bg-white rounded-lg p-6 shadow-sm border">
                                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Widget Preview</h3>
                                         <div className="border rounded-lg p-4 bg-gray-50">
-                                            <HaikuWidget key={JSON.stringify(widgetConfig)} widgetKey="dev-widget-key-12345" config={widgetConfig} />
+                                            <HaikuWidget key={JSON.stringify(previewConfig)} widgetKey="dev-widget-key-12345" config={previewConfig} />
                                         </div>
                                     </div>
 
