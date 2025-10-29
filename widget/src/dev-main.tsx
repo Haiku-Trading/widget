@@ -330,10 +330,23 @@ function DevApp() {
         }
 
         const configString = JSON.stringify(configDiff, null, 2);
+        // Indent each line of the JSON config to align within the JSX config prop
+        // JSON.stringify produces 2-space indentation, we need 4 total (2 for JSX + 2 for config object)
+        const lines = configString.split('\n');
+        const indentedConfig = lines
+            .slice(1, -1) // Skip first line (opening brace) and last line (closing brace)
+            .map((line) => {
+                // Add 2 more spaces to each line (JSON already has 2, we need 4 total)
+                return '  ' + line;
+            })
+            .join('\n');
+        
         return `<HaikuWidget
-      widgetKey="<YOUR_WIDGET_KEY>"
-      config={${configString}}
-    />`;
+  widgetKey="<YOUR_WIDGET_KEY>"
+  config={{
+${indentedConfig}
+  }}
+/>`;
     }
 
     const copyConfig = async () => {
@@ -690,6 +703,16 @@ function DevApp() {
                                             ))}
                                         </div>
                                     </div>
+                                </div>
+
+                                {/* Widget Display */}
+                                <div className="lg:col-span-2 space-y-6">
+                                    <div className="bg-white rounded-lg p-6 shadow-sm border">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Widget Preview</h3>
+                                        <div className="border rounded-lg p-4 bg-gray-50">
+                                            <HaikuWidget key={JSON.stringify(widgetConfig)} widgetKey="dev-widget-key-12345" config={widgetConfig} />
+                                        </div>
+                                    </div>
 
                                     {/* Component Code */}
                                     <div className="bg-white rounded-lg p-4 shadow-sm border">
@@ -705,16 +728,6 @@ function DevApp() {
                                         <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto max-h-40">{generateComponentSnippet()}</pre>
                                         <div className="mt-2 text-xs text-gray-600">
                                             💡 Click "Copy" for your ready-to-use Haiku widget React component
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Widget Display */}
-                                <div className="lg:col-span-2">
-                                    <div className="bg-white rounded-lg p-6 shadow-sm border">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Widget Preview</h3>
-                                        <div className="border rounded-lg p-4 bg-gray-50">
-                                            <HaikuWidget key={JSON.stringify(widgetConfig)} widgetKey="dev-widget-key-12345" config={widgetConfig} />
                                         </div>
                                     </div>
                                 </div>
