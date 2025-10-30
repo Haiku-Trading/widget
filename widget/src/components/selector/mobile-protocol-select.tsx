@@ -1,9 +1,9 @@
-import { protocolsConfig } from '../../constants/constants'
-import { cn } from '../../utils'
 import { ChevronDownIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { getProtocolIcon } from '../../utils/protocol-utils'
+import { protocolsConfig } from '../../constants/constants'
 import { useConfig as useWidgetConfig } from '../../providers/config-provider'
+import { cn } from '../../utils'
+import { getProtocolIcon } from '../../utils/protocol-utils'
 
 type ProtocolSelectProps = {
   value: string[]
@@ -82,7 +82,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
   }
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative text-foreground">
       {/* Trigger Button */}
       <button
         type="button"

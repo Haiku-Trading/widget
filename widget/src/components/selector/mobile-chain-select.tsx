@@ -1,9 +1,9 @@
-import { ChevronDownIcon } from '../icons'
-import { cn } from '../../utils'
 import { useEffect, useRef, useState } from 'react'
 import { useConfig } from 'wagmi'
-import { getChainIcon } from '../../utils/chain-utils'
 import { useConfig as useWidgetConfig } from '../../providers/config-provider'
+import { cn } from '../../utils'
+import { getChainIcon } from '../../utils/chain-utils'
+import { ChevronDownIcon } from '../icons'
 
 type ChainSelectProps = {
   value: string
@@ -30,7 +30,6 @@ export function MobileChainSelect({
     return true
   })
 
-  // Закрытие по клику вне компонента
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -40,7 +39,6 @@ export function MobileChainSelect({
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
-      // Предотвращаем прокрутку страницы когда меню открыто на мобильных
       document.body.style.overflow = 'hidden'
     }
 
@@ -62,7 +60,7 @@ export function MobileChainSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-max items-center justify-between p-2 flex gap-1 rounded-lg bg-bg-section text-sm outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-bg-surface duration-150"
+        className="w-max text-foreground items-center justify-between p-2 flex gap-1 rounded-lg bg-bg-section text-sm outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-bg-surface duration-150"
       >
         <div className="flex items-center justify-center">
           {value === 'all-chains' ? (
@@ -99,7 +97,7 @@ export function MobileChainSelect({
           {/* Dropdown Content */}
           <div
             className={cn(
-              'absolute right-0 top-full mt-6 z-50',
+              'absolute right-0 top-full mt-6 z-50 text-foreground',
               'bg-bg-surface border border-stroke-grey-primary rounded-lg',
               'w-[200px]',
               'md:relative',

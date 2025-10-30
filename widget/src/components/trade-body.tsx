@@ -562,7 +562,7 @@ function EmptyAssetsState({ type, onSelectTokens }: EmptyAssetsStateProps) {
   
   return (
     <div>
-      <span className="text-16px-normal mt-3 mb-3">{header}</span>
+      <span className="text-16px-normal mt-3 mb-3 text-foreground">{header}</span>
       <div className="mt-3 bg-muted-background rounded-[32px] p-4">
         <div className="bg-bg-surface rounded-[16px] p-4 flex items-center justify-between">
           {isResolvingPreselectedTokens ? (

@@ -734,9 +734,11 @@ ${indentedConfig}
 
                                 {/* Widget Display */}
                                 <div className="lg:col-span-2 space-y-6">
-                                    <div className="bg-white rounded-lg p-6 shadow-sm border">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Widget Preview</h3>
-                                        <div className="border rounded-lg p-4 bg-gray-50">
+                                    <div className="bg-white rounded-lg  md:p-6 shadow-sm border">
+                                        <h3 className="text-lg font-semibold text-gray-900 ml-3 mt-3 md:mt-0">
+                                            Live Widget Preview
+                                        </h3>
+                                        <div className="md:border md:rounded-lg md:p-4 md:bg-gray-50">
                                             <HaikuWidget key={JSON.stringify(previewConfig)} widgetKey="dev-widget-key-12345" config={previewConfig} />
                                         </div>
                                     </div>

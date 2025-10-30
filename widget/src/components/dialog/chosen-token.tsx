@@ -44,6 +44,7 @@ import { TextField } from '../text-field'
 import { ToggleGroup } from '../toggle-group'
 import { Tooltip } from '../tooltip/tooltip'
 
+import { mockData } from '@/mock'
 import millify from 'millify'
 import { TokenType } from '../../enums/token-type'
 import { enrichWeightedTokensWithLogos } from '../../utils/common'
@@ -316,7 +317,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     [getTokensQuery?.data?.tokenList.tokens],
   )
   const collateralTokens = useMemo(
-    () => getTokensQuery?.data?.tokenList.collateralTokens || [],
+    () => getTokensQuery?.data?.tokenList.collateralTokens || mockData,
     [getTokensQuery?.data?.tokenList.collateralTokens],
   )
   const varDebtTokens = useMemo(
