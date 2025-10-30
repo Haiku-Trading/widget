@@ -75,8 +75,6 @@ function deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>)
 export function HaikuWidget({ widgetKey, config }: HaikuWidgetProps) {
     const mergedConfig = config ? deepMerge(DEFAULT_CONFIG, config) : DEFAULT_CONFIG;
 
-    console.log('mergedConfig', mergedConfig)
-
     return (
         <WidgetKeyProvider widgetKey={widgetKey}>
             <ConfigProvider config={mergedConfig}>
