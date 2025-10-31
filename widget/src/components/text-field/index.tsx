@@ -43,7 +43,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, re
         )}
         <input
           className={cn(
-            'p-2 m-0 placeholder:text-grey-secondary outline-none w-full text-grey-primary text-sm',
+            'p-2 m-0 border-0 placeholder:text-grey-secondary outline-none w-full text-grey-primary text-sm',
             className,
           )}
           ref={ref}
