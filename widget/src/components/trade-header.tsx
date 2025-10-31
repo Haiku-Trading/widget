@@ -208,8 +208,12 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
               <Tooltip content="USD Input">
                 <button
                   onClick={stableToggleTokenViewHandler}
-                  // className="border-[0.69px] border-[#D9D9D9] rounded-[6.5px] w-7 h-7 flex items-center justify-center"
-                  className="border-[0.69px] border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
+                  className={cn(
+                    "border-[0.69px] rounded-[6.5px] w-7 h-7 flex items-center justify-center transition-colors",
+                    !isTokenView
+                      ? "border-muted-background bg-bg-section hover:bg-bg-section/80"
+                      : "border-transparent hover:bg-bg-section"
+                  )}
                 >
                   {/* <SettingsIcon className="w-4 text-[#191919]" /> */}
                   <span
