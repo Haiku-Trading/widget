@@ -1,8 +1,8 @@
 const ENDPOINT = {
   TOKENS: '/tokenList',
   PRICES: '/prices',
-  INTENTROUTE: '/quoteIntent',
-  BUILDINTENT: '/solveIntent',
+  INTENTROUTE: '/widget/quote',
+  BUILDINTENT: '/widget/solve',
   MIGRATEVAULT: '/migrateVault',
 }
 

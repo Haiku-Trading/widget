@@ -34,7 +34,7 @@ export const solveIntent = async (
   }
 
   const data = await httpClient.post<SolveIntentResponse>(
-    '/quoteIntent',
+    '/widget/quote',
     {
       intent: {
         receiver: intent.receiver,
