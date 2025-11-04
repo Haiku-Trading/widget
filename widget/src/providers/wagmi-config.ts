@@ -40,9 +40,21 @@ export const katana = defineChain({
   },
 })
 
+export const plasma = defineChain({
+  id: 9745,
+  name: 'Plasma',
+  nativeCurrency: { name: 'Plasma', symbol: 'XPL', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc.plasma.dxchain.com'] },
+  },
+  blockExplorers: {
+    default: { name: 'PlasmaScan', url: 'https://plasmascan.to' },
+  },
+})
+
 // Function to get chains based on environment
 const getChainsForEnvironment = () => {
-  const productionReadyChains = [arbitrum, base, berachain, bsc, sonic, mainnet, hyperevm, polygon, gnosis, scroll, apeChain, avalanche, worldchain, katana, sei] as const
+  const productionReadyChains = [arbitrum, base, berachain, bsc, sonic, mainnet, hyperevm, polygon, gnosis, scroll, apeChain, avalanche, worldchain, katana, sei, plasma] as const
   
   // In production, only include these chains
   if (process.env.VERCEL_ENV === 'production') {
@@ -139,6 +151,11 @@ export const wagmiConfig = createConfig({
     [worldchain.id]: http(
       process.env.VERCEL_ENV === 'development'
         ? process.env.WORLDCHAIN_RPC
+        : undefined,
+    ),
+    [plasma.id]: http(
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.PLASMA_RPC
         : undefined,
     ),
   },

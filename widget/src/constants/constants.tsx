@@ -91,7 +91,8 @@ export const mappingChainNameToChainId: Record<string, number> = {
   scroll: 534352,
   katana: 747474,
   ape: 33139,
-  worldchain: 480
+  worldchain: 480,
+  plasma: 9745
 }
 
 export const INVALIDATE_QUERIES_DELAY = 8000
@@ -223,6 +224,12 @@ export const chainsConfig: {
     network: 'Worldchain',
     slug: 'worldchain',
     dexScreenId: 'worldchain',
+  },
+  9745: {
+    chainId: 9745,
+    network: 'Plasma',
+    slug: 'plasma',
+    dexScreenId: 'plasma',
   },
 }
 

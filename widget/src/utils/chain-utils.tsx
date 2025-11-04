@@ -16,7 +16,8 @@ import {
   Chain747474Icon, 
   Chain80094Icon, 
   Chain8453Icon, 
-  Chain999Icon 
+  Chain999Icon,
+  Chain9745Icon
 } from '../components/icons'
 
 /**
@@ -44,6 +45,7 @@ export const getChainIcon = (chainId: string, className: string = "size-5"): Rea
     '33139': Chain33139Icon,
     '534352': Chain534352Icon,
     '747474': Chain747474Icon,
+    '9745': Chain9745Icon,
   }
   
   const IconComponent = iconMap[chainId]

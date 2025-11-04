@@ -9,6 +9,7 @@ import CustomDarkColor from "./components/custom-colors/custom-dark-color";
 import CustomLightColor from "./components/custom-colors/custom-light-color";
 import { DEFAULT_CONFIG } from "./components/haiku-widget";
 import { HaikuWidget, WidgetConfig, WidgetTheme } from "./index";
+import { plasma } from "./providers/wagmi-config";
 import "./styles.css";
 import { ColorPalette } from "./types/theme";
 
@@ -30,6 +31,7 @@ const chains = [
     sei, // 1329: Sei
     worldchain, // 480: Worldchain
     katana, // 747474: Katana
+    plasma, // 9745: Plasma
 ];
 
 const config = getDefaultConfig({
@@ -53,6 +55,7 @@ const availableChains = [
     { id: 1329, name: "Sei", chain: sei },
     { id: 480, name: "Worldchain", chain: worldchain },
     { id: 747474, name: "Katana", chain: katana },
+    { id: 9745, name: "Plasma", chain: plasma },
 ];
 
 // Available protocols for testing
