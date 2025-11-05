@@ -47,7 +47,7 @@ export function resolveTokensFromIids(
   ]
 
   for (const iid of iids) {
-    const token = allTokens.find(t => t.iid === iid)
+    const token = allTokens.find(t => t.iid.toLowerCase() === iid.toLowerCase())
     
     if (token) {
       // Check if token should be hidden based on chain/protocol filters
@@ -102,7 +102,7 @@ export function resolveTokensFromMap(
   ]
 
   for (const [iid, amount] of Object.entries(tokenMap)) {
-    const token = allTokens.find(t => t.iid === iid)
+    const token = allTokens.find(t => t.iid.toLowerCase() === iid.toLowerCase())
     
     if (token) {
       // Check if token should be hidden based on chain/protocol filters
