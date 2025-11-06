@@ -53,6 +53,7 @@ import { ChainSelect } from '../selector/chain-select'
 import { FilterSelect } from '../selector/filter-select'
 import { MobileChainSelect } from '../selector/mobile-chain-select'
 import { MobileProtocolSelect } from '../selector/mobile-protocol-select'
+import { MobileCategorySelect } from '../selector/mobile-category-select'
 import { ProtocolSelect } from '../selector/protocol-select'
 import TaggingMetadataContent from '../tagging/components/tagging-metadata-content'
 
@@ -950,7 +951,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       // className={`w-full ${!isShortScreen ? 'h-full' : ''} max-h-[730px] md:h-auto`}
       className={cn(
         'w-full md:max-h-[730px] md:h-auto',
-        isSimpleMode && 'md:max-w-full'
+        isSimpleMode && 'md:max-w-[500px] md:w-[500px]'
       )}
       onOpenAutoFocus={(event) => event.preventDefault()}
       overlayClassName={'w-full h-full'}
@@ -993,10 +994,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     >
       {/* <div className={`flex flex-col ${isShortScreen ? '' : 'w-[500px]'} h-full`}> */}
       <div
-        className={cn(
-          'flex flex-col h-full animate-[slideInFromRight_0.4s_ease-out_0.05s_both]',
-          isSimpleMode ? 'md:w-full' : 'md:w-[500px]'
-        )}
+        className="flex flex-col h-full animate-[slideInFromRight_0.4s_ease-out_0.05s_both] md:w-[500px]"
       >
         <Dialog.Header>
           <Dialog.Title>
@@ -1076,9 +1074,9 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                   />
                 </div>
               </div>
-              {/* In simple mode, show filters inline with ToggleGroup */}
+              {/* In simple mode, show filters inline with dropdowns */}
               {isSimpleMode ? (
-                <div className="flex flex-wrap items-center gap-2 mt-2">
+                <div className="flex flex-wrap items-center gap-2 mt-2 mb-4">
                   <MobileChainSelect
                     onValueChange={setChainValue}
                     value={chainValue}
@@ -1089,43 +1087,11 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                     value={protocolValue}
                     onValueChange={setProtocolValue}
                   />
-                  <ToggleGroup.Root
-                    type="multiple"
+                  <MobileCategorySelect
                     value={selectedCategories}
-                    className="overflow-x-auto pl-[2px] flex-1"
-                    onValueChange={(value) => {
-                      const hasAll = value.includes('all')
-
-                      let newValue = value
-
-                      if (hasAll) {
-                        newValue = value.filter((item) => item !== 'all')
-                      } else if (value.length === 0) {
-                        newValue = ['all']
-                      }
-
-                      setSelectedCategories(newValue)
-                    }}
-                  >
-                    {getTokensQuery.data?.tokenCategories?.map((category) =>
-                      categoriesOrigNames[category] && category !== 'varDebt' ? (
-                        <ToggleGroup.Item
-                          key={category}
-                          value={category}
-                          className="whitespace-nowrap capitalize"
-                        >
-                          {categoriesOrigNames[category]}
-                        </ToggleGroup.Item>
-                      ) : null,
-                    )}
-                    <ToggleGroup.Item
-                      key={'pendle'}
-                      value={'pendle'}
-                      className="whitespace-nowrap capitalize"
-                    >
-                      YT/PT
-                    </ToggleGroup.Item>
-                  </ToggleGroup.Root>
+                    onValueChange={setSelectedCategories}
+                    availableCategories={getTokensQuery.data?.tokenCategories || []}
+                  />
                 </div>
               ) : (
                 <ToggleGroup.Root

@@ -65,12 +65,27 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
     }
   }, [isOpen])
 
-  const handleSelect = (protocol: string) => {
+  const handleSelect = (protocol: string | null) => {
+    if (protocol === null) {
+      // Select "All Protocols"
+      onValueChange([''])
+      setIsOpen(false)
+      return
+    }
+    
     const isSelected = value.includes(protocol)
     if (isSelected) {
-      onValueChange(value.filter((v) => v !== protocol))
+      const newValue = value.filter((v) => v !== protocol)
+      // If nothing selected, default to "all protocols"
+      if (newValue.length === 0) {
+        onValueChange([''])
+      } else {
+        onValueChange(newValue)
+      }
     } else {
-      onValueChange([...value, protocol])
+      // Remove empty string if it exists (means "all protocols" was selected)
+      const newValue = value.filter((v) => v !== '')
+      onValueChange([...newValue, protocol])
     }
     setIsOpen(false)
   }
@@ -91,12 +106,14 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
       >
         <div className="w-max flex gap-2 items-center justify-center">
           {value.length === 0 || (value.length === 1 && value[0] === '') ? (
-            <span className="text-foreground">Protocol {'(opt)'}</span>
-          ) : (
+            <span className="text-foreground">All Protocols</span>
+          ) : value.length === 1 ? (
             <div className="flex gap-2">
-              {getProtocolIcon(value[0] || value[1] || '', 'w-5 h-5')}
-              <span className="text-foreground">{formatProtocolName(value[0] || value[1] || '')}</span>
+              {getProtocolIcon(value[0], 'w-5 h-5')}
+              <span className="text-foreground">{formatProtocolName(value[0])}</span>
             </div>
+          ) : (
+            <span className="text-foreground">{value.length} selected</span>
           )}
           {/* {value.length > 1 && (
             <button
@@ -147,6 +164,24 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
                 touchAction: 'pan-y',
               }}
             >
+              {/* All Protocols Option */}
+              <button
+                type="button"
+                onClick={() => handleSelect(null)}
+                className={cn(
+                  'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
+                  'hover:bg-bg-section active:bg-bg-section',
+                  'min-h-[44px] flex items-center gap-2',
+                  value.length === 0 || (value.length === 1 && value[0] === '') ? 'bg-bg-section' : '',
+                )}
+              >
+                <span className="text-foreground">All Protocols</span>
+                {(value.length === 0 || (value.length === 1 && value[0] === '')) && (
+                  <div className="ml-auto w-2 h-2 rounded-full bg-primary flex-shrink-0" />
+                )}
+              </button>
+
+              {/* Protocol Options */}
               {filterByHiddenProtocols.map((protocol) => {
                 const isSelected = value.includes(protocol.symbol)
                 return (
