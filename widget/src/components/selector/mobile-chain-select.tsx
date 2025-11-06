@@ -9,12 +9,14 @@ type ChainSelectProps = {
   value: string
   onValueChange: (value: string) => void
   onValueProtocolChange: (value: string[]) => void
+  isSimpleMode?: boolean
 }
 
 export function MobileChainSelect({
   value,
   onValueChange,
   onValueProtocolChange,
+  isSimpleMode = false,
 }: ChainSelectProps) {
   const config = useConfig()
   const { config: widgetConfig } = useWidgetConfig()
@@ -73,7 +75,7 @@ export function MobileChainSelect({
                 {getChainIcon('56', 'w-2.5 h-2.5')}
                 {getChainIcon('8453', 'w-2.5 h-2.5')}
               </div>
-              <span className="text-foreground">All chain</span>
+              <span className="text-foreground">All chains</span>
             </div>
           ) : (
             <div className="flex gap-2">
@@ -102,7 +104,7 @@ export function MobileChainSelect({
               'absolute left-0 top-full mt-2 z-50',
               'bg-bg-surface border border-stroke-grey-primary rounded-lg',
               'w-[200px]',
-              'max-h-[300px]',
+              isSimpleMode ? 'max-h-[440px]' : 'max-h-[300px]',
               'max-md:fixed max-md:inset-x-4 max-md:top-[45%] max-md:-translate-y-1/2',
               'max-md:max-h-[70vh]',
             )}
@@ -113,7 +115,8 @@ export function MobileChainSelect({
             <div
               className={cn(
                 'p-2 flex flex-col gap-1',
-                'max-h-[300px] overflow-y-auto',
+                isSimpleMode ? 'max-h-[440px]' : 'max-h-[300px]',
+                'overflow-y-auto',
                 'max-md:max-h-[60vh]',
               )}
               style={{

@@ -1081,11 +1081,13 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                     onValueChange={setChainValue}
                     value={chainValue}
                     onValueProtocolChange={setProtocolValue}
+                    isSimpleMode={true}
                   />
                   <MobileProtocolSelect
                     chain={chainValue}
                     value={protocolValue}
                     onValueChange={setProtocolValue}
+                    isSimpleMode={true}
                   />
                   <MobileCategorySelect
                     value={selectedCategories}

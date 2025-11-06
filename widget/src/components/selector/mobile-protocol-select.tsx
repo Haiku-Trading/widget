@@ -9,9 +9,10 @@ type ProtocolSelectProps = {
   value: string[]
   onValueChange: (value: string[]) => void
   chain: string
+  isSimpleMode?: boolean
 }
 
-export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSelectProps) {
+export function MobileProtocolSelect({ value, onValueChange, chain, isSimpleMode = false }: ProtocolSelectProps) {
   const { config: widgetConfig } = useWidgetConfig()
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -144,7 +145,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
               'absolute left-0 top-full mt-2 z-50',
               'bg-bg-surface border border-stroke-grey-primary rounded-lg',
               'w-[200px]',
-              'max-h-[300px]',
+              isSimpleMode ? 'max-h-[440px]' : 'max-h-[300px]',
               'max-md:fixed max-md:inset-x-4 max-md:top-[45%] max-md:left-[50%] max-md:-translate-y-1/2',
               'max-md:max-h-[70vh]',
             )}
@@ -155,7 +156,8 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
             <div
               className={cn(
                 'p-2 flex flex-col gap-1',
-                'max-h-[300px] overflow-y-auto',
+                isSimpleMode ? 'max-h-[440px]' : 'max-h-[300px]',
+                'overflow-y-auto',
                 'max-md:max-h-[60vh]',
               )}
               style={{
