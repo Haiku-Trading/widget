@@ -171,11 +171,11 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
                 className={cn(
                   'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                   'hover:bg-bg-section active:bg-bg-section',
-                  'min-h-[44px] flex items-center gap-2',
+                  'min-h-[44px] flex items-center justify-start gap-2 w-full',
                   value.length === 0 || (value.length === 1 && value[0] === '') ? 'bg-bg-section' : '',
                 )}
               >
-                <span className="text-foreground">All Protocols</span>
+                <span className="text-foreground text-left">All Protocols</span>
                 {(value.length === 0 || (value.length === 1 && value[0] === '')) && (
                   <div className="ml-auto w-2 h-2 rounded-full bg-primary flex-shrink-0" />
                 )}
@@ -192,12 +192,14 @@ export function MobileProtocolSelect({ value, onValueChange, chain }: ProtocolSe
                     className={cn(
                       'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                       'hover:bg-bg-section active:bg-bg-section',
-                      'min-h-[44px] flex items-center gap-2',
+                      'min-h-[44px] flex items-center justify-start gap-2 w-full',
                       isSelected ? 'bg-bg-section' : '',
                     )}
                   >
-                    {getProtocolIcon(protocol.symbol, 'size-5 flex-shrink-0')}
-                    <span className="truncate text-foreground">{protocol.name}</span>
+                    <div className="flex-shrink-0">
+                      {getProtocolIcon(protocol.symbol, 'size-5')}
+                    </div>
+                    <span className="truncate text-foreground text-left flex-1">{protocol.name}</span>
                     {isSelected && (
                       <div className="ml-auto w-2 h-2 rounded-full bg-primary flex-shrink-0" />
                     )}

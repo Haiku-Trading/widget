@@ -132,11 +132,11 @@ export function MobileCategorySelect({ value, onValueChange, availableCategories
                 className={cn(
                   'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                   'hover:bg-bg-section active:bg-bg-section',
-                  'min-h-[44px] flex items-center gap-2',
+                  'min-h-[44px] flex items-center justify-start gap-2 w-full',
                   value.includes('all') || value.length === 0 ? 'bg-bg-section' : '',
                 )}
               >
-                <span className="text-foreground">All Primitives</span>
+                <span className="text-foreground text-left">All Primitives</span>
                 {(value.includes('all') || value.length === 0) && (
                   <div className="ml-auto w-2 h-2 rounded-full bg-primary flex-shrink-0" />
                 )}
@@ -155,11 +155,11 @@ export function MobileCategorySelect({ value, onValueChange, availableCategories
                     className={cn(
                       'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                       'hover:bg-bg-section active:bg-bg-section',
-                      'min-h-[44px] flex items-center gap-2',
+                      'min-h-[44px] flex items-center justify-start gap-2 w-full',
                       isSelected ? 'bg-bg-section' : '',
                     )}
                   >
-                    <span className="text-foreground capitalize">{displayName}</span>
+                    <span className="text-foreground capitalize text-left flex-1">{displayName}</span>
                     {isSelected && (
                       <div className="ml-auto w-2 h-2 rounded-full bg-primary flex-shrink-0" />
                     )}

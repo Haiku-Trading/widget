@@ -129,11 +129,11 @@ export function MobileChainSelect({
                 className={cn(
                   'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                   'hover:bg-bg-section active:bg-bg-section',
-                  'min-h-[44px] flex gap-2 items-center',
+                  'min-h-[44px] flex gap-2 items-center justify-start w-full',
                   value === 'all-chains' ? 'bg-bg-section' : '',
                 )}
               >
-                <div className="grid grid-cols-2 gap-0 w-5 h-5">
+                <div className="grid grid-cols-2 gap-0 w-5 h-5 flex-shrink-0">
                   {getChainIcon('1', 'w-2.5 h-2.5')}
                   {getChainIcon('80094', 'w-2.5 h-2.5')}
                   {getChainIcon('56', 'w-2.5 h-2.5')}
@@ -153,12 +153,14 @@ export function MobileChainSelect({
                     className={cn(
                       'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                       'hover:bg-bg-section active:bg-bg-section',
-                      'min-h-[44px] flex items-center gap-2',
+                      'min-h-[44px] flex items-center justify-start gap-2 w-full',
                       value === chain.id.toString() ? 'bg-bg-section' : '',
                     )}
                   >
-                    {getChainIcon(chain.id.toString(), 'size-5 flex-shrink-0')}
-                    <span className="truncate text-foreground">{chain.name}</span>
+                    <div className="flex-shrink-0">
+                      {getChainIcon(chain.id.toString(), 'size-5')}
+                    </div>
+                    <span className="truncate text-foreground text-left">{chain.name}</span>
                   </button>
                 ))}
             </div>
