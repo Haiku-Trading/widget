@@ -53,6 +53,7 @@ import { ChainSelect } from '../selector/chain-select'
 import { FilterSelect } from '../selector/filter-select'
 import { MobileChainSelect } from '../selector/mobile-chain-select'
 import { MobileProtocolSelect } from '../selector/mobile-protocol-select'
+import { MobileCategorySelect } from '../selector/mobile-category-select'
 import { ProtocolSelect } from '../selector/protocol-select'
 import TaggingMetadataContent from '../tagging/components/tagging-metadata-content'
 
@@ -291,6 +292,9 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   
   // Determine if multi-selection is allowed based on type and config
   const isMultiSelectAllowed = type === 'input' ? widgetConfig.multiInput : widgetConfig.multiOutput
+  
+  // Check if simplified mode is enabled
+  const isSimpleMode = widgetConfig.tokenSelect === 'simple'
 
   const allTokensSelected = useTradeStore(
     useShallow((state) => state.inputTokens.concat(state.outputTokens)),
@@ -850,7 +854,36 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       return filtered.sort(sortByBalance)
     }
     return filtered
-  }, [matches])
+  }, [matches, filter.order, filter.sort])
+
+  // In simple mode, merge all tokens into one unified list
+  const unifiedTokens = useMemo(() => {
+    if (isSimpleMode) {
+      // In simple mode, combine all tokens without separation
+      // Get tokens with balance
+      const tokensWithBalance = matches.filter((token) =>
+        BigNumber(Math.abs(token.balance as any)).isGreaterThan(0),
+      )
+      
+      // Get tokens without balance
+      const tokensWithoutBalance = matches.filter((token) =>
+        BigNumber(Math.abs(token.balance as any)).isEqualTo(0),
+      )
+      
+      // Sort tokens with balance by balance if default sort
+      if (filter.sort === 'default') {
+        tokensWithBalance.sort((a, b) => {
+          const balanceA = new BigNumber(a.balance).abs().toNumber()
+          const balanceB = new BigNumber(b.balance).abs().toNumber()
+          return filter.order === 'descending' ? balanceB - balanceA : balanceA - balanceB
+        })
+      }
+      
+      // Combine: tokens with balance first, then tokens without balance
+      return [...tokensWithBalance, ...tokensWithoutBalance]
+    }
+    return []
+  }, [isSimpleMode, matches, filter.sort, filter.order])
 
   // const matches = filterTokens({
   //   tokens,
@@ -905,51 +938,63 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
 
   // const isShortScreen = useIsShortScreen()
   const mergedTokens = useMemo(() => {
+    if (isSimpleMode) {
+      // In simple mode, return unified list
+      return unifiedTokens
+    }
+    // In default mode, return separated list
     return [...myTokens, ...matches]
-  }, [myTokens, matches])
+  }, [isSimpleMode, myTokens, matches, unifiedTokens])
 
   return (
     <Dialog.Content
       // className={`w-full ${!isShortScreen ? 'h-full' : ''} max-h-[730px] md:h-auto`}
-      className={`w-full  md:max-h-[730px] md:h-auto`}
+      className={cn(
+        'w-full md:max-h-[730px] md:h-auto',
+        isSimpleMode && 'md:max-w-[500px] md:w-[500px]'
+      )}
       onOpenAutoFocus={(event) => event.preventDefault()}
       overlayClassName={'w-full h-full'}
       onInteractOutside={(event) => {
         // Prevent closing when clicking on the side panel (chain/protocol selectors)
-        const target = event.target as Element
-        if (target.closest('[data-side-panel]')) {
-          event.preventDefault()
+        if (!isSimpleMode) {
+          const target = event.target as Element
+          if (target.closest('[data-side-panel]')) {
+            event.preventDefault()
+          }
         }
       }}
       sideElement={
-        <div
-          className={cn(
-            'flex flex-row gap-4 h-[677px] animate-[slideInFromLeft_0.4s_ease-out_0.05s_both]',
-          )}
-          data-side-panel
-        >
-          <div className="flex-row gap-[8px] !flex" style={{ display: 'flex !important' }}>
-            <div className="flex-1 w-full" style={{ flex: '1 1 0%' }}>
-              <ChainSelect
-                value={chainValue}
-                onValueChange={setChainValue}
-                onValueProtocolChange={setProtocolValue}
-              />
-            </div>
-            <div className="flex-1 w-full" style={{ flex: '1 1 0%' }}>
-              <ProtocolSelect
-                chain={chainValue}
-                value={protocolValue}
-                onValueChange={setProtocolValue}
-              />
+        !isSimpleMode ? (
+          <div
+            className={cn(
+              'flex flex-row gap-4 h-[677px] animate-[slideInFromLeft_0.4s_ease-out_0.05s_both]',
+            )}
+            data-side-panel
+          >
+            <div className="flex-row gap-[8px] !flex" style={{ display: 'flex !important' }}>
+              <div className="flex-1 w-full" style={{ flex: '1 1 0%' }}>
+                <ChainSelect
+                  value={chainValue}
+                  onValueChange={setChainValue}
+                  onValueProtocolChange={setProtocolValue}
+                />
+              </div>
+              <div className="flex-1 w-full" style={{ flex: '1 1 0%' }}>
+                <ProtocolSelect
+                  chain={chainValue}
+                  value={protocolValue}
+                  onValueChange={setProtocolValue}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        ) : undefined
       }
     >
       {/* <div className={`flex flex-col ${isShortScreen ? '' : 'w-[500px]'} h-full`}> */}
       <div
-        className={`flex flex-col md:w-[500px] h-full animate-[slideInFromRight_0.4s_ease-out_0.05s_both]`}
+        className="flex flex-col h-full animate-[slideInFromRight_0.4s_ease-out_0.05s_both] md:w-[500px]"
       >
         <Dialog.Header>
           <Dialog.Title>
@@ -966,22 +1011,24 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
           {/* <div className={`flex flex-col ${isShortScreen ? 'h-[70vh]' : 'h-full md:h-[600px]'}`}> */}
           <div className={`flex flex-col h-70vh md:h-[600px]`}>
             <div className="px-4">
-              <div className="flex justify-between items-center mb-4 mt-2 md:hidden">
-                <div>
-                  <MobileChainSelect
-                    onValueChange={setChainValue}
-                    value={chainValue}
-                    onValueProtocolChange={setProtocolValue}
-                  />
+              {!isSimpleMode && (
+                <div className="flex justify-between items-center mb-4 mt-2 md:hidden">
+                  <div>
+                    <MobileChainSelect
+                      onValueChange={setChainValue}
+                      value={chainValue}
+                      onValueProtocolChange={setProtocolValue}
+                    />
+                  </div>
+                  <div>
+                    <MobileProtocolSelect
+                      chain={chainValue}
+                      value={protocolValue}
+                      onValueChange={setProtocolValue}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <MobileProtocolSelect
-                    chain={chainValue}
-                    value={protocolValue}
-                    onValueChange={setProtocolValue}
-                  />
-                </div>
-              </div>
+              )}
               <div className="flex gap-2">
                 <TextField
                   leftIcon={<MagniferIcon />}
@@ -1027,47 +1074,68 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                   />
                 </div>
               </div>
-              <ToggleGroup.Root
-                type="multiple"
-                value={selectedCategories}
-                className="overflow-x-auto pl-[2px]"
-                onValueChange={(value) => {
-                  const hasAll = value.includes('all')
+              {/* In simple mode, show filters inline with dropdowns */}
+              {isSimpleMode ? (
+                <div className="flex flex-wrap items-center gap-2 mt-2 mb-4">
+                  <MobileChainSelect
+                    onValueChange={setChainValue}
+                    value={chainValue}
+                    onValueProtocolChange={setProtocolValue}
+                  />
+                  <MobileProtocolSelect
+                    chain={chainValue}
+                    value={protocolValue}
+                    onValueChange={setProtocolValue}
+                  />
+                  <MobileCategorySelect
+                    value={selectedCategories}
+                    onValueChange={setSelectedCategories}
+                    availableCategories={getTokensQuery.data?.tokenCategories || []}
+                  />
+                </div>
+              ) : (
+                <ToggleGroup.Root
+                  type="multiple"
+                  value={selectedCategories}
+                  className="overflow-x-auto pl-[2px]"
+                  onValueChange={(value) => {
+                    const hasAll = value.includes('all')
 
-                  let newValue = value
+                    let newValue = value
 
-                  if (hasAll) {
-                    newValue = value.filter((item) => item !== 'all')
-                  } else if (value.length === 0) {
-                    newValue = ['all']
-                  }
+                    if (hasAll) {
+                      newValue = value.filter((item) => item !== 'all')
+                    } else if (value.length === 0) {
+                      newValue = ['all']
+                    }
 
-                  setSelectedCategories(newValue)
-                }}
-              >
-                {/* <ToggleGroup.Item value="all" className="whitespace-nowrap flex-1">
+                    setSelectedCategories(newValue)
+                  }}
+                >
+                  {/* <ToggleGroup.Item value="all" className="whitespace-nowrap flex-1">
                 All
               </ToggleGroup.Item> */}
-                {getTokensQuery.data?.tokenCategories?.map((category) =>
-                  categoriesOrigNames[category] && category !== 'varDebt' ? (
-                    <ToggleGroup.Item
-                      key={category}
-                      value={category}
-                      className="whitespace-nowrap capitalize"
-                    >
-                      {/* {category === 'varDebt' ? 'Borrow' : categoriesNames[category]} */}
-                      {categoriesOrigNames[category]}
-                    </ToggleGroup.Item>
-                  ) : null,
-                )}
-                <ToggleGroup.Item
-                  key={'pendle'}
-                  value={'pendle'}
-                  className="whitespace-nowrap capitalize"
-                >
-                  YT/PT
-                </ToggleGroup.Item>
-              </ToggleGroup.Root>
+                  {getTokensQuery.data?.tokenCategories?.map((category) =>
+                    categoriesOrigNames[category] && category !== 'varDebt' ? (
+                      <ToggleGroup.Item
+                        key={category}
+                        value={category}
+                        className="whitespace-nowrap capitalize"
+                      >
+                        {/* {category === 'varDebt' ? 'Borrow' : categoriesNames[category]} */}
+                        {categoriesOrigNames[category]}
+                      </ToggleGroup.Item>
+                    ) : null,
+                  )}
+                  <ToggleGroup.Item
+                    key={'pendle'}
+                    value={'pendle'}
+                    className="whitespace-nowrap capitalize"
+                  >
+                    YT/PT
+                  </ToggleGroup.Item>
+                </ToggleGroup.Root>
+              )}
 
               {selectedTokens.length > 0 && (
                 <div className="pb-4 flex flex-wrap items-center gap-2.5">
@@ -1129,23 +1197,30 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                   overscan={200}
                   computeItemKey={(index, token) => `${index}-${token.iid}`}
                   itemContent={(_index, token) => {
+                    // In simple mode, don't show section headers
+                    const isFirstCard = !isSimpleMode && (_index === 0 || _index === myTokens.length)
+                    
                     return (
                       <div
-                        className={`w-full ${_index === 0 || _index === myTokens.length ? 'h-[94px]' : 'h-[70px]'} `}
+                        className={`w-full ${isFirstCard ? 'h-[94px]' : 'h-[70px]'} `}
                         key={token.iid}
                       >
-                        {/* <div className={`w-full`} key={token.iid}> */}
-                        {_index === 0 && myTokens.length > 0 && (
-                          <div className="flex items-center gap-1 ml-[10px] text-primary">
-                            <Coins className="w-4 h-4" />
-                            <h3 className="text-primary">My assets by {renderSortedName(true)}</h3>
-                          </div>
-                        )}
-                        {_index === myTokens.length && (
-                          <div className="flex items-center gap-1 ml-[10px] text-primary">
-                            <TrendingUp className="w-4 h-4" />
-                            <h3 className="text-primary">Assets by {renderSortedName(false)}</h3>
-                          </div>
+                        {/* Section headers only in default mode */}
+                        {!isSimpleMode && (
+                          <>
+                            {_index === 0 && myTokens.length > 0 && (
+                              <div className="flex items-center gap-1 ml-[10px] text-primary">
+                                <Coins className="w-4 h-4" />
+                                <h3 className="text-primary">My assets by {renderSortedName(true)}</h3>
+                              </div>
+                            )}
+                            {_index === myTokens.length && (
+                              <div className="flex items-center gap-1 ml-[10px] text-primary">
+                                <TrendingUp className="w-4 h-4" />
+                                <h3 className="text-primary">Assets by {renderSortedName(false)}</h3>
+                              </div>
+                            )}
+                          </>
                         )}
                         <TokenCard
                           token={token}
@@ -1158,7 +1233,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                           activeTooltipId={activeTooltipId}
                           setActiveTooltipId={setActiveTooltipId}
                           onSelect={() => toggleSelectedToken(token)}
-                          isFirstCard={_index === 0 || _index === myTokens.length}
+                          isFirstCard={isFirstCard}
                         />
                       </div>
                     )

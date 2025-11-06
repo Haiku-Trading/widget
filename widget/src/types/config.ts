@@ -10,6 +10,7 @@ export interface WidgetConfig {
   preselectedOutputs?: Record<string, number> // token iid -> weight
   lockedInputs?: boolean
   lockedOutputs?: boolean
+  tokenSelect?: 'simple' | 'default'
 }
 
 export interface ConfigProviderProps {

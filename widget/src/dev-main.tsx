@@ -118,6 +118,7 @@ function DevApp() {
     const [singleOutput, setSingleOutput] = useState(false);
     const [lockedInputs, setLockedInputs] = useState(false);
     const [lockedOutputs, setLockedOutputs] = useState(false);
+    const [tokenSelect, setTokenSelect] = useState<'simple' | 'default'>('default');
 
     // Preselected tokens state
     const [preselectedInputs, setPreselectedInputs] = useState<Record<string, number>>({});
@@ -169,6 +170,7 @@ function DevApp() {
             lockedOutputs,
             preselectedInputs: Object.keys(preselectedInputs).length > 0 ? preselectedInputs : undefined,
             preselectedOutputs: Object.keys(preselectedOutputs).length > 0 ? preselectedOutputs : undefined,
+            tokenSelect: tokenSelect !== 'default' ? tokenSelect : undefined,
         };
     }, [
         configMode,
@@ -182,6 +184,7 @@ function DevApp() {
         lockedOutputs,
         preselectedInputs,
         preselectedOutputs,
+        tokenSelect,
     ]);
 
     // Preview config (uses previewMode for preview widget display)
@@ -290,6 +293,7 @@ function DevApp() {
         setSingleOutput(false);
         setLockedInputs(false);
         setLockedOutputs(false);
+        setTokenSelect('default');
         setPreselectedInputs({});
         setPreselectedOutputs({});
         setNewInputTokenId("");
@@ -545,6 +549,20 @@ ${indentedConfig}
                                                 />
                                                 <span className="text-sm text-gray-700">Locked Outputs</span>
                                             </label>
+
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Token Select Mode</label>
+                                                <select
+                                                    value={tokenSelect}
+                                                    onChange={(e) => setTokenSelect(e.target.value as 'simple' | 'default')}
+                                                    className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                    <option value="default">Default</option>
+                                                    <option value="simple">Simple</option>
+                                                </select>
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    Simple mode: Single unified section with inline filters
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
 

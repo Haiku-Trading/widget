@@ -62,7 +62,7 @@ export function MobileChainSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-max items-center justify-between p-2 flex gap-1 rounded-lg bg-bg-section text-sm outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-bg-surface duration-150"
+        className="w-max items-center justify-between p-2 flex gap-1 rounded-lg bg-bg-section text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-bg-surface duration-150"
       >
         <div className="flex items-center justify-center">
           {value === 'all-chains' ? (
@@ -73,12 +73,12 @@ export function MobileChainSelect({
                 {getChainIcon('56', 'w-2.5 h-2.5')}
                 {getChainIcon('8453', 'w-2.5 h-2.5')}
               </div>
-              All chain
+              <span className="text-foreground">All chain</span>
             </div>
           ) : (
             <div className="flex gap-2">
               {getChainIcon(value, 'w-5 h-5')}
-              <span className="text-sm">{nameChain}</span>
+              <span className="text-sm text-foreground">{nameChain}</span>
             </div>
           )}
         </div>
@@ -99,11 +99,10 @@ export function MobileChainSelect({
           {/* Dropdown Content */}
           <div
             className={cn(
-              'absolute right-0 top-full mt-6 z-50',
+              'absolute left-0 top-full mt-2 z-50',
               'bg-bg-surface border border-stroke-grey-primary rounded-lg',
               'w-[200px]',
-              'md:relative',
-              // 'max-md:fixed max-md:inset-x-4 max-md:top-1/2 max-md:-translate-y-1/2',
+              'max-h-[300px]',
               'max-md:fixed max-md:inset-x-4 max-md:top-[45%] max-md:-translate-y-1/2',
               'max-md:max-h-[70vh]',
             )}
@@ -128,7 +127,7 @@ export function MobileChainSelect({
                 type="button"
                 onClick={() => handleSelect('all-chains')}
                 className={cn(
-                  'p-3 text-sm text-left rounded-lg transition-colors',
+                  'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                   'hover:bg-bg-section active:bg-bg-section',
                   'min-h-[44px] flex gap-2 items-center',
                   value === 'all-chains' ? 'bg-bg-section' : '',
@@ -140,7 +139,7 @@ export function MobileChainSelect({
                   {getChainIcon('56', 'w-2.5 h-2.5')}
                   {getChainIcon('8453', 'w-2.5 h-2.5')}
                 </div>
-                All Chains
+                <span className="text-foreground">All Chains</span>
               </button>
 
               {/* Chain Options */}
@@ -152,14 +151,14 @@ export function MobileChainSelect({
                     type="button"
                     onClick={() => handleSelect(chain.id.toString())}
                     className={cn(
-                      'p-3 text-sm text-left rounded-lg transition-colors',
+                      'p-3 text-sm text-left rounded-lg transition-colors text-foreground',
                       'hover:bg-bg-section active:bg-bg-section',
                       'min-h-[44px] flex items-center gap-2',
                       value === chain.id.toString() ? 'bg-bg-section' : '',
                     )}
                   >
                     {getChainIcon(chain.id.toString(), 'size-5 flex-shrink-0')}
-                    <span className="truncate">{chain.name}</span>
+                    <span className="truncate text-foreground">{chain.name}</span>
                   </button>
                 ))}
             </div>
