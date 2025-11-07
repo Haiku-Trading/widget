@@ -5,7 +5,7 @@ interface Chain146IconProps extends React.SVGProps<SVGSVGElement> {}
 export const Chain146Icon: React.FC<Chain146IconProps> = (props) => {
   return (
     <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 309.99 309.99" {...props}>
-
+      <rect width="309.99" height="309.99" fill="white"/>
   <path fill="#000000" d="M180.26,185.07l.03-.02s-.03.02-.05.03c.01,0,.02,0,.03,0h0Z"/>
   <path fill="#000000" d="M180.24,185.08c-46.81,14.06-85.52,34.57-109.77,58.59l-1.07,1.07c6.45,6.1,13.52,11.56,21.16,16.2l1.64-2.01c6.62-8.09,13.72-15.9,21.11-23.26,19.83-19.76,42.51-36.86,66.93-50.59Z"/>
   <path fill="#000000" d="M185.65,164.24H31.12c1.87,25.07,11.18,48.06,25.79,66.76l.67-.67c15.01-14.81,34.55-28.27,58.12-40,20.66-10.29,44.38-19.12,69.95-26.09Z"/>
