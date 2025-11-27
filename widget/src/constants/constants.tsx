@@ -1,6 +1,6 @@
 import { TokenType } from '../enums/token-type'
 
-export type TokenCategory = 'collateral' | 'varDebt' | 'token' | 'weightedLiquidity' | 'vault'
+export type TokenCategory = 'collateral' | 'varDebt' | 'token' | 'weightedLiquidity' | 'vault' | 'concentratedLiquidity'
 
 type TradeAlert = {
   id: TradeAlertId
@@ -13,6 +13,7 @@ export const categoriesNames: Record<string, string> = {
   varDebt: 'Debt',
   weightedLiquidity: 'Pool',
   vault: 'Vault',
+  concentratedLiquidity: 'CLAMM',
 }
 export const categoriesOrigNames: Record<string, string> = {
   token: 'Tokens',
@@ -20,6 +21,7 @@ export const categoriesOrigNames: Record<string, string> = {
   varDebt: 'Debts',
   weightedLiquidity: 'Pools',
   vault: 'Vaults',
+  concentratedLiquidity: 'CLAMM',
 }
 
 export const categoriesNamesByType: Record<TokenType, string> = {
@@ -28,6 +30,7 @@ export const categoriesNamesByType: Record<TokenType, string> = {
   [TokenType.VarDebt]: 'Debt',
   [TokenType.WeightedLiquidity]: 'Liquidity',
   [TokenType.Vault]: 'Vault',
+  [TokenType.ConcentratedLiquidity]: 'Concentrated',
 }
 
 export const categoriesTypesBadge: Record<TokenType, 'success' | 'failed' | 'info' | 'primary'> = {
@@ -36,6 +39,7 @@ export const categoriesTypesBadge: Record<TokenType, 'success' | 'failed' | 'inf
   [TokenType.VarDebt]: 'failed',
   [TokenType.WeightedLiquidity]: 'success',
   [TokenType.Vault]: 'success',
+  [TokenType.ConcentratedLiquidity]: 'primary',
 }
 
 export const tokenBadge: Record<TokenCategory, 'success' | 'failed' | 'info' | 'primary'> = {
@@ -44,6 +48,7 @@ export const tokenBadge: Record<TokenCategory, 'success' | 'failed' | 'info' | '
   token: 'info',
   weightedLiquidity: 'primary',
   vault: 'success',
+  concentratedLiquidity: 'primary',
 }
 
 export enum TradeAlertId {

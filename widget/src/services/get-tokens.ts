@@ -1,7 +1,7 @@
 import { HttpClient } from '../models/http-client'
 import { TokenType } from '../enums/token-type'
 
-export type Category = 'token' | 'collateral' | 'varDebt' | 'weightedLiquidity' | 'vault'
+export type Category = 'token' | 'collateral' | 'varDebt' | 'weightedLiquidity' | 'vault' | 'concentratedLiquidity'
 
 export async function getTokens(httpClient: HttpClient) {
   const data = await httpClient.get<TokenListResponse>(`/tokenList`)
@@ -19,6 +19,7 @@ export type TokenList = {
   varDebtTokens: APIVarDebtToken[]
   weightedLiquidityTokens: APIWeightedLiquidityToken[]
   vaultTokens: APIVaultToken[]
+  concentratedLiquidityTokens: APIConcentratedLiquidityToken[]
 }
 
 export type AnyAPIToken =
@@ -27,6 +28,7 @@ export type AnyAPIToken =
   | APIVarDebtToken
   | APIWeightedLiquidityToken
   | APIVaultToken
+  | APIConcentratedLiquidityToken
 
 export type APIToken = {
   /**
@@ -166,4 +168,43 @@ export type APIVaultToken = {
   showSlider?: boolean
   minApr?: string
   maxApr?: string
+}
+
+export type APIConcentratedLiquidityToken = {
+  iid: string
+  name: string
+  symbol: string
+  address: string
+  protocol: string
+  underlying_iids: string[]
+  feeTier: number
+  network: number
+  decimals: number
+  poolId: string
+  tokenCategory: Category
+  primaryColor: string
+  priceUSD: string
+  url?: string
+  type: TokenType
+  locked?: boolean
+  percentage?: number
+  showSlider?: boolean
+  minApr?: string
+  maxApr?: string
+  logosUrl?: string[]
+  balance?: string
+  balanceRaw?: string
+  tickLower?: string
+  tickUpper?: string
+  fee?: number
+  token0?: {
+    address: string
+    symbol: string
+    decimals: number
+  }
+  token1?: {
+    address: string
+    symbol: string
+    decimals: number
+  }
 }

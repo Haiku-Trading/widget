@@ -1,4 +1,4 @@
-import { useHttpClient } from '@/modules/app/providers/http'
+import { useHttpClient } from '../../../providers/http-client'
 import { useQuery } from '@tanstack/react-query'
 
 interface Props {

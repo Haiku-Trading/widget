@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useShallow } from 'zustand/shallow'
 import { useTradeStore } from '../providers'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
@@ -11,6 +11,7 @@ import { Address } from 'viem'
 import { useSwapOutputTotal } from '../hooks'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
 import { APIToken } from '../services/get-tokens'
+import { TokenType } from '../enums/token-type'
 import { usdFormatter } from '../utils'
 import { ClientOnly } from './client-only'
 import { Dialog } from './dialog'
@@ -19,10 +20,11 @@ import { CollapsedTokensList } from './input-assets'
 import { TransactionOverview } from './transaction-overview'
 
 type OutputAssetsProps = {
+  isShowMinDebt?: boolean
   onSelectTokens: (tokens: APIToken[]) => void
 }
 
-export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
+export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProps) {
   const isShortScreen = useIsShortScreen()
   const { config: widgetConfig } = useWidgetConfig()
   const { outputTokens, removeOutputToken, setTokenValue } = useTradeStore(
@@ -38,16 +40,6 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
 
   const isOpen = openItem === 'item-1'
   const usdOutputTotal = useSwapOutputTotal()
-
-  const [resetTransactionData, setResetTransactionData] = useState(false)
-
-  useEffect(() => {
-    if (outputTokens.length === 0) {
-      setResetTransactionData(true)
-    } else {
-      setResetTransactionData(false)
-    }
-  }, [outputTokens])
 
   const clearSlider = useTradeStore((state) => state.clearSlider)
 
@@ -70,42 +62,96 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
     }
   }, [ref, clearSlider])
 
+  const outputTokenPrices = useMemo(() => {
+    if (!solveIntentQuery.data?.outputTokenUsdPrices) return new Map()
+
+    const priceMap = new Map()
+    solveIntentQuery.data.outputTokenUsdPrices.forEach((ot) => {
+      priceMap.set(ot.iid, ot)
+    })
+    return priceMap
+  }, [solveIntentQuery.data?.outputTokenUsdPrices])
+
+  const tokenBalances = useMemo(() => {
+    if (!solveIntentQuery.data?.balances) return new Map()
+
+    const balanceMap = new Map()
+    solveIntentQuery.data.balances.forEach((balance) => {
+      let key = `${balance.token.chainId}:${balance.token.address.toLowerCase()}`
+
+      const token = outputTokens.find((t) => {
+        const [iid, tickRange] = t.iid.split('::')
+        const tokenKey = `${iid.split(':')[1]}::${tickRange || ''}`
+        return (
+          balance.token.tokenKey &&
+          tokenKey.toLowerCase() === balance.token.tokenKey.toLowerCase()
+        )
+      })
+
+      if (token && token.type === TokenType.ConcentratedLiquidity) {
+        key = `${token.iid}`
+      }
+
+      balanceMap.set(key, balance)
+    })
+    return balanceMap
+  }, [solveIntentQuery.data?.balances, outputTokens])
+
+  const tokenData = useMemo(() => {
+    return outputTokens.map((token, index) => {
+      const isLast = outputTokens.length - 1 === index
+      let balanceKey = `${token.network}:${token.address.toLowerCase()}`
+      if (token.type === TokenType.ConcentratedLiquidity) {
+        balanceKey = token.iid
+      }
+      const balance = tokenBalances.get(balanceKey)
+      const outputToken = outputTokenPrices.get(token.iid)
+      const tokenValue = balance?.amount || '0.00'
+
+      const images = [
+        {
+          src: 'logoURI' in token ? token.logoURI : '',
+          symbol: token.symbol,
+          color: undefined,
+        },
+      ]
+
+      const branches = [
+        {
+          symbol: token.network.toString(),
+        },
+      ]
+
+      if ('protocol' in token) {
+        branches.push({
+          symbol: token.protocol as string,
+        })
+      }
+
+      return {
+        token,
+        index,
+        isLast,
+        balance,
+        outputToken,
+        tokenValue,
+        images,
+        branches,
+      }
+    })
+  }, [outputTokens, tokenBalances, outputTokenPrices])
+
+  const minDebtToken = useMemo(
+    () => outputTokens.find((token) => token.type === TokenType.VarDebt),
+    [outputTokens],
+  )
+
   return (
-    <div className="bg-bg-section rounded-[32px] relative" ref={ref}>
-      <div className="p-4 flex flex-col gap-2 overflow-hidden">
-
-        {/* <AnimatePresence mode="popLayout"> */}
-        {outputTokens.map((token, index) => {
-          const isLast = outputTokens.length - 1 === index
-          const balance = solveIntentQuery.data?.balances.find((balance) => {
-            return (
-              `${token.network}:${token.address.toLowerCase()}` ===
-              `${balance.token.chainId}:${balance.token.address.toLowerCase()}`
-            )
-          })
-          // Using balance.amountUSD instead of calculating from outputTokenUsdPrices
-          const tokenValue = balance?.amount ? balance.amount : '0.00'
-
-          const images = [
-            {
-              src: 'logoURI' in token ? token.logoURI : '',
-              symbol: token.symbol,
-              color: undefined,
-            },
-          ]
-
-          const branches = [
-            {
-              symbol: token.network.toString(),
-            },
-          ]
-
-          if ('protocol' in token) {
-            branches.push({
-              symbol: token.protocol as string,
-            })
-          }
-          return (
+    <div className="h-full bg-bg-section rounded-[32px] relative" ref={ref}>
+      <div className="h-full p-4 flex flex-col gap-2 overflow-hidden justify-between">
+        {/* Token cards */}
+        <div className="flex flex-col gap-2">
+          {tokenData.map(({ token, isLast, outputToken, tokenValue, images, branches }) => (
             <AssetCard
               images={images}
               branches={branches}
@@ -115,10 +161,10 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               tokenDecimal={token.decimals}
               address={token.address as Address}
               chainId={token.network}
-              usdPrice={balance?.amountUSD ? (Number(balance.amountUSD) / Number(balance.amount)).toString() : '1'}
+              usdPrice={outputToken?.priceUSD || '1'}
               tokenValue={tokenValue}
               onDismiss={() => stableRemoveOutputToken(token)}
-              onValueChange={(value) => stableSetTokenValue(token, value)}
+              onValueChange={(value, balance) => stableSetTokenValue(token, value, balance)}
               name={token.name ?? token.symbol}
               symbol={token.symbol}
               logoURL={'logoURI' in token ? token.logoURI : ''}
@@ -139,87 +185,78 @@ export function OutputAssets({ onSelectTokens }: OutputAssetsProps) {
               showAddButton={widgetConfig.multiOutput}
               isLocked={widgetConfig.lockedOutputs}
             />
-          )
-        })}
-        {/* </AnimatePresence> */}
-
-        {/* <LayoutGroup> */}
-        <div className="flex space-x-2 mb-4">
-          {outputTokens.map((token, index) => (
-            <div
-              key={token.iid}
-              className="h-6 bg-blue-500 rounded-full transition-all duration-300 ease-in-out"
-              style={{
-                backgroundColor: token.primaryColor,
-                width: `${token.percentage}%`,
-              }}
-            />
           ))}
+
+          <div className="flex space-x-2 mb-2">
+            {outputTokens.map((token) => (
+              <div
+                key={token.iid}
+                className="h-6 bg-blue-500 rounded-full transition-all duration-300 ease-in-out"
+                style={{
+                  backgroundColor: token.primaryColor,
+                  width: `${token.percentage}%`,
+                }}
+              />
+            ))}
+          </div>
         </div>
 
-        <CollapsedTokensList
-          tokens={outputTokens}
-          usdTotal={usdOutputTotal}
-          label="Input total"
-          type="input"
-          // onSelectTokens={handleAddInputToken}
-        />
-        {/* </LayoutGroup> */}
+        {isShowMinDebt && (
+          <div className="w-full flex justify-between items-center text-14px-medium">
+            <span>Min Debt </span>
+            <span>10 {minDebtToken?.symbol}</span>
+          </div>
+        )}
+        {/* Progress bar */}
+        <div className="flex flex-col">
+          <CollapsedTokensList
+            tokens={outputTokens}
+            usdTotal={usdOutputTotal}
+            label="Input total"
+            type="output"
+          />
 
-        <Accordion.Root
-          className="w-full"
-          type="single"
-          value={openItem}
-          onValueChange={(value) => setOpenItem(value)}
-          collapsible
-        >
-          <Accordion.Item value="item-1">
-            <Accordion.Header>
-              <Accordion.Trigger className="w-full">
-                <div className="flex mt-3 w-full justify-between">
-                  <span className=" text-sm text-foreground">Minimum received</span>
-                  <div className="flex items-center gap-[5px]">
-                    <span className=" text-sm text-foreground">
-                      {usdFormatter.fullValue.format(usdOutputTotal)}
-                    </span>
-                    <RiArrowDownSLine
-                      size={16}
-                      className={`transition-transform duration-200 text-foreground ${isOpen ? 'rotate-180' : 'rotate-0'}`}
-                    />
+          <Accordion.Root
+            className="w-full"
+            type="single"
+            value={openItem}
+            onValueChange={(value) => setOpenItem(value)}
+            collapsible
+          >
+            <Accordion.Item value="item-1">
+              <Accordion.Header>
+                <Accordion.Trigger className="w-full">
+                  <div className="flex mt-3 w-full justify-between">
+                    <span className=" text-14px-medium">Minimum received</span>
+                    <div className="flex items-center gap-[5px]">
+                      <span className=" text-14px-medium">
+                        {usdFormatter.fullValue.format(usdOutputTotal)}
+                      </span>
+                      <RiArrowDownSLine
+                        size={16}
+                        className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+                      />
+                    </div>
                   </div>
+                </Accordion.Trigger>
+              </Accordion.Header>
+              <Accordion.Content>
+                <div className="w-full">
+                  <TransactionOverview isClassicModal={false} />
                 </div>
-              </Accordion.Trigger>
-            </Accordion.Header>
-            <Accordion.Content>
-              <div className="w-full">
-                <TransactionOverview isClassicModal={false} />
-              </div>
-            </Accordion.Content>
-          </Accordion.Item>
-        </Accordion.Root>
+              </Accordion.Content>
+            </Accordion.Item>
+          </Accordion.Root>
+        </div>
       </div>
 
       <ClientOnly>
         <Dialog.Root open={open} onOpenChange={setOpen}>
-          {/* <Dialog.Trigger>
-            <button className="size-[30px] rounded-full flex items-center justify-center bg-bg-surface border border-stroke-grey-secondary absolute bottom-[-15px] left-1/2 -translate-x-1/2">
-              <RiAddLine size={14} className="text-foreground" />
-            </button>
-          </Dialog.Trigger> */}
           <ChosenTokenDialogContent
             type="output"
-            isOpen={open}
             onSelectTokens={(tokens) => {
               setOpen(false)
-              // In single-token mode, replace the current token instead of adding
-              if (!widgetConfig.multiOutput && tokens.length > 0) {
-                // Remove all current output tokens and add the new one
-                const currentTokens = outputTokens
-                currentTokens.forEach(token => stableRemoveOutputToken(token))
-                onSelectTokens?.(tokens)
-              } else {
-                onSelectTokens?.(tokens)
-              }
+              onSelectTokens?.(tokens)
             }}
           />
         </Dialog.Root>

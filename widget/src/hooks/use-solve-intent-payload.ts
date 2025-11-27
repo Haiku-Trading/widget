@@ -8,6 +8,7 @@ export function useClassicSolveIntentPayload(): SolveIntentPayload {
   const slippage = useTradeStore((state) => state.slippage)
   const bridgeMode = useTradeStore((state) => state.bridgeMode)
   const inputPositions = useTradeStore((state) => state.inputPositions)
+  const clammPositions = useTradeStore((state) => state.clammInputPositions)
   // const targetWeights = useTradeStore((state) => state.targetWeights)
   const sessionID = useSessionStore((state) => state.sessionId)
   const outputTokens = useTradeStore((state) => state.outputTokens)
@@ -15,11 +16,25 @@ export function useClassicSolveIntentPayload(): SolveIntentPayload {
     outputTokens.map((token) => [token.iid, Math.round(token.percentage ?? 1) / 100]),
   )
 
+  // rewrite input positions to include clamm positions
+  // Only use clammPositions for keys that exist in clammPositions, otherwise use inputPositions
+  const modifiedInputPositions: Record<string, string> = Object.keys(inputPositions).reduce(
+    (acc, key) => {
+      if (clammPositions[key]) {
+        acc[key] = clammPositions[key]
+      } else {
+        acc[key] = inputPositions[key]
+      }
+      return acc
+    },
+    {} as Record<string, string>,
+  )
+
   return {
     intent: {
-      receiver: account.address!,
+      receiver: account.address || '0x0000000000000000000000000000000000000000',
       slippage: Number(slippage),
-      inputPositions,
+      inputPositions: modifiedInputPositions,
       targetWeights,
       bridgeMode,
     },

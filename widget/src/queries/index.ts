@@ -49,6 +49,10 @@ export function useGetTokensQuery() {
             TokenType.WeightedLiquidity,
           ),
           vaultTokens: addTokenType(response.tokenList.vaultTokens, TokenType.Vault),
+          concentratedLiquidityTokens: addTokenType(
+            response.tokenList.concentratedLiquidityTokens || [],
+            TokenType.ConcentratedLiquidity,
+          ),
         },
       }
     },
@@ -103,6 +107,7 @@ type Response = {
     token_positions: Record<string, number>
     weighted_liquidity_positions: Record<string, number>
     vault_positions: Record<string, number>
+    concentrated_liquidity_positions?: Record<string, string>
   }
 }
 

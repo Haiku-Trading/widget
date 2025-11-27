@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useChartData } from '@/modules/agent/queries/chart-data'
-import { APIToken, cn } from '@/modules/app'
+import { useChartData } from '../../../queries/chart-data'
+import { APIToken } from '../../../services/get-tokens'
+import { cn } from '../../../utils'
 import { ToggleGroup } from 'radix-ui'
 import { useMemo, useState } from 'react'
 import UniswapChart from './uniswap-chart'

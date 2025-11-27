@@ -1,16 +1,17 @@
 'use client'
 
-import ShareIcon from '@/icons/share.svg'
-import { useConcentratedPoolData } from '@/modules/agent/queries/concentrated-pool-data'
-import { MAX_TICK, MIN_TICK, nearestUsableTick } from '@/modules/agent/utils/uniswapV3'
-import { APIToken, Button, cn } from '@/modules/app'
+import { useConcentratedPoolData } from '../../../queries/concentrated-pool-data'
+import { MAX_TICK, MIN_TICK, nearestUsableTick } from '../../../utils/uniswapV3'
+import { APIToken } from '../../../services/get-tokens'
+import { Button } from '../../button/button'
+import { cn } from '../../../utils'
 import { Avatar, Clipboard } from '@ark-ui/react'
 import { CopyIcon } from '@radix-ui/react-icons'
 import { ToggleGroup } from 'radix-ui'
 import { useEffect, useMemo, useState } from 'react'
 import { useConfig } from 'wagmi'
+import { ShareIcon } from '../../icons'
 import UniswapChartContainer from './uniswap-chart-container'
-// import { useConcentratedPoolData } from '@/modules/agent/queries/concentrated-pool-data'
 
 const modes = [
   {

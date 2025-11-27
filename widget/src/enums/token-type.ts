@@ -4,4 +4,5 @@ export enum TokenType {
   VarDebt = 3,
   WeightedLiquidity = 4,
   Vault = 5,
+  ConcentratedLiquidity = 6,
 }

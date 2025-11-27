@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MAX_TICK, MIN_TICK, priceToTick } from '@/modules/agent/utils/uniswapV3'
+import { MAX_TICK, MIN_TICK, priceToTick, nearestUsableTick } from '../../../utils/uniswapV3'
 import {
   LineSeries,
   createChart,
@@ -8,7 +8,6 @@ import {
   LineData,
 } from 'lightweight-charts'
 import React, { useEffect, useRef, useState } from 'react'
-import { nearestUsableTick } from '@/modules/agent/utils/uniswapV3'
 
 type UniswapChartProps = {
   data: {

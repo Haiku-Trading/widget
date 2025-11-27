@@ -13,7 +13,10 @@ import { TokenType } from '../../enums/token-type'
 import { TradeAlert } from '../../enums/trade-alert'
 import { useTradeStore } from '../../providers'
 import { useTokenBalanceQuery } from '../../queries'
+import { useConcentratedPoolData } from '../../queries/concentrated-pool-data'
 import { cn, tokenFormatter } from '../../utils'
+import { calcConcentratedBalances, getUniswapV3PositionUSDValue } from '../../utils/concentratedPool'
+import { MAX_TICK, MIN_TICK, nearestUsableTick } from '../../utils/uniswapV3'
 import { getChainIcon } from '../../utils/chain-utils'
 import { getInitials } from '../../utils/get-initials'
 import { formatTokenAmount, formatWithZeroCountSubscript } from '../../utils/numberFormatting'
@@ -63,6 +66,7 @@ const ImageGroup = (props: ImageGroupProps) => {
         KODIAK_BAULTS: 'Kodiak Baults',
         CURVE: 'Curve',
         UNISWAP_V2: 'Uniswap V2',
+        UNISWAP_V3: 'Uniswap V3',
         MORPHO: 'Morpho',
         HYPURRFI: 'Hypurrfi',
         HYPERLEND: 'HyperLend',
@@ -70,6 +74,11 @@ const ImageGroup = (props: ImageGroupProps) => {
         YEI: 'Yei',
         DRAGONSWAP_V2: 'Dragonswap V2',
         HYPERSWAP_V2: 'Hyperswap V2',
+        HYPERSTABLE: 'Hyperstable',
+        YEARN_FINANCE: 'Yearn Finance',
+        FLUID: 'Fluid',
+        BEND: 'Bend',
+        QUICKSWAP_V3: 'Quickswap V3',
       }[protocol.symbol]
 
       names.unshift(protocolName)
@@ -261,7 +270,7 @@ type AssetCardProps = ImageGroupProps & {
   tokenCategory: TokenType
   //
   onInsufficientBalance?: (insufficientBalance: boolean, symbol: string) => void
-  onValueChange?: (value: string) => void
+  onValueChange?: (value: string, balance?: { balance: number; balanceUSD: number }) => void
   onDismiss?: () => void
   onOpenChosenTokens?: () => void
   setOpen?: any
@@ -306,7 +315,27 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
     },
     ref,
   ) => {
-    const tokenBalanceQuery = useTokenBalanceQuery(iid)
+    // Parse iid to extract tick range for CLAMM tokens
+    let tokenIid = ''
+    let lowerTick: string | undefined
+    let upperTick: string | undefined
+    if (tokenCategory === TokenType.ConcentratedLiquidity) {
+      const [realIid, tickSpace] = iid.split('::')
+      tokenIid = realIid
+      if (tickSpace) {
+        lowerTick = tickSpace.split(':')[0]
+        upperTick = tickSpace.split(':')[1]
+      }
+    } else {
+      tokenIid = iid
+    }
+
+    const tokenBalanceQuery = useTokenBalanceQuery(tokenIid)
+    const { data: concentratedPoolData } = useConcentratedPoolData({
+      iid: tokenIid,
+      enable: tokenCategory === TokenType.ConcentratedLiquidity,
+    })
+
     const toggleLock = useTradeStore((state) => state.toggleLock)
     const toggleSlider = useTradeStore((state) => state.toggleSlider)
     const outputTokens = useTradeStore((state) => state.outputTokens)
@@ -323,7 +352,14 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
     const handlePercentageChange = useTradeStore((state) => state.handlePercentageChange)
     const isShortScreen = useIsShortScreen()
     const isMobile = useMediaQuery('(max-width: 500px)')
-    const balance = tokenBalanceQuery.data || '0'
+
+    // Calculate balance for CLAMM tokens
+    const calcBalance =
+      tokenCategory === TokenType.ConcentratedLiquidity
+        ? calcConcentratedBalances((tokenBalanceQuery.data ?? {}) as any, lowerTick, upperTick)
+        : tokenBalanceQuery.data
+    const balance =
+      tokenCategory === TokenType.ConcentratedLiquidity ? calcBalance.balanceUSD : calcBalance
 
     // const [isTokenView, setIsTokenView] = useState(true)
     const [usdValue, setUsdValue] = useState('0')
@@ -352,6 +388,28 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
+
+      if (tokenCategory === TokenType.ConcentratedLiquidity) {
+        const usdValue = getUniswapV3PositionUSDValue({
+          liquidity: BigInt(Math.floor(Number(value) || 0)),
+          sqrtPriceX96: BigInt(concentratedPoolData?.sqrtPriceX96 || '0'),
+          tickLower: Number(lowerTick),
+          tickUpper: Number(upperTick),
+          decimals0: concentratedPoolData?.token0.decimals || 18,
+          decimals1: concentratedPoolData?.token1.decimals || 18,
+          price0USD: parseFloat(concentratedPoolData?.token0PriceUSD ?? '0'),
+          price1USD: parseFloat(concentratedPoolData?.token1PriceUSD ?? '0'),
+        })
+        if (isTokenView) {
+          onValueChange?.(value, calcBalance)
+          setUsdValue(usdValue.toString())
+        } else {
+          onValueChange?.(usdValue.toString(), calcBalance)
+          setUsdValue(value.toString())
+        }
+        return
+      }
+
       let truncatedValue = value.replace(/[^0-9.]/g, '')
 
       if (truncatedValue === '') {
@@ -364,12 +422,6 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
         ])
       }
 
-      // let truncatedValue = numericValue.includes('.')
-      //   ? numericValue.split('.')[0] +
-      //     '.' +
-      //     numericValue.split('.')[1].substring(0, getSmartDecimalLimit(numericValue, 6))
-      //   : numericValue
-
       truncatedValue = truncatedValue.replace(/^0+(?=\d)/, '')
 
       if (truncatedValue.startsWith('.')) {
@@ -377,7 +429,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
       }
 
       if (isTokenView) {
-        onValueChange?.(truncatedValue)
+        onValueChange?.(truncatedValue, calcBalance)
         const usdVal = BigNumber(truncatedValue || '0').multipliedBy(usdPrice)
         setUsdValue(usdVal.isEqualTo('0') ? '0.00' : usdVal.toFixed())
       } else {
@@ -385,7 +437,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
           .dividedBy(usdPrice)
           .toFixed(tokenDecimal, BigNumber.ROUND_DOWN)
 
-        onValueChange?.(tokenAmount)
+        onValueChange?.(tokenAmount, calcBalance)
         setUsdValue(truncatedValue)
       }
     }
@@ -415,52 +467,89 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
 
 
     const oppositeValue = useMemo(() => {
-      if (isTokenView) {
-        if (!tokenValue || tokenValue === 'NaN') return formatToUsd(0)
-        const usdTokenValue = BigNumber(tokenValue)
-          .multipliedBy(usdPrice)
-          .toFixed(8, BigNumber.ROUND_DOWN)
-        return formatToUsd(usdTokenValue)
+      let priceUSD = usdPrice || '0'
+      if (tokenCategory === TokenType.ConcentratedLiquidity) {
+        if (type === 'input') {
+          priceUSD = '1'
+        } else {
+          const usdValue = getUniswapV3PositionUSDValue({
+            liquidity: BigInt(Math.floor(Number(tokenValue) || 0)),
+            sqrtPriceX96: BigInt(concentratedPoolData?.sqrtPriceX96 || '0'),
+            tickLower: Number(lowerTick),
+            tickUpper: Number(upperTick),
+            decimals0: concentratedPoolData?.token0.decimals || 18,
+            decimals1: concentratedPoolData?.token1.decimals || 18,
+            price0USD: parseFloat(concentratedPoolData?.token0PriceUSD ?? '0'),
+            price1USD: parseFloat(concentratedPoolData?.token1PriceUSD ?? '0'),
+          })
+          if (Number(usdValue) && Number(tokenValue)) {
+            setUsdValue(usdValue.toString())
+            priceUSD = Number(parseFloat(usdValue.toString()) / Number(tokenValue)).toString()
+          }
+        }
       }
-      const token = BigNumber(isNaN(tokenValue as unknown as number) ? '0' : tokenValue || '0')
-        .toFixed(tokenDecimal)
-        .toString()
 
-      const tokenRounded = new BigNumber(token).toFixed(
-        getSmartDecimalLimit(token, 8),
+      const tokenVal =
+        tokenCategory === TokenType.ConcentratedLiquidity
+          ? BigNumber(tokenValue || '0').multipliedBy(priceUSD)
+          : BigNumber(tokenValue || '0')
+      const usdVal =
+        tokenCategory === TokenType.ConcentratedLiquidity
+          ? tokenVal
+          : tokenVal.multipliedBy(priceUSD)
+      const tokenRounded = tokenVal.toFixed(
+        getSmartDecimalLimit(tokenVal.toString(), 8),
         BigNumber.ROUND_DOWN,
       )
-      // .toFixed(2, BigNumber.ROUND_DOWN)
 
-      const result = formatTokenAmount(Number(tokenRounded), Number(usdPrice) || 0)
-
-      return result
-    }, [isTokenView, usdPrice, tokenDecimal, tokenValue])
+      if (isTokenView) {
+        return formatToUsd(usdVal.toFixed(8, BigNumber.ROUND_DOWN))
+      }
+      return formatTokenAmount(Number(tokenRounded), Number(priceUSD) || 0)
+    }, [isTokenView, usdPrice, tokenDecimal, tokenValue, tokenCategory, type, concentratedPoolData, lowerTick, upperTick])
 
     const oppositeOutputValue = useMemo(() => {
-      if (!isTokenView) {
-        if (!tokenValue || tokenValue === 'NaN') return formatToUsd(0)
-        const usdTokenValue = BigNumber(tokenValue)
-          .multipliedBy(usdPrice)
-          .toFixed(8, BigNumber.ROUND_DOWN)
-        return formatToUsd(usdTokenValue)
+      let priceUSD = usdPrice || '0'
+      if (tokenCategory === TokenType.ConcentratedLiquidity) {
+        const usdValue = getUniswapV3PositionUSDValue({
+          liquidity: BigInt(Math.floor(Number(tokenValue) || 0)),
+          sqrtPriceX96: BigInt(concentratedPoolData?.sqrtPriceX96 || '0'),
+          tickLower: Number(lowerTick),
+          tickUpper: Number(upperTick),
+          decimals0: concentratedPoolData?.token0.decimals || 18,
+          decimals1: concentratedPoolData?.token1.decimals || 18,
+          price0USD: parseFloat(concentratedPoolData?.token0PriceUSD ?? '0'),
+          price1USD: parseFloat(concentratedPoolData?.token1PriceUSD ?? '0'),
+        })
+        if (Number(usdValue) && Number(tokenValue)) {
+          priceUSD = Number(parseFloat(usdValue.toString()) / Number(tokenValue)).toString()
+        }
       }
-      const token = BigNumber(isNaN(tokenValue as unknown as number) ? '0' : tokenValue || '0')
-        .toFixed(tokenDecimal)
-        .toString()
 
-      const tokenRounded = new BigNumber(token).toFixed(
-        getSmartDecimalLimit(token, 8),
+      const tokenVal =
+        tokenCategory === TokenType.ConcentratedLiquidity
+          ? BigNumber(tokenValue || '0').multipliedBy(priceUSD)
+          : BigNumber(tokenValue || '0')
+      const usdVal =
+        tokenCategory === TokenType.ConcentratedLiquidity
+          ? tokenVal
+          : tokenVal.multipliedBy(priceUSD)
+      const tokenRounded = tokenVal.toFixed(
+        getSmartDecimalLimit(tokenVal.toString(), 8),
         BigNumber.ROUND_DOWN,
       )
-      // .toFixed(2, BigNumber.ROUND_DOWN)
 
-      const result = formatTokenAmount(Number(tokenRounded), Number(usdPrice) || 0)
+      if (!isTokenView) {
+        return formatToUsd(usdVal.toFixed(8, BigNumber.ROUND_DOWN))
+      }
+      return formatTokenAmount(Number(tokenRounded), Number(priceUSD) || 0)
+    }, [isTokenView, usdPrice, tokenDecimal, tokenValue, tokenCategory, concentratedPoolData, lowerTick, upperTick])
 
-      return result
-    }, [isTokenView, usdPrice, tokenDecimal, tokenValue])
-
-    const usdBalance = BigNumber(balance).multipliedBy(usdPrice).toFixed()
+    const usdBalance = useMemo(() => {
+      return tokenCategory === TokenType.ConcentratedLiquidity
+        ? calcBalance.balanceUSD
+        : BigNumber(balance).multipliedBy(usdPrice).toFixed()
+    }, [balance, usdPrice, tokenCategory, calcBalance])
 
     const { removeAlerts, addMoreAlerts } = useTradeStore(useShallow((state) => state))
 
@@ -645,12 +734,29 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
               >
                 <ImageGroup images={images} branches={branches} />
                 <p className="text-sm  font-medium whitespace-nowrap text-foreground">
-                  {isMobile && symbol.length > 5 ? `${symbol.slice(0, 5)}...` : symbol}
+                  {isMobile && symbol.length > 5
+                    ? `${symbol.slice(0, 5)}...`
+                    : categoriesNamesByType[tokenCategory] === 'Liquidity' ||
+                      categoriesNamesByType[tokenCategory] === 'Concentrated'
+                      ? `${symbol.slice(0, 9)}...`
+                      : symbol.length > 16
+                        ? `${symbol.slice(0, 16)}...`
+                        : symbol}
                 </p>
                 <div className="flex items-center justify-center gap-2">
                   {categoriesNamesByType[tokenCategory] !== 'Token' && (
                     <Badge variant={categoriesTypesBadge[tokenCategory]}>
-                      {categoriesNamesByType[tokenCategory]}
+                      {tokenCategory === TokenType.ConcentratedLiquidity && type === 'output'
+                        ? lowerTick &&
+                          upperTick &&
+                          concentratedPoolData &&
+                          Number(lowerTick) ===
+                            nearestUsableTick(MIN_TICK, concentratedPoolData?.tickSpacing) &&
+                          Number(upperTick) ===
+                            nearestUsableTick(MAX_TICK, concentratedPoolData?.tickSpacing)
+                          ? 'CLAMM Full'
+                          : 'CLAMM Custom'
+                        : categoriesNamesByType[tokenCategory]}
                     </Badge>
                   )}
                 </div>
@@ -678,10 +784,15 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                 }
                 className="text-sm text-grey-secondary whitespace-nowrap cursor-pointer hover:cursor-pointer"
               >
-                Balance:{' '}
+                Balance: {tokenCategory === TokenType.ConcentratedLiquidity && '$'}
                 {isShowBalance
                   ? balance
-                    ? formatTokenAmount(Number(balance), Number(usdPrice) || 0)
+                    ? Number(formatTokenAmount(Number(balance), Number(usdPrice) || 0)) < 1
+                      ? formatWithZeroCountSubscript(
+                          Number(formatTokenAmount(Number(balance), Number(usdPrice) || 0)),
+                          18,
+                        )
+                      : millify(Number(formatTokenAmount(Number(balance), Number(usdPrice) || 0)))
                     : '0'
                   : '***'}
               </span>
@@ -748,7 +859,33 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
                 {formatWithZeroCountSubscript(oppositeOutputValue, 8) === '0'
                   ? '0.00'
                   : isTokenView
-                    ? formatTokenAmount(Number(tokenValue || 0), Number(usdPrice) || 0)
+                    ? categoriesNamesByType[tokenCategory] === 'Liquidity' ||
+                      categoriesNamesByType[tokenCategory] === 'Concentrated'
+                      ? (() => {
+                          const liquidityValue =
+                            tokenCategory === TokenType.ConcentratedLiquidity
+                              ? Number(oppositeOutputValue)
+                              : Number(
+                                  formatTokenAmount(Number(tokenValue || 0), Number(usdPrice) || 0),
+                                )
+                          return Number(liquidityValue) < 1
+                            ? formatWithZeroCountSubscript(Number(liquidityValue), 18)
+                            : millify(Number(liquidityValue))
+                        })()
+                      : Number(
+                          formatTokenAmount(Number(tokenValue || 0), Number(usdPrice) || 0),
+                        ) < 1
+                        ? formatWithZeroCountSubscript(
+                            Number(
+                              formatTokenAmount(Number(tokenValue || 0), Number(usdPrice) || 0),
+                            ),
+                            18,
+                          )
+                        : millify(
+                            Number(
+                              formatTokenAmount(Number(tokenValue || 0), Number(usdPrice) || 0),
+                            ),
+                          )
                     : oppositeOutputValue}
               </p>
             )}

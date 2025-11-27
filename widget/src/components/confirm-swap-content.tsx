@@ -16,6 +16,7 @@ import { useTradeStore } from '../providers'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
 import { AnyAPIToken } from '../services/get-tokens'
 import { SolveIntentResponse } from '../services/solve-intent'
+import { TokenType } from '../enums/token-type'
 import { useTransactionConfirmingStore } from '../stores/tx-confirming'
 import { Card } from './card'
 import { CardToken } from './card-token'
@@ -192,9 +193,13 @@ export function ConfirmSwapContent({
             <CardSlider title="Input">
               {filteredInputTokens.map((token) => {
                 const tokenValue = inputPositions[token.iid]
-                const usdBalance = BigNumber(tokenValue).multipliedBy(token.priceUSD).toFixed()
+                let priceUSD = token.priceUSD
+                if (token.type === TokenType.ConcentratedLiquidity) {
+                  priceUSD = '1'
+                }
+                const usdBalance = BigNumber(tokenValue).multipliedBy(priceUSD).toFixed()
                 const amountToken = tokenValue
-                  ? formatTokenAmount(Number(tokenValue), Number(token.priceUSD) || 0)
+                  ? formatTokenAmount(Number(tokenValue), Number(priceUSD) || 0)
                   : '0'
 
                 return (
@@ -202,7 +207,11 @@ export function ConfirmSwapContent({
                     className="mb-3 w-[99%] mx-auto embla__slide flex-[0_0_100%] min-w-0"
                     type={token.type}
                     key={token.symbol}
-                    amountToken={amountToken}
+                    amountToken={
+                      token.type === TokenType.ConcentratedLiquidity
+                        ? usdFormatter.fullValue.format(usdBalance)
+                        : amountToken
+                    }
                     amountUSD={usdFormatter.fullValue.format(usdBalance)}
                     icon={'logoURI' in token ? token.logoURI || '' : ''}
                     symbol={token.symbol}
@@ -217,10 +226,16 @@ export function ConfirmSwapContent({
                 const balance = solveIntentQuery.data?.balances.find(
                   (ot) => ot.token.address.toLowerCase() === token.address.toLowerCase(),
                 )
+                const outputToken = solveIntentQuery.data?.outputTokenUsdPrices.find(
+                  (ot) => ot.address === token.address,
+                )
+                if (!outputToken) return null
                 if (!balance) return null
 
-                // Using pre-calculated amountUSD from balances instead of calculating from outputTokenUsdPrices
-                const usdBalance = BigNumber(balance.amountUSD)
+                const usdBalance =
+                  token.type === TokenType.ConcentratedLiquidity
+                    ? BigNumber(balance.amountMinUSD)
+                    : BigNumber(balance.amount).multipliedBy(outputToken.priceUSD)
 
                 const percentage =
                   Math.round(
@@ -236,11 +251,18 @@ export function ConfirmSwapContent({
                     className="mb-3 w-[99%] mx-auto embla__slide flex-[0_0_100%] min-w-0"
                     type={token.type}
                     key={token.symbol}
-                    amountToken={formatTokenAmount(Number(balance.amount), Number(balance.amountUSD) / Number(balance.amount) || 0)}
+                    amountToken={
+                      token.type === TokenType.ConcentratedLiquidity
+                        ? usdFormatter.fullValue.format(usdBalance.toFixed())
+                        : formatTokenAmount(
+                            Number(balance.amount),
+                            Number(outputToken.priceUSD) || 0,
+                          )
+                    }
                     amountUSD={usdFormatter.fullValue.format(usdBalance.toFixed())}
-                    icon={'logoURI' in token ? token.logoURI ?? '' : ''}
-                    color={'primaryColor' in token ? token.primaryColor ?? '' : ''}
-                    symbol={token.symbol}
+                    icon={outputToken.logoURI ?? ''}
+                    color={token.primaryColor ?? ''}
+                    symbol={outputToken.symbol}
                     valuePercent={valuePercent}
                     chainId={token.network}
                   />

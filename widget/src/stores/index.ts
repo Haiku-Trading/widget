@@ -15,6 +15,7 @@ export type TradeState = {
   slippage: string
   alerts: TradeAlertsType[]
   inputPositions: Record<string, string>
+  clammInputPositions: Record<string, string>
   targetWeights: Record<string, number>
   isShowBalance: boolean
   isTokenView: boolean
@@ -29,7 +30,7 @@ export type TradeActions = {
   removeOutputToken: (token: AnyAPIToken) => void
   setPreselectedInputTokens: (tokens: Array<{ token: AnyAPIToken; amount: number }>) => void
   setPreselectedOutputTokens: (tokens: Array<{ token: AnyAPIToken; amount: number }>) => void
-  setTokenValue: (token: AnyAPIToken, value: string) => void
+  setTokenValue: (token: AnyAPIToken, value: string, balance?: { balance: number; balanceUSD: number }) => void
   swapToken: () => void
   updateTokensUSDPrice: (tokens: AnyAPIToken[]) => void
   updateAlerts: (alerts: TradeAlertsType[]) => void
@@ -62,6 +63,7 @@ export const defaultTradeInitState: TradeState = {
   slippage: '0.003',
   alerts: [],
   inputPositions: {},
+  clammInputPositions: {},
   targetWeights: {},
   isShowBalance: true,
   isTokenView: true,
@@ -327,16 +329,30 @@ export const createTradeStore = (initState: TradeState = defaultTradeInitState) 
         }
       })
     },
-    setTokenValue: (token, value) => {
+    setTokenValue: (token, value, balance) => {
       set((state) => {
         const inputPositions = {
           ...state.inputPositions,
         }
+
+        const clammInputPositions = {
+          ...state.clammInputPositions,
+        }
+
+        // Handle CLAMM tokens separately - convert USD value to liquidity amount
+        if (token.type === TokenType.ConcentratedLiquidity && balance) {
+          clammInputPositions[token.iid] = Math.ceil(
+            Number((Number(value) / balance.balanceUSD) * balance.balance),
+          ).toString()
+        }
+
+        // Store value in inputPositions for all tokens (including CLAMM)
         inputPositions[token.iid] = value
 
         const usdInputTotal = getTotalUSD(inputPositions, state.inputTokens)
 
         return {
+          clammInputPositions,
           inputPositions,
           usdInputTotal,
         }
