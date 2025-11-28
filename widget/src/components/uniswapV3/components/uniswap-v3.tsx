@@ -199,7 +199,7 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
           Cancel
         </Button>
         <Button
-          className="flex-1 text-base disabled:grayscale disabled:opacity-30 border border-border"
+          className="flex-1 text-base disabled:grayscale disabled:opacity-30 border border-border [color:hsl(var(--button-text))!important] [background-color:hsl(var(--button-bg))] disabled:[background-color:transparent]"
           size="lg"
           onClick={onSelect}
         >
