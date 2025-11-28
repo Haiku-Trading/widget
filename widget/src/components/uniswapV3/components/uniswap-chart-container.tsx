@@ -116,9 +116,9 @@ const UniswapChartContainer = ({
     <div className="flex flex-col gap-1">
       <div className="bg-bg-section p-4 rounded-tl-[20px] rounded-tr-[20px]">
         <div className="flex justify-between items-center">
-          <span className="text-14px-normal text-grey-medium dark:text-[#B2B2B2]">
+          <span className="text-14px-normal text-grey-medium">
             Market price:{' '}
-            <span className="dark:text-[white] text-[black]">
+            <span className="text-foreground font-medium">
               {marketRate} {otherToken.symbol} = 1 {activeToken.symbol}
             </span>
           </span>
@@ -147,7 +147,7 @@ const UniswapChartContainer = ({
                     className="bg-primary rounded-full absolute inset-0"
                   />
                 )}
-                <p className={cn('relative z-10', 'text-white')}>{token.symbol}</p>
+                <p className={cn('relative z-10', currentToken === token.symbol ? 'text-primary-foreground' : 'text-muted-foreground')}>{token.symbol}</p>
               </ToggleGroup.Item>
             ))}
           </ToggleGroup.Root>
@@ -187,7 +187,7 @@ const UniswapChartContainer = ({
                   className="bg-primary rounded-full absolute inset-0"
                 />
               )}
-              <p className={cn('relative z-10', 'text-white')}>{day.label}</p>
+              <p className={cn('relative z-10', currentFilter === day.key ? 'text-primary-foreground' : 'text-muted-foreground')}>{day.label}</p>
             </ToggleGroup.Item>
           ))}
         </ToggleGroup.Root>

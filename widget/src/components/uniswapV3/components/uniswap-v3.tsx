@@ -8,10 +8,12 @@ import { cn } from '../../../utils'
 import { Avatar, Clipboard } from '@ark-ui/react'
 import { CopyIcon } from '@radix-ui/react-icons'
 import { ToggleGroup } from 'radix-ui'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useConfig } from 'wagmi'
-import { ShareIcon } from '../../icons'
+import { ShareIcon, CloseIcon } from '../../icons'
 import UniswapChartContainer from './uniswap-chart-container'
+import { useTheme } from '../../../providers/theme-provider'
+import { applyThemeToElement } from '../../../utils/theme-utils'
 
 const modes = [
   {
@@ -31,11 +33,20 @@ interface UniswapV3Props {
 }
 
 const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }: UniswapV3Props) => {
-  const firstToken =
-    useMemo(
-      () => allTokens?.find((token) => token.iid === tokenInfo.underlying_iids[0]),
-      [tokenInfo, allTokens],
-    ) || []
+  const { theme } = useTheme()
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Apply theme to the container when theme changes
+  useEffect(() => {
+    if (containerRef.current) {
+      applyThemeToElement(containerRef.current, theme)
+    }
+  }, [theme])
+
+  const firstToken = useMemo(
+    () => allTokens?.find((token) => token.iid === tokenInfo.underlying_iids[0]),
+    [tokenInfo, allTokens],
+  )
   const secondToken = useMemo(
     () => allTokens?.find((token) => token.iid === tokenInfo.underlying_iids[1]),
     [tokenInfo, allTokens],
@@ -65,28 +76,33 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
   }, [tokenInfo, chains])
 
   return (
-    <div className="w-[700px] flex rounded-lg  bg-bg-surface border border-stroke-grey-primary flex-col gap-5 p-6">
+    <div ref={containerRef} className="haiku-widget-theme-container w-[700px] flex rounded-2xl bg-bg-primary border border-border flex-col gap-5 p-6">
       <div className="w-full flex justify-between">
-        <span className="text-[18px]">Set price change</span>
+        <span className="text-foreground font-medium text-lg">Set price change</span>
         <div className="w-max flex justify-end items-center gap-3">
           {chainUrl && (
-            <a href={`${chainUrl}/address/${tokenInfo?.address}`} target="_blank">
+            <a href={`${chainUrl}/address/${tokenInfo?.address}`} target="_blank" className="text-icon-subtle hover:text-icon-primary transition-colors">
               <ShareIcon />
             </a>
           )}
           {'url' in tokenInfo && tokenInfo?.url ? (
-            <a href={typeof tokenInfo.url === 'string' ? tokenInfo.url : '#'} target="_blank">
-              <Avatar.Root className="w-3.5 h-3.5 inline-block rounded-full overflow-hidden">
+            <a 
+              href={typeof tokenInfo.url === 'string' ? tokenInfo.url : '#'} 
+              target="_blank"
+              className="flex items-center justify-center hover:opacity-75 transition-opacity"
+            >
+              <Avatar.Root className="size-4 inline-block rounded-full overflow-hidden border border-border">
                 <Avatar.Image
                   src={`/icons/protocols/${tokenInfo?.protocol}.svg`}
-                  alt="Favicon"
-                  className="rounded-full"
+                  alt="Protocol"
+                  className="rounded-full w-full h-full"
                 />
+                <Avatar.Fallback className="text-xs text-foreground flex items-center justify-center w-full h-full bg-bg-section">
+                  {tokenInfo?.protocol?.[0]?.toUpperCase() || 'P'}
+                </Avatar.Fallback>
               </Avatar.Root>
             </a>
-          ) : (
-            <></>
-          )}
+          ) : null}
           {tokenInfo?.address.toString().toLowerCase() !==
             '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'.toLowerCase() && (
             <Clipboard.Root value={`${tokenInfo?.address.toLowerCase()}`} className="font-bold">
@@ -98,6 +114,15 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
                 </Clipboard.Trigger>
               </Clipboard.Control>
             </Clipboard.Root>
+          )}
+          {onCancel && (
+            <button
+              onClick={onCancel}
+              className="size-4 flex items-center justify-center cursor-pointer active:scale-95 text-icon-subtle hover:text-icon-primary transition-colors"
+              aria-label="Close"
+            >
+              <CloseIcon />
+            </button>
           )}
         </div>
       </div>
@@ -112,8 +137,8 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
         )}
       >
         {modes.map((mode) => (
-          // eslint-disable-next-line react/jsx-key
           <ToggleGroup.Item
+            key={mode.type}
             value={mode.type}
             disabled={mode.disabled}
             className={cn(
@@ -132,7 +157,7 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
             <p
               className={cn(
                 'relative z-10',
-                currMode === mode.type && !mode.disabled ? 'text-white' : 'text-muted-foreground',
+                currMode === mode.type && !mode.disabled ? 'text-primary-foreground' : 'text-muted-foreground',
                 mode.disabled && 'text-muted-foreground/50',
               )}
             >
@@ -142,7 +167,7 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
         ))}
       </ToggleGroup.Root>
 
-      <span className="text-14px-normal text-grey-medium dark:text-[#B2B2B2]">
+      <span className="text-14px-normal text-grey-medium">
         Providing full range liquidity ensures continuous market participation across all possible
         prices, offering simplicity but with potential for higher impermanent loss.
       </span>
@@ -155,9 +180,9 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
         concentratedPoolData={concentratedPoolData}
       />
 
-      <div className="bg-bg-surface p-4 flex items-center gap-4 rounded-b-full">
+      <div className="bg-bg-primary p-4 flex items-center gap-4 rounded-b-2xl">
         <Button
-          className="flex-1 text-base text-grey-secondary"
+          className="flex-1 text-base"
           variant="outline"
           size="lg"
           onClick={() => {
@@ -174,7 +199,7 @@ const UniswapV3 = ({ tokenInfo, allTokens, onSetTickRange, onSelect, onCancel }:
           Cancel
         </Button>
         <Button
-          className="flex-1 text-base disabled:grayscale disabled:opacity-30"
+          className="flex-1 text-base disabled:grayscale disabled:opacity-30 border border-border"
           size="lg"
           onClick={onSelect}
         >

@@ -67,15 +67,51 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
   const [dragStartTop, setDragStartTop] = useState<number>(0)
   const [dragStartBottom, setDragStartBottom] = useState<number>(0)
 
+  // Get theme colors for bubble styles (using useMemo to avoid recalculating on every render)
+  const themeColors = React.useMemo(() => {
+    if (typeof document === 'undefined') {
+      return {
+        bgPrimaryHsl: '#ffffff',
+        primaryHsl: '#f97415',
+        borderHsl: 'rgba(0,0,0,0.06)',
+        mutedForegroundHsl: '#9ca3af',
+        mutedForegroundRaw: '215.4 16.3% 46.9%',
+      }
+    }
+    const docRoot = document.documentElement
+    const bgPrimary = getComputedStyle(docRoot).getPropertyValue('--bg-primary').trim()
+    const bgPrimaryHsl = bgPrimary ? `hsl(${bgPrimary})` : '#ffffff'
+    const primaryColor = getComputedStyle(docRoot).getPropertyValue('--primary').trim()
+    const primaryHsl = primaryColor ? `hsl(${primaryColor})` : '#f97415'
+    const borderColor = getComputedStyle(docRoot).getPropertyValue('--border').trim()
+    const borderHsl = borderColor ? `hsl(${borderColor} / 0.3)` : 'rgba(0,0,0,0.06)'
+    const mutedFg = getComputedStyle(docRoot).getPropertyValue('--muted-foreground').trim()
+    const mutedForegroundHsl = mutedFg ? `hsl(${mutedFg})` : '#9ca3af'
+    const mutedForegroundRaw = mutedFg || '215.4 16.3% 46.9%'
+    
+    return { bgPrimaryHsl, primaryHsl, borderHsl, mutedForegroundHsl, mutedForegroundRaw }
+  }, [])
+  
   // chart setup
   useEffect(() => {
     if (!chartContainerRef.current) return
+    
+    // Get theme colors from CSS variables
+    const chartRoot = typeof document !== 'undefined' ? document.documentElement : null
+    const primaryColor = chartRoot ? getComputedStyle(chartRoot).getPropertyValue('--primary').trim() : ''
+    const primaryHsl = primaryColor ? `hsl(${primaryColor})` : '#f97415'
+    const bgSection = chartRoot ? getComputedStyle(chartRoot).getPropertyValue('--bg-section').trim() : ''
+    const bgSectionHsl = bgSection ? `hsl(${bgSection})` : '#f5f5f5'
+    const chartMutedForeground = chartRoot ? getComputedStyle(chartRoot).getPropertyValue('--muted-foreground').trim() : ''
+    const chartMutedForegroundHsl = chartMutedForeground ? `hsl(${chartMutedForeground})` : '#888'
+    const primaryWithAlpha = primaryColor ? `hsl(${primaryColor} / 0.1)` : '#f974151A'
+    
     const chart = createChart(chartContainerRef.current, {
       width: chartContainerRef.current.clientWidth,
       height: 300,
       layout: {
-        background: { color: colors?.backgroundColor || '#f974151A' },
-        textColor: '#888',
+        background: { color: colors?.backgroundColor || primaryWithAlpha },
+        textColor: chartMutedForegroundHsl,
       },
       grid: {
         vertLines: { visible: false },
@@ -104,7 +140,7 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
     }))
 
     const newSeries = chart.addSeries(LineSeries, {
-      color: colors?.lineColor || '#f97415',
+      color: colors?.lineColor || primaryHsl,
       lineWidth: 3,
       priceLineVisible: false,
       lastValueVisible: true,
@@ -172,16 +208,17 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
 
     chart.timeScale().fitContent()
 
+    // Get theme colors for price line
     if (series._lastPriceLine) series.removePriceLine(series._lastPriceLine)
     series._lastPriceLine = series.createPriceLine({
       price: lastValue,
-      color: '#9ca3af',
+      color: themeColors.mutedForegroundHsl,
       lineWidth: 1,
       lineStyle: 3,
       axisLabelVisible: false,
       title: '',
     })
-  }, [data])
+  }, [data, themeColors])
 
   // dragging
   const handleMouseDown = (e: React.MouseEvent, type: 'top' | 'bottom' | 'middle') => {
@@ -306,19 +343,19 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
     setMinMaxRange({ minRange: bottomPrice, maxRange: topPrice })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topPrice, bottomPrice, currentPrice, inverted])
-
+  
   const bubbleStyleBase: React.CSSProperties = {
     position: 'absolute',
     left: 10,
     transform: 'translateY(-50%)',
     padding: '6px 10px',
     borderRadius: 12,
-    background: '#ffffff',
-    border: '1px solid rgba(0,0,0,0.06)',
+    background: themeColors.bgPrimaryHsl,
+    border: `1px solid ${themeColors.borderHsl}`,
     boxShadow: '0 6px 18px rgba(16,24,40,0.06)',
     fontSize: 13,
     fontWeight: 600,
-    color: '#f97415',
+    color: themeColors.primaryHsl,
     zIndex: 11,
     lineHeight: 1,
     minWidth: 56,
@@ -335,7 +372,7 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
             left: 0,
             right: 0,
             height: '2px',
-            backgroundColor: '#9ca3af',
+            backgroundColor: themeColors.mutedForegroundHsl,
             cursor: 'ns-resize',
             zIndex: 10,
             display: isFullRange ? 'none' : '',
@@ -350,7 +387,7 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
               transform: 'translateX(-50%)',
               width: '40px',
               height: '10px',
-              backgroundColor: '#9ca3af',
+              backgroundColor: themeColors.mutedForegroundHsl,
               borderRadius: '2px',
             }}
           />
@@ -364,8 +401,8 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
             left: 0,
             right: 0,
             height: `${rangeBottom - rangeTop}%`,
-            backgroundColor: 'rgba(156, 163, 175, 0.08)',
-            border: '1px dashed #9ca3af',
+            backgroundColor: `hsl(${themeColors.mutedForegroundRaw} / 0.08)`,
+            border: `1px dashed ${themeColors.mutedForegroundHsl}`,
             borderTop: 'none',
             borderBottom: 'none',
             cursor: 'move',
@@ -382,7 +419,7 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
             left: 0,
             right: 0,
             height: '2px',
-            backgroundColor: '#9ca3af',
+            backgroundColor: themeColors.mutedForegroundHsl,
             cursor: 'ns-resize',
             zIndex: 10,
             display: isFullRange ? 'none' : '',
@@ -397,7 +434,7 @@ const UniswapChart: React.FC<UniswapChartProps> = ({
               transform: 'translateX(-50%)',
               width: '40px',
               height: '10px',
-              backgroundColor: '#9ca3af',
+              backgroundColor: themeColors.mutedForegroundHsl,
               borderRadius: '2px',
             }}
           />

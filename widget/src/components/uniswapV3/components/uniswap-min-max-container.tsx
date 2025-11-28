@@ -1,12 +1,13 @@
 import { useHttpClient } from '../../../providers/http-client'
 import { useQuery } from '@tanstack/react-query'
+import { APIToken } from '../../../services/get-tokens'
 
-interface Props {
+interface HookProps {
   iidFirstToken: string
   iidSecondToken: string
 }
 
-const useMinMaxPrice = ({ iidFirstToken, iidSecondToken }: Props) => {
+export const useMinMaxPrice = ({ iidFirstToken, iidSecondToken }: HookProps) => {
   const httpClient = useHttpClient()
 
   const query = useQuery({
@@ -35,4 +36,44 @@ const useMinMaxPrice = ({ iidFirstToken, iidSecondToken }: Props) => {
   }
 }
 
-export default useMinMaxPrice
+interface UniswapMinMaxContainerProps {
+  minMaxRange: { minRange: number; maxRange: number }
+  isFullRange: boolean
+  activeToken: APIToken
+  otherToken: APIToken
+}
+
+const UniswapMinMaxContainer = ({
+  minMaxRange,
+  isFullRange,
+  activeToken,
+  otherToken,
+}: UniswapMinMaxContainerProps) => {
+  const { minPrice, maxPrice } = useMinMaxPrice({
+    iidFirstToken: activeToken.iid,
+    iidSecondToken: otherToken.iid,
+  })
+
+  return (
+    <div className="bg-bg-section p-4 rounded-bl-[20px] rounded-br-[20px]">
+      <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-1">
+          <span className="text-14px-normal text-grey-medium">Min Price</span>
+          <span className="text-base font-medium text-foreground">
+            {minMaxRange.minRange > 0 ? minMaxRange.minRange.toFixed(5) : minPrice?.toFixed(5) || '0.00000'}{' '}
+            {otherToken.symbol} = 1 {activeToken.symbol}
+          </span>
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className="text-14px-normal text-grey-medium">Max Price</span>
+          <span className="text-base font-medium text-foreground">
+            {minMaxRange.maxRange > 0 ? minMaxRange.maxRange.toFixed(5) : maxPrice?.toFixed(5) || '0.00000'}{' '}
+            {otherToken.symbol} = 1 {activeToken.symbol}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default UniswapMinMaxContainer
