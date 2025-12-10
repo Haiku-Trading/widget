@@ -1,7 +1,7 @@
 import { ConnectButton, RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { WagmiProvider } from "wagmi";
 import { arbitrum, avalanche, base, berachain, bsc, gnosis, katana, mainnet, optimism, polygon, scroll, sei, sonic, worldchain } from "wagmi/chains";
@@ -201,6 +201,35 @@ function DevApp() {
             },
         };
     }, [widgetConfig, previewMode]);
+
+    // Simple remount approach: completely unmount and remount widget on config changes
+    // This is only for the dev playground, not production code
+    const [isWidgetMounted, setIsWidgetMounted] = useState(true);
+    const prevConfigRef = React.useRef<string | null>(null);
+    
+    // When config changes, unmount and remount the widget completely
+    useEffect(() => {
+        const configString = JSON.stringify(previewConfig);
+        
+        // Skip on first mount
+        if (prevConfigRef.current === null) {
+            prevConfigRef.current = configString;
+            return;
+        }
+        
+        // If config actually changed, unmount then remount
+        if (prevConfigRef.current !== configString) {
+            prevConfigRef.current = configString;
+            
+            // Unmount
+            setIsWidgetMounted(false);
+            
+            // Remount on next tick
+            setTimeout(() => {
+                setIsWidgetMounted(true);
+            }, 0);
+        }
+    }, [previewConfig]);
 
     // Helper functions
     const toggleHiddenChain = (chainId: number) => {
@@ -762,7 +791,7 @@ ${indentedConfig}
                                     <div className="bg-white rounded-lg p-6 shadow-sm border">
                                         <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Widget Preview</h3>
                                         <div className="border rounded-lg p-4 bg-gray-50">
-                                            <HaikuWidget key={JSON.stringify(previewConfig)} widgetKey="dev-widget-key-12345" config={previewConfig} />
+                                            {isWidgetMounted && <HaikuWidget widgetKey="dev-widget-key-12345" config={previewConfig} />}
                                         </div>
                                     </div>
 
