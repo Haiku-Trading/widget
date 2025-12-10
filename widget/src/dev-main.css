@@ -1,0 +1,13 @@
+/* 
+ * Dev Showcase Page Styles
+ * This file contains unscoped Tailwind utilities for the dev-main.tsx showcase page.
+ * This file is ONLY used in development and is NOT included in the production widget build.
+ */
+
+/* Import Tailwind with base, components, and utilities - unscoped for the showcase page */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Additional showcase-specific styles if needed */
+

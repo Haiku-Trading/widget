@@ -1,8 +1,21 @@
-@tailwind base;
+/* Removed @tailwind base to prevent global CSS resets from affecting parent applications */
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* Minimal base styles scoped to widget container only */
+.haiku-widget-theme-container {
+    /* Essential box-sizing for proper layout */
+    box-sizing: border-box;
+}
+
+.haiku-widget-theme-container *,
+.haiku-widget-theme-container *::before,
+.haiku-widget-theme-container *::after {
+    box-sizing: border-box;
+}
+
+/* Scoped CSS variables - only available within widget container */
+.haiku-widget-theme-container {
     /* Background colors - controlled by light/dark mode only */
     --bg-primary: 0 0% 100%;
     --bg-surface: 0 0% 98%;
@@ -144,7 +157,8 @@
     --button-header-icon:215.4 16.3% 46.9%
 }
 
-.dark {
+/* Scoped dark mode - only applies within widget container */
+.haiku-widget-theme-container.dark {
     /* Background colors - controlled by light/dark mode only */
     --bg-primary: 222.2 84% 4.9%;
     --bg-surface: 222.2 84% 4.9%;
@@ -208,9 +222,9 @@
      and their scales will be overridden by user theme configuration */
 }
 
-/* Media query for auto mode dark theme support */
+/* Scoped media query for auto mode dark theme support */
 @media (prefers-color-scheme: dark) {
-    :root:not(.light) {
+    .haiku-widget-theme-container:not(.light) {
         /* Use dark mode warning colors when system prefers dark and no explicit light mode */
         --warning: var(--warning-dark, 38 92% 60%);
         --warning-bg: var(--warning-bg-dark, 38 92% 50% / 0.15);

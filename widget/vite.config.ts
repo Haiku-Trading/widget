@@ -45,7 +45,14 @@ export default defineConfig({
     },
   },
   css: {
-    postcss: './postcss.config.js',
+    // Use unscoped PostCSS config for Vite dev server
+    // This allows the showcase page (dev-main.css) to use unscoped Tailwind utilities
+    // The widget's styles.css will still work because:
+    // 1. Widget components are wrapped in .haiku-widget-theme-container
+    // 2. Custom CSS rules in styles.css are already scoped to .haiku-widget-theme-container
+    // 3. Tailwind utilities will be unscoped in dev, but only used inside the widget container
+    // Production build (Rollup) uses scoped config to prevent CSS leakage
+    postcss: './postcss.config.dev.js',
   },
   server: {
     port: 3001,

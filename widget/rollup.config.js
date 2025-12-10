@@ -10,6 +10,7 @@ import replace from '@rollup/plugin-replace';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
+import prefixwrap from 'postcss-prefixwrap';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -103,9 +104,17 @@ export default [
         minimize: !isDev,
         plugins: [
           tailwindcss,
+          // Wrap all Tailwind-generated CSS in .haiku-widget-theme-container
+          // This scopes all utilities and components to the widget container
+          prefixwrap('.haiku-widget-theme-container', {
+            ignoredSelectors: [':root', '.dark', '@media'], // These are scoped manually in styles.css
+            prefixRootTags: false, // Don't prefix root-level tags
+          }),
           autoprefixer,
         ],
         include: ['**/*.css'],
+        // Explicitly exclude dev-main.css from production build
+        exclude: ['**/dev-main.css'],
       }),
       typescript({ 
         tsconfig: './tsconfig.json',
