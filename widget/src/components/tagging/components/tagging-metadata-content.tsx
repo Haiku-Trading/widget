@@ -140,7 +140,7 @@ const ChainItem = ({ chainName, metadata, images, branches }: ChainItemProps) =>
         </div>
       </div>
       <div className="w-full h-1/3 rounded-b-lg bg-bg-surface p-[16px] flex justify-start items-center gap-2">
-        <a href={metadata?.blockExplorers?.default.url} target="_blank">
+        <a href={metadata?.blockExplorers?.default.url} target="_blank" className="text-icon-subtle">
           <ShareIcon />
         </a>
       </div>
@@ -179,7 +179,7 @@ const ProtocolItem = ({ protocolName, metadata, images, branches }: ProtocolItem
         </div>
       </div>
       <div className="w-full h-1/3 rounded-b-lg bg-bg-surface p-[16px] flex justify-start items-center gap-2">
-        <a href={metadata?.url} target="_blank">
+        <a href={metadata?.url} target="_blank" className="text-icon-subtle">
           <ShareIcon />
         </a>
       </div>
@@ -295,7 +295,7 @@ const TokenItem = ({ tokenName, metadata, images, branches }: TokenItemProps) =>
       </div>
       <div className="w-full h-1/5 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
-          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
+          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank" className="text-icon-subtle">
             <ShareIcon />
           </a>
         )}
@@ -402,7 +402,7 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
       </div>
       <div className="w-full h-1/5 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
-          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
+          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank" className="text-icon-subtle">
             <ShareIcon />
           </a>
         )}
@@ -512,7 +512,7 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
       </div>
       <div className="w-full h-1/5 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
-          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
+          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank" className="text-icon-subtle">
             <ShareIcon />
           </a>
         )}
@@ -622,7 +622,7 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
       </div>
       <div className="w-full h-1/3 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
-          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
+          <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank" className="text-icon-subtle">
             <ShareIcon />
           </a>
         )}

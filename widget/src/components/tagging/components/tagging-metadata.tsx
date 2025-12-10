@@ -1,6 +1,8 @@
 import { BeautifulMentionComponentProps } from 'lexical-beautiful-mentions'
 import { HoverCard } from 'radix-ui'
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useRef } from 'react'
+import { useTheme } from '../../../providers/theme-provider'
+import { applyThemeToElement } from '../../../utils/theme-utils'
 import TaggingMetadataContent from './tagging-metadata-content'
 
 const TaggingMetadata = forwardRef<HTMLSpanElement, BeautifulMentionComponentProps<{ id: string }>>(
@@ -26,16 +28,18 @@ const TaggingMetadata = forwardRef<HTMLSpanElement, BeautifulMentionComponentPro
           </span>
         </HoverCard.Trigger>
         <HoverCard.Portal>
-          <HoverCard.Content className="z-50" side={'right'} align="start" sideOffset={0}>
-            <TaggingMetadataContent
-              value={value}
-              images={images}
-              branches={branches}
-              type={data.type}
-              metadata={JSON.parse(data.metadata) || '{}'}
-            />
-            <HoverCard.Arrow className="fill-section h-[6px] w-3" />
-          </HoverCard.Content>
+          <HoverCardContentWithTheme>
+            <HoverCard.Content className="z-50" side={'right'} align="start" sideOffset={0}>
+              <TaggingMetadataContent
+                value={value}
+                images={images}
+                branches={branches}
+                type={data.type}
+                metadata={JSON.parse(data.metadata) || '{}'}
+              />
+              <HoverCard.Arrow className="fill-section h-[6px] w-3" />
+            </HoverCard.Content>
+          </HoverCardContentWithTheme>
         </HoverCard.Portal>
       </HoverCard.Root>
     )
@@ -43,5 +47,25 @@ const TaggingMetadata = forwardRef<HTMLSpanElement, BeautifulMentionComponentPro
 )
 
 TaggingMetadata.displayName = 'TaggingMetadata'
+
+// Theme wrapper for HoverCard content to apply theme styles
+const HoverCardContentWithTheme = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Apply theme to wrapper when theme changes or on mount
+  useEffect(() => {
+    const element = wrapperRef.current
+    if (element) {
+      applyThemeToElement(element, theme)
+    }
+  }, [theme])
+
+  return (
+    <div ref={wrapperRef} className="haiku-widget-theme-container">
+      {children}
+    </div>
+  )
+}
 
 export default TaggingMetadata

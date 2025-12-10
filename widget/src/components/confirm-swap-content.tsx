@@ -264,7 +264,7 @@ export function ConfirmSwapContent({
             <div
               className={cn(
                 'flex gap-1 w-full',
-                '*:flex-1 *:rounded-full *:flex *:gap-1 *:items-center *:justify-center *:h-10 *:font-medium *:border *:border-transparent hover:*:border-border *:text-muted-foreground',
+                '*:flex-1 *:rounded-full *:flex *:gap-1 *:items-center *:justify-center *:h-10 *:font-medium *:border *:border-transparent hover:*:border-border *:text-foreground',
               )}
             >
               <Tooltip content="Source Chain Transaction" className="text-sm p-2 rounded-lg">
@@ -273,7 +273,7 @@ export function ConfirmSwapContent({
                 ) : (
                   <a target="_blank" href={txURL}>
                     Source
-                    <ShareIcon />
+                    <span className="text-icon-subtle"><ShareIcon /></span>
                   </a>
                 )}
               </Tooltip>
@@ -290,7 +290,7 @@ export function ConfirmSwapContent({
                       {transactionQuery.data?.destinationTx?.status === 'REFUNDED'
                         ? 'Refund'
                         : 'Bridge'}
-                      <ShareIcon />
+                      <span className="text-icon-subtle"><ShareIcon /></span>
                     </a>
                   )}
                 </Tooltip>
@@ -313,7 +313,7 @@ export function ConfirmSwapContent({
                     {transactionQuery.data?.destinationTx?.status === 'REFUNDED'
                       ? 'Refund'
                       : 'Destination'}
-                    <ShareIcon />
+                    <span className="text-icon-subtle"><ShareIcon /></span>
                   </a>
                 )}
               </Tooltip>

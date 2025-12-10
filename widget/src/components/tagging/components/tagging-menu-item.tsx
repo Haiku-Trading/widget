@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { memo, useMemo } from 'react'
+import React, { memo, useMemo, useEffect, useRef } from 'react'
 import { BeautifulMentionsMenuItemProps } from 'lexical-beautiful-mentions'
 import { forwardRef } from 'react'
 import { Avatar } from 'radix-ui'
@@ -7,6 +7,8 @@ import { Avatar } from 'radix-ui'
 import { cn } from '../../../utils'
 import { getInitials } from '../../../utils/get-initials'
 import { HoverCard } from 'radix-ui'
+import { useTheme } from '../../../providers/theme-provider'
+import { applyThemeToElement } from '../../../utils/theme-utils'
 import TaggingMetadataContent from './tagging-metadata-content'
 import { getChainIcon } from '../../../utils/chain-utils'
 import { getProtocolIcon } from '../../../utils/protocol-utils'
@@ -165,16 +167,18 @@ const TaggingMenuItem = memo(
               </div>
             </HoverCard.Trigger>
             <HoverCard.Portal>
-              <HoverCard.Content className="z-50" side={'right'} align="start" sideOffset={0}>
-                <TaggingMetadataContent
-                  value={displayText}
-                  images={imageData.images}
-                  branches={imageData.branches}
-                  type={data.type}
-                  metadata={JSON.parse(data.metadata) || '{}'}
-                />
-                <HoverCard.Arrow className="fill-section h-[6px] w-3" />
-              </HoverCard.Content>
+              <HoverCardContentWithTheme>
+                <HoverCard.Content className="z-50" side={'right'} align="start" sideOffset={0}>
+                  <TaggingMetadataContent
+                    value={displayText}
+                    images={imageData.images}
+                    branches={imageData.branches}
+                    type={data.type}
+                    metadata={JSON.parse(data.metadata) || '{}'}
+                  />
+                  <HoverCard.Arrow className="fill-section h-[6px] w-3" />
+                </HoverCard.Content>
+              </HoverCardContentWithTheme>
             </HoverCard.Portal>
           </HoverCard.Root>
         </li>
@@ -184,5 +188,25 @@ const TaggingMenuItem = memo(
 )
 
 TaggingMenuItem.displayName = 'TaggingMenuItem'
+
+// Theme wrapper for HoverCard content to apply theme styles
+const HoverCardContentWithTheme = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Apply theme to wrapper when theme changes or on mount
+  useEffect(() => {
+    const element = wrapperRef.current
+    if (element) {
+      applyThemeToElement(element, theme)
+    }
+  }, [theme])
+
+  return (
+    <div ref={wrapperRef} className="haiku-widget-theme-container">
+      {children}
+    </div>
+  )
+}
 
 export default TaggingMenuItem

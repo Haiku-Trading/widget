@@ -18,6 +18,8 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useTheme } from '../../providers/theme-provider'
+import { applyThemeToElement } from '../../utils/theme-utils'
 import { VirtuosoGrid } from 'react-virtuoso'
 import { useConfig } from 'wagmi'
 import { useShallow } from 'zustand/shallow'
@@ -256,6 +258,26 @@ const List = forwardRef<DivElement, DivProps>((props, ref) => {
   )
 })
 List.displayName = 'List'
+
+// Theme wrapper for HoverCard content to apply theme styles
+const HoverCardContentWithTheme = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Apply theme to wrapper when theme changes or on mount
+  useEffect(() => {
+    const element = wrapperRef.current
+    if (element) {
+      applyThemeToElement(element, theme)
+    }
+  }, [theme])
+
+  return (
+    <div ref={wrapperRef} className="haiku-widget-theme-container">
+      {children}
+    </div>
+  )
+}
 
 type FilterTokensProps = {
   search: string
@@ -1488,16 +1510,18 @@ export const TokenCard = memo(function TokenCard({
       </HoverCard.Trigger>
 
       <HoverCard.Portal>
-        <HoverCard.Content side={'right'} align="start" sideOffset={0} className="z-50">
-          <TaggingMetadataContent
-            value={token.name}
-            images={images}
-            branches={branches}
-            type={tokenType}
-            metadata={token || '{}'}
-          />
-          <HoverCard.Arrow className="fill-section h-[6px] w-3" />
-        </HoverCard.Content>
+        <HoverCardContentWithTheme>
+          <HoverCard.Content side={'right'} align="start" sideOffset={0} className="z-50">
+            <TaggingMetadataContent
+              value={token.name}
+              images={images}
+              branches={branches}
+              type={tokenType}
+              metadata={token || '{}'}
+            />
+            <HoverCard.Arrow className="fill-section h-[6px] w-3" />
+          </HoverCard.Content>
+        </HoverCardContentWithTheme>
       </HoverCard.Portal>
     </HoverCard.Root>
   )
