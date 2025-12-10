@@ -2,7 +2,7 @@
 
 import { useMediaQuery } from '@uidotdev/usehooks'
 import { Dialog as DialogPrimitive } from 'radix-ui'
-import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef, useEffect, useMemo, useRef } from 'react'
+import { ComponentProps, ComponentPropsWithoutRef, ElementRef, forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Drawer } from 'vaul'
 import { cn } from '../utils'
 import { IconButton } from './icon-button/icon-button'
@@ -68,17 +68,35 @@ Content.displayName = 'DialogContent'
 // Theme wrapper component for portaled content
 const ThemeWrapper = forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
   const { theme } = useTheme()
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const internalRef = useRef<HTMLDivElement>(null)
 
-  // Apply theme to the wrapper when theme changes
+  // Callback ref to handle both forwarded ref and internal ref
+  const setRefs = useCallback((node: HTMLDivElement | null) => {
+    // Set the forwarded ref if provided
+    if (typeof ref === 'function') {
+      ref(node)
+    } else if (ref) {
+      ref.current = node
+    }
+    // Set the internal ref
+    internalRef.current = node
+    
+    // Apply theme immediately when element is mounted
+    if (node) {
+      applyThemeToElement(node, theme)
+    }
+  }, [ref, theme])
+
+  // Apply theme when theme changes (for updates after mount)
   useEffect(() => {
-    if (wrapperRef.current) {
-      applyThemeToElement(wrapperRef.current, theme)
+    const element = internalRef.current
+    if (element) {
+      applyThemeToElement(element, theme)
     }
   }, [theme])
 
   return (
-    <div ref={ref || wrapperRef} className="haiku-widget-theme-container">
+    <div ref={setRefs} className="haiku-widget-theme-container">
       {children}
     </div>
   )
