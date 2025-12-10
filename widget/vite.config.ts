@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { join } from 'path'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
 
 // Environment configuration - hardcoded for public deployment
 const isDev = process.env.NODE_ENV === 'development'
@@ -52,7 +54,13 @@ export default defineConfig({
     // 2. Custom CSS rules in styles.css are already scoped to .haiku-widget-theme-container
     // 3. Tailwind utilities will be unscoped in dev, but only used inside the widget container
     // Production build (Rollup) uses scoped config to prevent CSS leakage
-    postcss: './postcss.config.dev.js',
+    postcss: {
+      plugins: [
+        tailwindcss,
+        // No prefixwrap here - showcase page needs unscoped Tailwind
+        autoprefixer,
+      ],
+    },
   },
   server: {
     port: 3001,
