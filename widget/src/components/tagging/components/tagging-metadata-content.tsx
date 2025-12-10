@@ -368,7 +368,7 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
                     </span>
                     <div className="w-full text-start font-bold text-wrap flex gap-2 justify-start items-center">
                       <div className="w-full text-start text-wrap flex gap-2 justify-start items-end">
-                        <span className="w-full text-start text-wrap flex gap-2 justify-between items-center">
+                        <span className="w-full text-start text-wrap flex gap-2 justify-between items-center text-foreground">
                           $
                           {priceUSD > 1
                             ? millify(priceUSD)
@@ -383,19 +383,19 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
           </div>
           <div className="w-full h-1/2 flex justify-center items-center">
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {parseFloat((metadata?.apy ?? 0)).toFixed(2)}{' '}%
               </span>
-              <span className="text-xs opacity-50">APY</span>
+              <span className="text-xs opacity-50 text-foreground">APY</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 $
                 {metadata?.metadata?.tvl && Number(metadata?.metadata?.tvl) > 1
                   ? millify(Number(metadata?.metadata?.tvl))
                   : '0.00'}
               </span>
-              <span className="text-xs opacity-50">TVL</span>
+              <span className="text-xs opacity-50 text-foreground">TVL</span>
             </div>
           </div>
         </div>
@@ -476,7 +476,7 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
                     </span>
                     <div className="w-full text-start font-bold text-wrap flex gap-2 justify-start items-center">
                       <div className="w-full text-start text-wrap flex gap-2 justify-start items-end">
-                        <span className="w-full text-start text-wrap flex gap-2 justify-between items-center">
+                        <span className="w-full text-start text-wrap flex gap-2 justify-between items-center text-foreground">
                           $
                           {priceUSD > 1
                             ? millify(priceUSD)
@@ -491,21 +491,21 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
           </div>
           <div className="w-full h-1/2 flex justify-center items-center">
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {metadata?.minApy === metadata?.maxApy
                   ? parseFloat(metadata?.minApy ?? 0).toFixed(2)
                   : `${parseFloat(metadata?.minApy ?? 0).toFixed(2)} - ${parseFloat(metadata?.maxApy ?? 0).toFixed(2)}`}{' '}%
               </span>
-              <span className="text-xs opacity-50">APY</span>
+              <span className="text-xs opacity-50 text-foreground">APY</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 $
                 {metadata?.metadata?.tvl && Number(metadata?.metadata?.tvl) > 1
                   ? millify(Number(metadata?.metadata?.tvl))
                   : '0.00'}
               </span>
-              <span className="text-xs opacity-50">TVL</span>
+              <span className="text-xs opacity-50 text-foreground">TVL</span>
             </div>
           </div>
         </div>
@@ -586,7 +586,7 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
                     </span>
                     <div className="w-full text-start font-bold text-wrap flex gap-2 justify-start items-center">
                       <div className="w-full text-start text-wrap flex gap-2 justify-start items-end">
-                        <span className="w-full text-start text-wrap flex gap-2 justify-between items-center">
+                        <span className="w-full text-start text-wrap flex gap-2 justify-between items-center text-foreground">
                           $
                           {priceUSD > 1
                             ? millify(priceUSD)
@@ -601,21 +601,21 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
           </div>
           <div className="w-full h-1/2 flex justify-center items-center">
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {metadata?.minApy === metadata?.maxApy
                   ? parseFloat(metadata?.minApy ?? 0).toFixed(2)
                   : `${parseFloat(metadata?.minApy ?? 0).toFixed(2)} - ${parseFloat(metadata?.maxApy ?? 0).toFixed(2)}`}{' '}%
               </span>
-              <span className="text-xs opacity-50">APY</span>
+              <span className="text-xs opacity-50 text-foreground">APY</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 $
                 {metadata?.metadata?.tvl && Number(metadata?.metadata?.tvl) > 1
                   ? millify(Number(metadata?.metadata?.tvl))
                   : '0.00'}
               </span>
-              <span className="text-xs opacity-50">TVL</span>
+              <span className="text-xs opacity-50 text-foreground">TVL</span>
             </div>
           </div>
         </div>
