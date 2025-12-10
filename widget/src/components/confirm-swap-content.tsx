@@ -357,7 +357,16 @@ export function ConfirmSwapContent({
           })()}
 
         {(status === 'idle' || status === 'pending') && (
-          <Button onClick={onConfirm} className="flex-1 h-9" disabled={status === 'pending'}>
+          <Button 
+            onClick={onConfirm} 
+            variant="primary"
+            className="flex-1 h-9 border border-border" 
+            style={{
+              borderColor: 'hsl(var(--border))',
+              color: 'hsl(var(--foreground))',
+            }}
+            disabled={status === 'pending'}
+          >
             {status === 'pending' ? 'Swapping...' : 'Confirm'}
           </Button>
         )}

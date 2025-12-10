@@ -489,7 +489,11 @@ export function TradeBody() {
                     }}
                   >
                     {solveIntentQuery.isFetching && !solveIntentQuery.failureReason && (
-                      <Spinner className="text-white" />
+                      <Spinner 
+                        style={{
+                          color: 'hsl(var(--button-text))',
+                        }}
+                      />
                     )}
                     {renderNameButton()}
                   </Button>
