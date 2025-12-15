@@ -298,6 +298,12 @@ The widget is self-contained and includes:
 
 ## Development
 
+Run hot-reloading locally from source:
+`pnpm run dev:vite`
+
+Run hot-reloading locally from compiled dist folder:
+`pnpm run dev`
+`pnpm run dev:dist`
 
 
 ### Project Structure

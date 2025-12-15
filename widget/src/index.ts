@@ -2,7 +2,7 @@
 import './styles.css'
 
 // Haiku Widget - Main export file
-export { HaikuWidget } from './components/haiku-widget'
+export { HaikuWidget, DEFAULT_CONFIG } from './components/haiku-widget'
 export { WidgetHttpProvider } from './providers/widget-provider'
 export { WidgetKeyProvider } from './providers/widget-key-provider'
 export { useWidgetKey } from './providers/widget-key-provider'

@@ -4,6 +4,7 @@ import { join } from 'path'
 
 // Environment configuration - hardcoded for public deployment
 const isDev = process.env.NODE_ENV === 'development'
+const useDist = process.env.USE_DIST === 'true'
 const envConfig = {
   TURN_OFF_EIP7702: "false",
   VERCEL_ENV: isDev ? "development" : "production",
@@ -29,7 +30,21 @@ const envConfig = {
 }
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Plugin to serve index-dist.html when USE_DIST is set
+    useDist ? {
+      name: 'use-dist-html',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/' || req.url === '/index.html') {
+            req.url = '/index-dist.html'
+          }
+          next()
+        })
+      },
+    } : null,
+  ].filter(Boolean),
   define: {
     // Define environment variables for Vite
     ...Object.fromEntries(
@@ -43,6 +58,10 @@ export default defineConfig({
     alias: {
       '@': join(__dirname, 'src'),
     },
+    // Allow importing from dist folder when using dist-based dev
+    ...(useDist ? {
+      dedupe: ['react', 'react-dom'], // Ensure React is not duplicated
+    } : {}),
   },
   css: {
     postcss: './postcss.config.js',
