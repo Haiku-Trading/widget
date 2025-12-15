@@ -1,0 +1,12 @@
+/* 
+ * Dev page styles - unscoped CSS for playground UI
+ * This file is only used by dev-main-dist.tsx and is NOT included in the widget bundle
+ * It provides unscoped Tailwind utilities for the playground controls
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Additional styles for dev page if needed */
+

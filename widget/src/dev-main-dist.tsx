@@ -15,6 +15,8 @@ import type { WidgetConfig, WidgetTheme } from "./index";
 import { DEFAULT_CONFIG } from "./components/haiku-widget";
 import { plasma } from "./providers/wagmi-config";
 // Note: styles.css is already included in the dist bundle, so we don't import it here
+// Import unscoped dev styles for playground UI
+import "./dev-styles.css";
 import { ColorPalette } from "./types/theme";
 
 // Create a client

@@ -64,7 +64,8 @@ export default defineConfig({
     } : {}),
   },
   css: {
-    postcss: './postcss.config.js',
+    // Use dev PostCSS config (unscoped) for dev pages
+    postcss: './postcss.config.dev.js',
   },
   server: {
     port: 3001,

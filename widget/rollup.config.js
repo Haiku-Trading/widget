@@ -8,8 +8,6 @@ import json from '@rollup/plugin-json';
 import url from '@rollup/plugin-url';
 import replace from '@rollup/plugin-replace';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -101,10 +99,9 @@ export default [
       postcss({
         extract: false, // Inline CSS instead of extracting
         minimize: !isDev,
-        plugins: [
-          tailwindcss,
-          autoprefixer,
-        ],
+        // Use postcss.config.js which includes scoping plugin
+        // Exclude dev-styles.css from scoping (it's only used by dev pages)
+        exclude: ['**/dev-styles.css'],
         include: ['**/*.css'],
       }),
       typescript({ 
