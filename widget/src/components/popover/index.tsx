@@ -30,6 +30,21 @@ const ThemeWrapper = forwardRef<HTMLDivElement, { children: React.ReactNode }>((
   const { theme } = useTheme()
   const wrapperRef = useRef<HTMLDivElement>(null)
 
+  // Use callback ref to set both refs and apply theme
+  const setRef = (node: HTMLDivElement | null) => {
+    wrapperRef.current = node
+    if (typeof ref === 'function') {
+      ref(node)
+    } else if (ref) {
+      (ref as React.MutableRefObject<HTMLDivElement | null>).current = node
+    }
+    
+    // Apply theme immediately when element is set
+    if (node) {
+      applyThemeToElement(node, theme)
+    }
+  }
+
   // Apply theme to the wrapper when theme changes
   useEffect(() => {
     if (wrapperRef.current) {
@@ -38,7 +53,7 @@ const ThemeWrapper = forwardRef<HTMLDivElement, { children: React.ReactNode }>((
   }, [theme])
 
   return (
-    <div ref={ref || wrapperRef} className="haiku-widget-theme-container">
+    <div ref={setRef} className="haiku-widget-theme-container">
       {children}
     </div>
   )
