@@ -28,7 +28,7 @@ type ContentProps = ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 // Theme wrapper component for portaled content
 const ThemeWrapper = forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
   const { theme } = useTheme()
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
 
   // Use callback ref to set both refs and apply theme
   const setRef = (node: HTMLDivElement | null) => {

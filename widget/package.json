@@ -1,6 +1,6 @@
 {
   "name": "@haiku-trade/widget",
-  "version": "0.1.11-beta.4",
+  "version": "0.1.11-beta.5",
   "description": "Haiku Widget",
   "type": "module",
   "main": "dist/index.js",

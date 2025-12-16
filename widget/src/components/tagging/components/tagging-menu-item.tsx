@@ -16,7 +16,7 @@ import { getProtocolIcon } from '../../../utils/protocol-utils'
 // Theme wrapper component for HoverCard portaled content
 const HoverCardWithTheme = ({ children }: { children: React.ReactNode }) => {
   const { theme } = useTheme()
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
   const themeContainer = useMemo(() => {
     return typeof document !== 'undefined' 
       ? document.querySelector('.haiku-widget-theme-container') as HTMLElement

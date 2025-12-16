@@ -378,7 +378,7 @@ export function ConfirmSwapContent({
         {status === 'success' && !transactionQuery.data?.destinationTx?.protocolTxLink && (
           <Button className="flex-1 h-9" disabled={transactionQuery.isFetching}>
             {transactionQuery.isFetching ? (
-              <Spinner />
+              <Spinner className="h-5 w-5 bg-transparent" />
             ) : (
               <a href={txURL} target="_blank" rel="noopener noreferrer">
                 View Transaction

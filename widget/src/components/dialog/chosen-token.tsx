@@ -1170,8 +1170,8 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                         onClick={() => toggleSelectedToken(token)}
                       >
                         <ImageGroup images={images} branches={branches} />
-                        <div className="size-5 rounded-full bg-state-error-default flex items-center justify-center absolute top-0.5 -left-1.5 text-white">
-                          <CloseIcon />
+                        <div className="size-5 rounded-full bg-state-error-default flex items-center justify-center absolute top-0.5 -left-1.5 text-white p-1">
+                          <CloseIcon className="w-3 h-3" />
                         </div>
                       </button>
                     )
