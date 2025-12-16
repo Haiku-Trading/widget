@@ -4,11 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Haiku Swap Widget - Development (Dist Build)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <title>Haiku Widget Playground</title>
   </head>
-  <body>
+  <body style="font-family: 'Familjen Grotesk', system-ui, Avenir, Helvetica, Arial, sans-serif;">
     <div id="root"></div>
     <script type="module" src="/src/dev-main-dist.tsx"></script>
+    <script>
+      // Debug: Check if font is loaded
+      document.fonts.ready.then(() => {
+        const families = Array.from(document.fonts).map(f => f.family);
+        console.log('Loaded fonts:', families);
+        if (families.some(f => f.includes('Familjen'))) {
+          console.log('✅ Familjen Grotesk font loaded successfully');
+        } else {
+          console.warn('⚠️ Familjen Grotesk font not found in loaded fonts');
+        }
+      });
+    </script>
   </body>
 </html>
 

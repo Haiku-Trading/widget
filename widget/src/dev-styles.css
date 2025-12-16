@@ -9,4 +9,16 @@
 @tailwind utilities;
 
 /* Additional styles for dev page if needed */
+@layer base {
+  html,
+  body {
+    font-family: 'Familjen Grotesk', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  }
+}
+
+/* Fallback outside of Tailwind layer for maximum specificity */
+html,
+body {
+  font-family: 'Familjen Grotesk', system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+}
 
