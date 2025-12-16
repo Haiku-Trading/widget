@@ -8,8 +8,8 @@ export function SwapDivider({ onSwap }: SwapDividerProps) {
 
 
   return (
-    <div className="w-full flex items-center flex-col justify-center h-11 relative">
-      <div className="w-full text-divider">
+    <div className="w-full flex items-center flex-col justify-center h-11 relative" style={{ width: '100%', minWidth: 0 }}>
+      <div className="w-full text-divider" style={{ width: '100%', minWidth: 0 }}>
         <svg
           width="100%"
           height="3"
@@ -17,6 +17,7 @@ export function SwapDivider({ onSwap }: SwapDividerProps) {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio="none"
+          style={{ width: '100%', minWidth: 0, display: 'block' }}
         >
           <path
             d="M472 2.25C472.414 2.25 472.75 1.91421 472.75 1.5C472.75 1.08579 472.414 0.75 472 0.75V2.25ZM0 2.25H472V0.75H0V2.25Z"
