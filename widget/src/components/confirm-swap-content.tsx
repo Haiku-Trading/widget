@@ -260,7 +260,7 @@ export function ConfirmSwapContent({
       >
         {!!transactionQuery.data?.destinationTx?.protocolTxLink && (
           <div className="flex flex-col gap-2 items-center">
-            <p className="font-medium">See the details of your transaction</p>
+            <p className="font-medium text-foreground">See the details of your transaction</p>
             <div
               className={cn(
                 'flex gap-1 w-full',
@@ -343,21 +343,34 @@ export function ConfirmSwapContent({
             if (isFeeBridgeChangeError(error)) {
               return (
                 <Dialog.Close asChild>
-                  <Button onClick={onReset} className="flex-1 h-9">
+                  <Button 
+                    onClick={onReset} 
+                    className="flex-1 h-9 border" 
+                    style={{ borderColor: 'hsl(var(--button-text))' }}
+                  >
                     Try again
                   </Button>
                 </Dialog.Close>
               )
             }
             return (
-              <Button onClick={onReset} className="flex-1 h-9">
+              <Button 
+                onClick={onReset} 
+                className="flex-1 h-9 border" 
+                style={{ borderColor: 'hsl(var(--button-text))' }}
+              >
                 Try again
               </Button>
             )
           })()}
 
         {(status === 'idle' || status === 'pending') && (
-          <Button onClick={onConfirm} className="flex-1 h-9" disabled={status === 'pending'}>
+          <Button 
+            onClick={onConfirm} 
+            className="flex-1 h-9 border" 
+            style={{ borderColor: 'hsl(var(--button-text))' }}
+            disabled={status === 'pending'}
+          >
             {status === 'pending' ? 'Swapping...' : 'Confirm'}
           </Button>
         )}

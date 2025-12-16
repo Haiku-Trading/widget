@@ -139,7 +139,7 @@ const SuccessTransaction = ({
                 </span>
                 <RiArrowDownSLine
                   size={16}
-                  className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+                  className={`text-foreground transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
                 />
               </div>
             </Accordion.Trigger>

@@ -20,7 +20,7 @@ export function FeedbackDialog({ description, status, title }: FeedbackDialogPro
         {status === 'warning' && <WarningIcon />}
       </div>
       <div className="flex flex-col gap-3 items-center">
-        <h3 className="text-lg font-medium">{title}</h3>
+        <h3 className="text-lg font-medium text-foreground">{title}</h3>
         <p className="text-sm text-muted-foreground text-center">{description}</p>
       </div>
     </div>
