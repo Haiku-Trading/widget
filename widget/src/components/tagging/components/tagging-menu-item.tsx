@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { memo, useMemo } from 'react'
+import React, { memo, useMemo, useEffect, useRef } from 'react'
 import { BeautifulMentionsMenuItemProps } from 'lexical-beautiful-mentions'
 import { forwardRef } from 'react'
 import { Avatar } from 'radix-ui'
@@ -7,9 +7,45 @@ import { Avatar } from 'radix-ui'
 import { cn } from '../../../utils'
 import { getInitials } from '../../../utils/get-initials'
 import { HoverCard } from 'radix-ui'
+import { useTheme } from '../../../providers/theme-provider'
+import { applyThemeToElement } from '../../../utils/theme-utils'
 import TaggingMetadataContent from './tagging-metadata-content'
 import { getChainIcon } from '../../../utils/chain-utils'
 import { getProtocolIcon } from '../../../utils/protocol-utils'
+
+// Theme wrapper component for HoverCard portaled content
+const HoverCardWithTheme = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const themeContainer = useMemo(() => {
+    return typeof document !== 'undefined' 
+      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+      : null
+  }, [])
+
+  // Use callback ref to set both refs and apply theme
+  const setRef = (node: HTMLDivElement | null) => {
+    wrapperRef.current = node
+    if (node) {
+      applyThemeToElement(node, theme)
+    }
+  }
+
+  // Apply theme to the wrapper when theme changes
+  useEffect(() => {
+    if (wrapperRef.current) {
+      applyThemeToElement(wrapperRef.current, theme)
+    }
+  }, [theme])
+
+  return (
+    <HoverCard.Portal container={themeContainer}>
+      <div ref={setRef} className="haiku-widget-theme-container">
+        {children}
+      </div>
+    </HoverCard.Portal>
+  )
+}
 // import TaggingMetadataContentComponent from '../metadata/TaggingMetadataContentComponent'
 
 /* ----------------------------------------------------------------------------
@@ -164,7 +200,7 @@ const TaggingMenuItem = memo(
                 </div>
               </div>
             </HoverCard.Trigger>
-            <HoverCard.Portal>
+            <HoverCardWithTheme>
               <HoverCard.Content className="z-50" side={'right'} align="start" sideOffset={0}>
                 <TaggingMetadataContent
                   value={displayText}
@@ -175,7 +211,7 @@ const TaggingMenuItem = memo(
                 />
                 <HoverCard.Arrow className="fill-section h-[6px] w-3" />
               </HoverCard.Content>
-            </HoverCard.Portal>
+            </HoverCardWithTheme>
           </HoverCard.Root>
         </li>
       )

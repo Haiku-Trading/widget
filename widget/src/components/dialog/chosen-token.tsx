@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js'
 import { Coins, TrendingUp, Triangle } from 'lucide-react'
 import { matchSorter } from 'match-sorter'
 import { HoverCard } from 'radix-ui'
-import {
+import React, {
   ComponentProps,
   ElementRef,
   forwardRef,
@@ -24,7 +24,9 @@ import { useShallow } from 'zustand/shallow'
 import { TokenCategory, categoriesNames, categoriesOrigNames, tokenBadge } from '../../constants/constants'
 import { useTradeStore } from '../../providers'
 import { useConfig as useWidgetConfig } from '../../providers/config-provider'
+import { useTheme } from '../../providers/theme-provider'
 import { useClassicTokensBalancesQuery, useGetTokensQuery, useTokenBalanceQuery } from '../../queries'
+import { applyThemeToElement } from '../../utils/theme-utils'
 import {
   APICollateralToken,
   APIToken,
@@ -1277,6 +1279,40 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   )
 }
 
+// Theme wrapper component for HoverCard portaled content
+const HoverCardWithTheme = ({ children }: { children: React.ReactNode }) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
+  const themeContainer = useMemo(() => {
+    return typeof document !== 'undefined' 
+      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
+      : null
+  }, [])
+
+  // Use callback ref to apply theme immediately when element is set
+  const setRef = (node: HTMLDivElement | null) => {
+    wrapperRef.current = node
+    if (node) {
+      applyThemeToElement(node, theme)
+    }
+  }
+
+  // Apply theme to the wrapper when theme changes
+  useEffect(() => {
+    if (wrapperRef.current) {
+      applyThemeToElement(wrapperRef.current, theme)
+    }
+  }, [theme])
+
+  return (
+    <HoverCard.Portal container={themeContainer}>
+      <div ref={setRef} className="haiku-widget-theme-container">
+        {children}
+      </div>
+    </HoverCard.Portal>
+  )
+}
+
 type TokenCardProps = {
   token: APIToken
   disabled?: boolean
@@ -1487,7 +1523,7 @@ export const TokenCard = memo(function TokenCard({
         </Card>
       </HoverCard.Trigger>
 
-      <HoverCard.Portal>
+      <HoverCardWithTheme>
         <HoverCard.Content side={'right'} align="start" sideOffset={0} className="z-50">
           <TaggingMetadataContent
             value={token.name}
@@ -1498,7 +1534,7 @@ export const TokenCard = memo(function TokenCard({
           />
           <HoverCard.Arrow className="fill-section h-[6px] w-3" />
         </HoverCard.Content>
-      </HoverCard.Portal>
+      </HoverCardWithTheme>
     </HoverCard.Root>
   )
 })

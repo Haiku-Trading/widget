@@ -141,7 +141,7 @@ const ChainItem = ({ chainName, metadata, images, branches }: ChainItemProps) =>
       </div>
       <div className="w-full h-1/3 rounded-b-lg bg-bg-surface p-[16px] flex justify-start items-center gap-2">
         <a href={metadata?.blockExplorers?.default.url} target="_blank">
-          <ShareIcon />
+          <ShareIcon className="text-foreground" />
         </a>
       </div>
     </div>
@@ -180,7 +180,7 @@ const ProtocolItem = ({ protocolName, metadata, images, branches }: ProtocolItem
       </div>
       <div className="w-full h-1/3 rounded-b-lg bg-bg-surface p-[16px] flex justify-start items-center gap-2">
         <a href={metadata?.url} target="_blank">
-          <ShareIcon />
+          <ShareIcon className="text-foreground" />
         </a>
       </div>
     </div>
@@ -296,7 +296,7 @@ const TokenItem = ({ tokenName, metadata, images, branches }: TokenItemProps) =>
       <div className="w-full h-1/5 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
           <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
-            <ShareIcon />
+            <ShareIcon className="text-foreground" />
           </a>
         )}
         {metadata?.url && (
@@ -315,8 +315,8 @@ const TokenItem = ({ tokenName, metadata, images, branches }: TokenItemProps) =>
           <Clipboard.Root value={`${metadata?.address.toLowerCase()}`} className="font-bold">
             <Clipboard.Control>
               <Clipboard.Trigger className="size-4 flex items-center justify-center cursor-pointer active:scale-95 text-icon-subtle">
-                <Clipboard.Indicator copied={<CopyIcon />}>
-                  <CopyIcon />
+                <Clipboard.Indicator copied={<CopyIcon className="text-foreground" />}>
+                  <CopyIcon className="text-foreground" />
                 </Clipboard.Indicator>
               </Clipboard.Trigger>
             </Clipboard.Control>
@@ -403,7 +403,7 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
       <div className="w-full h-1/5 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
           <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
-            <ShareIcon />
+            <ShareIcon className="text-foreground" />
           </a>
         )}
         {metadata?.url && (
@@ -422,8 +422,8 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
           <Clipboard.Root value={`${metadata?.address.toLowerCase()}`} className="font-bold">
             <Clipboard.Control>
               <Clipboard.Trigger className="size-4 flex items-center justify-center cursor-pointer active:scale-95 text-icon-subtle">
-                <Clipboard.Indicator copied={<CopyIcon />}>
-                  <CopyIcon />
+                <Clipboard.Indicator copied={<CopyIcon className="text-foreground" />}>
+                  <CopyIcon className="text-foreground" />
                 </Clipboard.Indicator>
               </Clipboard.Trigger>
             </Clipboard.Control>
@@ -513,7 +513,7 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
       <div className="w-full h-1/5 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
           <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
-            <ShareIcon />
+            <ShareIcon className="text-foreground" />
           </a>
         )}
         {metadata?.url && (
@@ -532,8 +532,8 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
           <Clipboard.Root value={`${metadata?.address.toLowerCase()}`} className="font-bold">
             <Clipboard.Control>
               <Clipboard.Trigger className="size-4 flex items-center justify-center cursor-pointer active:scale-95 text-icon-subtle">
-                <Clipboard.Indicator copied={<CopyIcon />}>
-                  <CopyIcon />
+                <Clipboard.Indicator copied={<CopyIcon className="text-foreground" />}>
+                  <CopyIcon className="text-foreground" />
                 </Clipboard.Indicator>
               </Clipboard.Trigger>
             </Clipboard.Control>
@@ -623,7 +623,7 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
       <div className="w-full h-1/3 rounded-b-lg bg-bg-primary p-[16px] flex justify-start items-center gap-3">
         {chainUrl && (
           <a href={`${chainUrl}/address/${metadata?.address}`} target="_blank">
-            <ShareIcon />
+            <ShareIcon className="text-foreground" />
           </a>
         )}
         {metadata?.url && (
@@ -642,8 +642,8 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
           <Clipboard.Root value={`${metadata?.address.toLowerCase()}`} className="font-bold">
             <Clipboard.Control>
               <Clipboard.Trigger className="size-4 flex items-center justify-center cursor-pointer active:scale-95 text-icon-subtle">
-                <Clipboard.Indicator copied={<CopyIcon />}>
-                  <CopyIcon />
+                <Clipboard.Indicator copied={<CopyIcon className="text-foreground" />}>
+                  <CopyIcon className="text-foreground" />
                 </Clipboard.Indicator>
               </Clipboard.Trigger>
             </Clipboard.Control>
