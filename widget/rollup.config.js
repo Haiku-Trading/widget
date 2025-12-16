@@ -99,8 +99,10 @@ export default [
       postcss({
         extract: false, // Inline CSS instead of extracting
         minimize: !isDev,
-        // Use postcss.config.js which includes scoping plugin
-        // Exclude dev-styles.css from scoping (it's only used by dev pages)
+        config: {
+          path: './postcss.config.js', // Explicitly load the scoped postcss config
+        },
+        // Exclude dev-styles.css from the widget bundle
         exclude: ['**/dev-styles.css'],
         include: ['**/*.css'],
       }),

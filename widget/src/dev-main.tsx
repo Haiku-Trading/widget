@@ -10,7 +10,8 @@ import CustomLightColor from "./components/custom-colors/custom-light-color";
 import { DEFAULT_CONFIG } from "./components/haiku-widget";
 import { HaikuWidget, WidgetConfig, WidgetTheme } from "./index";
 import { plasma } from "./providers/wagmi-config";
-import "./styles.css";
+// Import dev styles (unscoped) for playground UI - separate from widget CSS
+import "./dev-styles.css";
 import { ColorPalette } from "./types/theme";
 
 // Create a client
