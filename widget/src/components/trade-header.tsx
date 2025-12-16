@@ -203,40 +203,36 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
 
           <PopoverRoot>
             <PopoverTrigger>
-              <Tooltip content="USD Input">
-                <button
-                  onClick={stableToggleTokenViewHandler}
-                  className={cn(
-                    "border-[0.69px] rounded-[6.5px] w-7 h-7 flex items-center justify-center transition-colors",
-                    !isTokenView
-                      ? "border-muted-background bg-bg-section hover:bg-bg-section/80"
-                      : "border-transparent hover:bg-bg-section"
-                  )}
+              <button
+                onClick={stableToggleTokenViewHandler}
+                className={cn(
+                  "border-[0.69px] rounded-[6.5px] w-7 h-7 flex items-center justify-center transition-colors",
+                  !isTokenView
+                    ? "border-muted-background bg-bg-section hover:bg-bg-section/80"
+                    : "border-transparent hover:bg-bg-section"
+                )}
+              >
+                {/* <SettingsIcon className="w-4 text-[#191919]" /> */}
+                <span
+                  style={{ color: "hsl(var(--button-header-icon))"}}
+                  className={`text-18px-normal ${isTokenView ? 'text-muted-foreground' : 'text-primary'} `}
                 >
-                  {/* <SettingsIcon className="w-4 text-[#191919]" /> */}
-                  <span
-                    style={{ color: "hsl(var(--button-header-icon))"}}
-                    className={`text-18px-normal ${isTokenView ? 'text-muted-foreground' : 'text-primary'} `}
-                  >
-                    $
-                  </span>
-                </button>
-              </Tooltip>
+                  $
+                </span>
+              </button>
             </PopoverTrigger>
           </PopoverRoot>
 
           <PopoverRoot>
-            <Tooltip content="Settings">
-              <PopoverTrigger>
-                {/* <button className="border-[0.69px] border-[#D9D9D9] rounded-[6.5px] w-7 h-7 flex items-center justify-center"> */}
-                <button 
-                  className="border-[0.69px]  border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
-                  onClick={stableNoOpHandler}
-                >
-                  <Setting2Icon style={{ color: "hsl(var(--button-header-icon))"}} className="w-[18px] h-[18px] text-muted-foreground" />
-                </button>
-              </PopoverTrigger>
-            </Tooltip>
+            <PopoverTrigger>
+              {/* <button className="border-[0.69px] border-[#D9D9D9] rounded-[6.5px] w-7 h-7 flex items-center justify-center"> */}
+              <button 
+                className="border-[0.69px]  border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
+                onClick={stableNoOpHandler}
+              >
+                <Setting2Icon style={{ color: "hsl(var(--button-header-icon))"}} className="w-[18px] h-[18px] text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
             <PopoverContent
               align="end"
               sideOffset={8}
