@@ -25,13 +25,13 @@ interface ButtonProps extends ButtonPrimitiveProps, ButtonVariants {
  * ---------------------------------------------------------------------------*/
 
 const Button = React.forwardRef<ButtonElements, ButtonProps>((props, ref) => {
-    const { asChild = false, alert = false, variant, className, size, children, type = "button", ...buttonProps } = props;
+    const { asChild = false, alert = false, variant, className, size, children, type = "button", disabled, ...buttonProps } = props;
 
     const Comp = asChild ? Slot : "button";
 
-    // Apply custom button styling for primary variant
+    // Apply custom button styling for primary variant, but not when disabled
     const style =
-        variant === "primary" && !asChild
+        variant === "primary" && !asChild && !disabled
             ? {
                   backgroundColor: "hsl(var(--button-bg))",
                   color: "hsl(var(--button-text))",
@@ -39,7 +39,7 @@ const Button = React.forwardRef<ButtonElements, ButtonProps>((props, ref) => {
             : undefined;
 
     return (
-        <Comp type={type} className={buttonStyles({ variant, size, className })} style={style} ref={ref} {...buttonProps}>
+        <Comp type={type} className={buttonStyles({ variant, size, className })} style={style} ref={ref} disabled={disabled} {...buttonProps}>
             {alert && (
                 <AlertIcon className={cn("size-5", variant === "failure" ? "text-failed" : variant === "warning" ? "text-warning-text" : "")} />
             )}

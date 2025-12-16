@@ -468,7 +468,7 @@ export function TradeBody() {
                   <Button
                     size="lg"
                     variant='primary'
-                    className="w-full bg-primary rounded-full text-white disabled:bg-disabled disabled:text-white"
+                    className="w-full bg-primary rounded-full text-white disabled:bg-disabled disabled:text-grey-secondary"
                     disabled={
                       disableWithVarDebt ||
                       !!solveIntentQuery.isFetching ||
