@@ -39,7 +39,7 @@ const EIP7702Switch = ({
   return (
     <div className="flex items-center gap-2 justify-between mt-2">
       <div className="flex items-center gap-2">
-        <span className="text-sm">Smart Account Mode</span>
+        <span className="text-sm text-foreground">Smart Account Mode</span>
         <Popup
           content={
             <p>
@@ -57,7 +57,7 @@ const EIP7702Switch = ({
           }
         >
           <div className="flex items-center gap-2">
-            <InfoIcon className="w-5 text-sec-border cursor-pointer" />
+            <InfoIcon width={16} height={16} className="text-foreground cursor-pointer flex-shrink-0" />
           </div>
         </Popup>
       </div>
@@ -170,14 +170,12 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
           {/* <EyeIcon className="cursor-pointer" onClick={handleShowBalance} size={17} />
           <p className="font-medium font-sans">Show Balances</p> */}
           {(inputTokens.length > 0 || outputTokens.length > 0) && (
-            <Tooltip content="Reset">
-              <button
-                onClick={stableResetHandler}
-                className="border-[0.69px] border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
-              >
-                <RiResetLeftLine style={{ color: "hsl(var(--button-header-icon))"}} className="w-[18px] h-[18px] text-muted-foreground" />
-              </button>
-            </Tooltip>
+            <button
+              onClick={stableResetHandler}
+              className="border-[0.69px] border-transparent hover:bg-bg-section rounded-[6.5px] w-7 h-7 flex items-center justify-center"
+            >
+              <RiResetLeftLine style={{ color: "hsl(var(--button-header-icon))"}} className="w-[18px] h-[18px] text-muted-foreground" />
+            </button>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -258,7 +256,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                   <div className="flex items-center gap-2">
                     <p className="text-sm text-foreground">Slippage</p>
                     <button onClick={stableNoOpHandler}>
-                      <InfoIcon className="w-5 text-sec-border cursor-pointer" />
+                      <InfoIcon width={16} height={16} className="text-sec-border cursor-pointer flex-shrink-0" />
                     </button>
                   </div>
                 </Popup>

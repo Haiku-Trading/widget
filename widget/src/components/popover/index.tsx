@@ -1,7 +1,8 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef, useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, ElementRef, forwardRef, useMemo, useRef, useEffect } from 'react'
 import { Popover as PopoverPrimitive } from 'radix-ui'
 import { cn } from '../../utils'
 import { useTheme } from '../../providers/theme-provider'
+import { applyThemeToElement } from '../../utils/theme-utils'
 
 /* -------------------------------------------------------------------------------------------------
  * Trigger
@@ -24,6 +25,27 @@ Trigger.displayName = 'PopoverTrigger'
 type ContentElement = ElementRef<typeof PopoverPrimitive.Content>
 type ContentProps = ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
 
+// Theme wrapper component for portaled content
+const ThemeWrapper = forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
+  const { theme } = useTheme()
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // Apply theme to the wrapper when theme changes
+  useEffect(() => {
+    if (wrapperRef.current) {
+      applyThemeToElement(wrapperRef.current, theme)
+    }
+  }, [theme])
+
+  return (
+    <div ref={ref || wrapperRef} className="haiku-widget-theme-container">
+      {children}
+    </div>
+  )
+})
+
+ThemeWrapper.displayName = 'PopoverThemeWrapper'
+
 export const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
   const { className, ...contentProps } = props
   
@@ -37,19 +59,21 @@ export const Content = forwardRef<ContentElement, ContentProps>((props, ref) => 
   
   return (
     <PopoverPrimitive.Portal container={themeContainer}>
-      <PopoverPrimitive.Content
-        className={cn(
-          'font-sans border-[0.7px] border-border rounded-xl bg-bg-primary text-muted-foreground shadow-[0px_2px_9.9px_0px_#19191D0D]',
-          'origin-[--radix-popover-content-transform-origin]',
-          // Animation enter
-          'data-[state=open]:data-[side=top]:animate-slide-from-top data-[state=open]:data-[side=bottom]:animate-slide-from-bottom data-[state=open]:data-[side=left]:animate-slide-from-left data-[state=open]:data-[side=right]:animate-slide-from-right',
-          // Animation out
-          'data-[state=closed]:data-[side=top]:animate-slide-to-top data-[state=closed]:data-[side=bottom]:animate-slide-to-bottom data-[state=closed]:data-[side=left]:animate-slide-to-left data-[state=closed]:data-[side=right]:animate-slide-to-right',
-          className,
-        )}
-        {...contentProps}
-        ref={ref}
-      />
+      <ThemeWrapper>
+        <PopoverPrimitive.Content
+          className={cn(
+            'font-sans border-[0.7px] border-border rounded-xl bg-bg-primary text-muted-foreground shadow-[0px_2px_9.9px_0px_#19191D0D]',
+            'origin-[--radix-popover-content-transform-origin]',
+            // Animation enter
+            'data-[state=open]:data-[side=top]:animate-slide-from-top data-[state=open]:data-[side=bottom]:animate-slide-from-bottom data-[state=open]:data-[side=left]:animate-slide-from-left data-[state=open]:data-[side=right]:animate-slide-from-right',
+            // Animation out
+            'data-[state=closed]:data-[side=top]:animate-slide-to-top data-[state=closed]:data-[side=bottom]:animate-slide-to-bottom data-[state=closed]:data-[side=left]:animate-slide-to-left data-[state=closed]:data-[side=right]:animate-slide-to-right',
+            className,
+          )}
+          {...contentProps}
+          ref={ref}
+        />
+      </ThemeWrapper>
     </PopoverPrimitive.Portal>
   )
 })

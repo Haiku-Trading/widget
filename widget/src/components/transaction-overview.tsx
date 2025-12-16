@@ -127,7 +127,7 @@ function TransactionOverViewItem({ label, value, tooltip, href }: TransactionOve
         <div className="flex items-center justify-center">
           <span className="text-sm flex items-center text-foreground">{label}</span>
           <button onClick={stableNoOpHandler}>
-            <InfoIcon className="size-[18px] text-muted-foreground" />
+            <InfoIcon width={18} height={18} className="text-muted-foreground" />
           </button>
         </div>
       </Popup>

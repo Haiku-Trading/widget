@@ -23,7 +23,7 @@ const BridgeModeToogle = () => {
                     }
                 >
                     <div className="flex items-center gap-2">
-                        <InfoIcon className="w-5 text-sec-border cursor-pointer" />
+                        <InfoIcon width={16} height={16} className="text-sec-border cursor-pointer flex-shrink-0" />
                     </div>
                 </Popup>
             </div>
