@@ -1,6 +1,6 @@
 import { defineChain } from 'viem'
 import { cookieStorage, createStorage, http } from 'wagmi'
-import { arbitrum, base, bsc, sonic, mainnet, polygon, optimism, unichain, avalanche, gnosis, scroll, apeChain, sei, worldchain } from 'wagmi/chains'
+import { arbitrum, base, bsc, sonic, mainnet, polygon, optimism, unichain, avalanche, gnosis, scroll, apeChain, sei, worldchain, bob } from 'wagmi/chains'
 import { createConfig } from 'wagmi'
 
 // Custom chains for the widget
@@ -54,7 +54,7 @@ export const plasma = defineChain({
 
 // Function to get chains based on environment
 const getChainsForEnvironment = () => {
-  const productionReadyChains = [arbitrum, base, berachain, bsc, sonic, mainnet, hyperevm, polygon, gnosis, scroll, apeChain, avalanche, worldchain, katana, sei, plasma] as const
+  const productionReadyChains = [arbitrum, base, berachain, bsc, sonic, mainnet, hyperevm, polygon, gnosis, scroll, apeChain, avalanche, worldchain, katana, sei, plasma, bob] as const
   
   // In production, only include these chains
   if (process.env.VERCEL_ENV === 'production') {
@@ -156,6 +156,11 @@ export const wagmiConfig = createConfig({
     [plasma.id]: http(
       process.env.VERCEL_ENV === 'development'
         ? process.env.PLASMA_RPC
+        : undefined,
+    ),
+    [bob.id]: http(
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.BOB_RPC
         : undefined,
     ),
   },

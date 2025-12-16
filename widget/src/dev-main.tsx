@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { WagmiProvider } from "wagmi";
-import { arbitrum, avalanche, base, berachain, bsc, gnosis, katana, mainnet, optimism, polygon, scroll, sei, sonic, worldchain } from "wagmi/chains";
+import { arbitrum, avalanche, base, berachain, bsc, gnosis, katana, mainnet, optimism, polygon, scroll, sei, sonic, worldchain, bob } from "wagmi/chains";
 import CustomDarkColor from "./components/custom-colors/custom-dark-color";
 import CustomLightColor from "./components/custom-colors/custom-light-color";
 import { DEFAULT_CONFIG } from "./components/haiku-widget";
@@ -34,6 +34,7 @@ const chains = [
     katana, // 747474: Katana
     plasma, // 9745: Plasma
     sonic, // 146: Sonic
+    bob, // 60808: Bob
 ];
 
 const config = getDefaultConfig({
@@ -59,6 +60,7 @@ const availableChains = [
     { id: 747474, name: "Katana", chain: katana },
     { id: 9745, name: "Plasma", chain: plasma },
     { id: 146, name: "Sonic", chain: sonic },
+    { id: 60808, name: "Bob", chain: bob },
 ];
 
 // Available protocols for testing

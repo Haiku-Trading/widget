@@ -26,7 +26,8 @@ const envConfig = {
   SCROLL_RPC: "https://rpc.scroll.io",
   KATANA_RPC: "https://rpc.katana.roninchain.com",
   APECHAIN_RPC: "https://rpc.apechain.io",
-  WORLDCHAIN_RPC: "https://worldchain-rpc.com"
+  WORLDCHAIN_RPC: "https://worldchain-rpc.com",
+  BOB_RPC: "https://rpc.gobob.xyz"
 }
 
 export default defineConfig({
