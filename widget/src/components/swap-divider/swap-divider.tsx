@@ -9,7 +9,7 @@ export function SwapDivider({ onSwap }: SwapDividerProps) {
 
   return (
     <div className="w-full flex items-center flex-col justify-center h-11 relative" style={{ width: '100%', minWidth: 0 }}>
-      <div className="w-full text-divider" style={{ width: '100%', minWidth: 0 }}>
+      <div className="w-full hidden text-divider" style={{ width: '100%', minWidth: 0 }}>
         <svg
           width="100%"
           height="3"
