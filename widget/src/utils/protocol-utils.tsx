@@ -25,10 +25,15 @@ import {
  * Helper function to get the appropriate protocol icon component for a given protocol symbol
  * @param protocolSymbol - The protocol symbol (e.g., 'AAVE_V3', 'BALANCER_V2')
  * @param className - Optional CSS classes to apply to the icon (defaults to "size-5")
+ * @param size - Optional explicit size prop (takes precedence over className)
  * @returns React component for the protocol icon or null if not found
  */
-export const getProtocolIcon = (protocolSymbol: string, className: string = "size-5"): React.ReactElement | null => {
-  const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+export const getProtocolIcon = (
+  protocolSymbol: string, 
+  className: string = "size-5",
+  size?: string | number
+): React.ReactElement | null => {
+  const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: string | number }>> = {
     'AAVE_V3': AaveV3Icon,
     'BALANCER_V2': BalancerV2Icon,
     'BEX': BexIcon,
@@ -51,6 +56,11 @@ export const getProtocolIcon = (protocolSymbol: string, className: string = "siz
   }
   
   const IconComponent = iconMap[protocolSymbol]
-  return IconComponent ? <IconComponent className={`${className} rounded-full`} /> : null
+  return IconComponent ? (
+    <IconComponent 
+      className={`${className} rounded-full`}
+      {...(size && { size })}
+    />
+  ) : null
 }
 

@@ -1,10 +1,41 @@
 import React from "react";
 
-interface Chain60808IconProps extends React.SVGProps<SVGSVGElement> {}
+interface Chain60808IconProps extends React.SVGProps<SVGSVGElement> {
+  width?: string | number
+  height?: string | number
+  size?: string | number // Convenience prop for square icons
+}
 
-export const Chain60808Icon: React.FC<Chain60808IconProps> = (props) => {
+export const Chain60808Icon: React.FC<Chain60808IconProps> = ({ 
+  width, 
+  height, 
+  size,
+  ...props 
+}) => {
+  // Convert size to pixels if it's a number
+  const svgWidth = size ?? width
+  const svgHeight = size ?? height
+  
+  // Ensure numeric values are converted to pixel strings
+  const widthValue = typeof svgWidth === 'number' ? `${svgWidth}px` : svgWidth
+  const heightValue = typeof svgHeight === 'number' ? `${svgHeight}px` : svgHeight
+
+  // Use inline styles for explicit sizes to ensure they override host page CSS
+  const inlineStyle = widthValue && heightValue ? {
+    width: widthValue,
+    height: heightValue,
+  } : undefined
+
   return (
-    <svg width="32" height="32" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg 
+      {...(widthValue && { width: widthValue })}
+      {...(heightValue && { height: heightValue })}
+      style={inlineStyle ? { ...props.style, ...inlineStyle } : props.style}
+      viewBox="0 0 130 130" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+      {...props}
+    >
       <path
         d="M62.4509 119C90.8666 119 113.902 95.9428 113.902 67.5C113.902 39.0573 90.8666 16 62.4509 16C34.0353 16 11 39.0573 11 67.5C11 95.9428 34.0353 119 62.4509 119Z"
         fill="#F25D00"

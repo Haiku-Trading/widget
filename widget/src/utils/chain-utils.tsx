@@ -25,10 +25,15 @@ import {
  * Helper function to get the appropriate chain icon component for a given chain ID
  * @param chainId - The chain ID as a string
  * @param className - Optional CSS classes to apply to the icon (defaults to "size-5")
+ * @param size - Optional explicit size prop (takes precedence over className)
  * @returns React component for the chain icon or null if not found
  */
-export const getChainIcon = (chainId: string, className: string = "size-5"): React.ReactElement | null => {
-  const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+export const getChainIcon = (
+  chainId: string, 
+  className: string = "size-5",
+  size?: string | number
+): React.ReactElement | null => {
+  const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: string | number }>> = {
     '1': Chain1Icon,
     '10': Chain10Icon,
     '56': Chain56Icon,
@@ -51,6 +56,11 @@ export const getChainIcon = (chainId: string, className: string = "size-5"): Rea
   }
   
   const IconComponent = iconMap[chainId]
-  return IconComponent ? <IconComponent className={`${className} rounded-full`} /> : null
+  return IconComponent ? (
+    <IconComponent 
+      className={`${className} rounded-full`}
+      {...(size && { size })}
+    />
+  ) : null
 }
 

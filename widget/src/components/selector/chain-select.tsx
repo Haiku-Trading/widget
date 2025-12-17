@@ -85,7 +85,7 @@ export function ChainSelect({ value, onValueChange, onValueProtocolChange }: Cha
                   isSelected && "bg-primary/10 border-primary/70"
                 )}
               >
-                {getChainIcon(chain.id.toString())}
+                {getChainIcon(chain.id.toString(), 'size-5', 20)}
                 {chain.name}
               </div>
             )

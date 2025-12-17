@@ -161,7 +161,7 @@ export function MobileChainSelect({
                     )}
                   >
                     <div className="flex-shrink-0">
-                      {getChainIcon(chain.id.toString(), 'size-5')}
+                      {getChainIcon(chain.id.toString(), 'size-5', 20)}
                     </div>
                     <span className="truncate text-foreground text-left">{chain.name}</span>
                   </button>

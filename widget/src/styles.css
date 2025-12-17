@@ -217,3 +217,91 @@
         --warning-border: var(--warning-border-dark, 38 92% 50% / 0.3);
     }
 }
+
+/* SVG sizing consistency - ensure SVGs respect Tailwind size classes */
+/* These rules have high specificity to override host page CSS */
+.haiku-widget-theme-container svg {
+    /* Prevent host page CSS from interfering with SVG sizing */
+    flex-shrink: 0;
+    /* Ensure viewBox maintains aspect ratio when CSS controls size */
+    box-sizing: content-box;
+}
+
+/* Override host page max-width/max-height rules that might constrain SVGs */
+.haiku-widget-theme-container svg[class*="w-"],
+.haiku-widget-theme-container svg[class*="h-"],
+.haiku-widget-theme-container svg[width],
+.haiku-widget-theme-container svg[height] {
+    max-width: none !important;
+    max-height: none !important;
+}
+
+/* Protect explicit width/height attributes from host page CSS */
+/* When width/height attributes are set, ensure they take precedence */
+.haiku-widget-theme-container svg[width][height] {
+    /* Remove any constraints that might override explicit dimensions */
+    min-width: 0 !important;
+    min-height: 0 !important;
+    /* Ensure flex doesn't shrink explicit sizes */
+    flex-shrink: 0 !important;
+}
+
+/* Ensure SVGs respect Tailwind width/height utility classes with high specificity */
+/* Only apply when no explicit width/height attributes are set (props take precedence) */
+.haiku-widget-theme-container svg.w-3:not([width]):not([height]),
+.haiku-widget-theme-container svg.w-3[width=""],
+.haiku-widget-theme-container svg.w-3[height=""] {
+    width: 0.75rem !important;
+    height: 0.75rem !important;
+}
+
+.haiku-widget-theme-container svg.h-3:not([height]),
+.haiku-widget-theme-container svg.h-3[height=""] {
+    height: 0.75rem !important;
+}
+
+.haiku-widget-theme-container svg.w-4:not([width]):not([height]),
+.haiku-widget-theme-container svg.w-4[width=""],
+.haiku-widget-theme-container svg.w-4[height=""] {
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+.haiku-widget-theme-container svg.h-4:not([height]),
+.haiku-widget-theme-container svg.h-4[height=""] {
+    height: 1rem !important;
+}
+
+.haiku-widget-theme-container svg.w-5:not([width]):not([height]),
+.haiku-widget-theme-container svg.w-5[width=""],
+.haiku-widget-theme-container svg.w-5[height=""] {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+}
+
+.haiku-widget-theme-container svg.h-5:not([height]),
+.haiku-widget-theme-container svg.h-5[height=""] {
+    height: 1.25rem !important;
+}
+
+.haiku-widget-theme-container svg.w-6:not([width]):not([height]),
+.haiku-widget-theme-container svg.w-6[width=""],
+.haiku-widget-theme-container svg.w-6[height=""] {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+}
+
+.haiku-widget-theme-container svg.h-6:not([height]),
+.haiku-widget-theme-container svg.h-6[height=""] {
+    height: 1.5rem !important;
+}
+
+.haiku-widget-theme-container svg.w-full:not([width]),
+.haiku-widget-theme-container svg.w-full[width=""] {
+    width: 100% !important;
+}
+
+.haiku-widget-theme-container svg.h-full:not([height]),
+.haiku-widget-theme-container svg.h-full[height=""] {
+    height: 100% !important;
+}
