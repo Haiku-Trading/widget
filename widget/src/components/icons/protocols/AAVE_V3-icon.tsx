@@ -1,54 +1,68 @@
-import React from 'react'
+import React from "react";
 
 interface AaveV3IconProps extends React.SVGProps<SVGSVGElement> {
-  width?: string | number
-  height?: string | number
-  size?: string | number // Convenience prop for square icons
+  width?: string | number;
+  height?: string | number;
+  size?: string | number; // Convenience prop for square icons
 }
 
-export const AaveV3Icon: React.FC<AaveV3IconProps> = ({ 
-  width, 
-  height, 
+export const AaveV3Icon: React.FC<AaveV3IconProps> = ({
+  width,
+  height,
   size,
-  ...props 
+  ...props
 }) => {
   // Convert size to pixels if it's a number
-  const svgWidth = size ?? width
-  const svgHeight = size ?? height
-  
+  const svgWidth = size ?? width;
+  const svgHeight = size ?? height;
+
   // Ensure numeric values are converted to pixel strings
-  const widthValue = typeof svgWidth === 'number' ? `${svgWidth}px` : svgWidth
-  const heightValue = typeof svgHeight === 'number' ? `${svgHeight}px` : svgHeight
+  const widthValue = typeof svgWidth === "number" ? `${svgWidth}px` : svgWidth;
+  const heightValue =
+    typeof svgHeight === "number" ? `${svgHeight}px` : svgHeight;
 
   // Use inline styles for explicit sizes to ensure they override host page CSS
-  const inlineStyle = widthValue && heightValue ? {
-    width: widthValue,
-    height: heightValue,
-  } : undefined
+  const inlineStyle =
+    widthValue && heightValue
+      ? {
+          width: widthValue,
+          height: heightValue,
+        }
+      : undefined;
 
   return (
-    <svg 
+    <svg
       {...(widthValue && { width: widthValue })}
       {...(heightValue && { height: heightValue })}
       style={inlineStyle ? { ...props.style, ...inlineStyle } : props.style}
-      viewBox="0 0 32 32" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-
-<g clipPath="url(#clip0_8555_56302)">
-<path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="#9391F7"/>
-<path d="M13.0239 16.7804C14.3959 16.5576 15.3276 15.2648 15.1049 13.8928C14.8822 12.5208 13.5893 11.5891 12.2174 11.8118C10.8454 12.0345 9.91371 13.3273 10.1364 14.6994C10.3591 16.0713 11.6519 17.003 13.0239 16.7804Z" fill="white"/>
-<path d="M19.6041 16.7804C20.976 16.5576 21.9077 15.2648 21.6849 13.8928C21.4623 12.5208 20.1695 11.5891 18.7975 11.8118C17.4255 12.0345 16.4938 13.3273 16.7165 14.6994C16.9392 16.0713 18.232 17.003 19.6041 16.7804Z" fill="white"/>
-<path d="M15.9072 3.90662C9.07368 3.90662 3.53337 9.55246 3.53516 16.5148H6.69585C6.69585 11.2971 10.7873 7.06672 15.9072 7.06672C21.0272 7.06672 25.1187 11.2971 25.1187 16.5148H28.2794C28.2805 9.55246 22.7402 3.90662 15.9072 3.90662Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_8555_56302">
-<rect width="32" height="32" fill="white"/>
-</clipPath>
-</defs>
-
+      <g clipPath="url(#clip0_8555_56302)">
+        <path
+          d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z"
+          fill="#9391F7"
+        />
+        <path
+          d="M13.0239 16.7804C14.3959 16.5576 15.3276 15.2648 15.1049 13.8928C14.8822 12.5208 13.5893 11.5891 12.2174 11.8118C10.8454 12.0345 9.91371 13.3273 10.1364 14.6994C10.3591 16.0713 11.6519 17.003 13.0239 16.7804Z"
+          fill="white"
+        />
+        <path
+          d="M19.6041 16.7804C20.976 16.5576 21.9077 15.2648 21.6849 13.8928C21.4623 12.5208 20.1695 11.5891 18.7975 11.8118C17.4255 12.0345 16.4938 13.3273 16.7165 14.6994C16.9392 16.0713 18.232 17.003 19.6041 16.7804Z"
+          fill="white"
+        />
+        <path
+          d="M15.9072 3.90662C9.07368 3.90662 3.53337 9.55246 3.53516 16.5148H6.69585C6.69585 11.2971 10.7873 7.06672 15.9072 7.06672C21.0272 7.06672 25.1187 11.2971 25.1187 16.5148H28.2794C28.2805 9.55246 22.7402 3.90662 15.9072 3.90662Z"
+          fill="white"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_8555_56302">
+          <rect width="32" height="32" fill="white" />
+        </clipPath>
+      </defs>
     </svg>
-  )
-}
+  );
+};

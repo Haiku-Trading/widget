@@ -70,16 +70,16 @@ export function MobileChainSelect({
           {value === 'all-chains' ? (
             <div className="flex gap-2">
               <div className="grid grid-cols-2 gap-0 w-5 h-5">
-                {getChainIcon('1', 'w-2.5 h-2.5')}
-                {getChainIcon('80094', 'w-2.5 h-2.5')}
-                {getChainIcon('56', 'w-2.5 h-2.5')}
-                {getChainIcon('8453', 'w-2.5 h-2.5')}
+                {getChainIcon('1', 'w-2.5 h-2.5', 10)}
+                {getChainIcon('80094', 'w-2.5 h-2.5', 10)}
+                {getChainIcon('56', 'w-2.5 h-2.5', 10)}
+                {getChainIcon('8453', 'w-2.5 h-2.5', 10)}
               </div>
               <span className="text-foreground">All chains</span>
             </div>
           ) : (
             <div className="flex gap-2">
-              {getChainIcon(value, 'w-5 h-5')}
+              {getChainIcon(value, 'w-5 h-5', 20)}
               <span className="text-sm text-foreground">{nameChain}</span>
             </div>
           )}
@@ -137,10 +137,10 @@ export function MobileChainSelect({
                 )}
               >
                 <div className="grid grid-cols-2 gap-0 w-5 h-5 flex-shrink-0">
-                  {getChainIcon('1', 'w-2.5 h-2.5')}
-                  {getChainIcon('80094', 'w-2.5 h-2.5')}
-                  {getChainIcon('56', 'w-2.5 h-2.5')}
-                  {getChainIcon('8453', 'w-2.5 h-2.5')}
+                  {getChainIcon('1', 'w-2.5 h-2.5', 10)}
+                  {getChainIcon('80094', 'w-2.5 h-2.5', 10)}
+                  {getChainIcon('56', 'w-2.5 h-2.5', 10)}
+                  {getChainIcon('8453', 'w-2.5 h-2.5', 10)}
                 </div>
                 <span className="text-foreground">All Chains</span>
               </button>

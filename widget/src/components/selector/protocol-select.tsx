@@ -98,7 +98,7 @@ export function ProtocolSelect({ value, onValueChange, chain }: ProtocolSelectPr
                   isSelected && "bg-primary/10 border-primary/70"
                 )}
               >
-                {getProtocolIcon(protocol.symbol)}
+                {getProtocolIcon(protocol.symbol, 'size-5', 20)}
                 {protocol.name}
               </div>
             )

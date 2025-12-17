@@ -1,10 +1,35 @@
 import React from 'react'
 
-interface DragonswapV2IconProps extends React.SVGProps<SVGSVGElement> {}
+interface DragonswapV2IconProps extends React.SVGProps<SVGSVGElement> {
+  width?: string | number
+  height?: string | number
+  size?: string | number
+}
 
-export const DragonswapV2Icon: React.FC<DragonswapV2IconProps> = (props) => {
+export const DragonswapV2Icon: React.FC<DragonswapV2IconProps> = ({
+  width,
+  height,
+  size,
+  ...props
+}) => {
+  // Convert size to pixels if it's a number
+  const svgWidth = size ?? width
+  const svgHeight = size ?? height
+
+  // Ensure numeric values are converted to pixel strings
+  const widthValue = typeof svgWidth === 'number' ? `${svgWidth}px` : svgWidth
+  const heightValue = typeof svgHeight === 'number' ? `${svgHeight}px` : svgHeight
+
   return (
-    <svg width="45" height="40" viewBox="0 0 45 40" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      {...(widthValue && { width: widthValue })}
+      {...(heightValue && { height: heightValue })}
+      style={{ ...(widthValue && { width: widthValue }), ...(heightValue && { height: heightValue }) }}
+      viewBox="0 0 45 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
 
 <path d="M26.8631 4.31167C27.0008 4.32416 26.3513 2.87264 26.2726 2.7298C25.972 2.18704 25.6016 1.76569 25.1793 1.43361C24.7159 1.06939 24.188 0.814076 23.6208 0.626609C23.5206 0.592687 23.4133 0.721235 23.433 0.847998C23.628 2.15669 23.322 3.48503 23.1914 4.09206C23.1914 4.09206 25.2294 4.16883 26.8648 4.31167H26.8631Z" fill="white"/>
 <path d="M26.414 4.41508C26.1527 3.48846 25.7161 2.6654 25.1507 2.03515C24.834 1.68164 24.3813 1.29957 23.934 1.11746C23.9752 1.84769 23.8964 3.47061 23.5994 4.32581C23.5081 4.59005 23.2183 4.72931 22.9535 4.63647C22.6886 4.54542 22.5491 4.25618 22.6421 3.99195C22.9051 3.23851 22.9749 1.45847 22.9105 1.03176L22.9069 1.01391C22.8729 0.796088 22.8032 0.342598 23.1664 0.096213C23.2952 0.00872861 23.4223 0.00337241 23.458 0.00158702C23.5099 -0.00198377 23.5547 0.00158702 23.5958 0.00158702C24.6587 0.0837152 25.5676 0.978198 25.9076 1.35849C26.575 2.103 27.0885 3.06533 27.3909 4.14013C27.4661 4.40973 27.3086 4.68825 27.0402 4.76324C26.9937 4.77573 26.949 4.78288 26.9025 4.78288C26.6806 4.78288 26.4766 4.63647 26.414 4.4133V4.41508ZM23.5046 1.01212C23.5046 1.01212 23.5081 1.01212 23.5099 1.01212H23.5046Z" fill="#0D1B3A"/>

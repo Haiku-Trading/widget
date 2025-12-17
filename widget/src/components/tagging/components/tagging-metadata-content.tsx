@@ -48,7 +48,7 @@ const ImageGroup = memo(({ branches, images }: ImageGroupProps) => {
               backgroundColor: image.color ?? 'hsl(var(--bg-section) / 0.24)',
             }}
           >
-            <div className="rounded-full w-full h-full flex items-center justify-center">
+            <div className="rounded-full w-full h-full flex items-center justify-center text-foreground">
               {getInitials(image.symbol)}
             </div>
 
@@ -88,17 +88,17 @@ const ImageBranch = memo(({ index, branch }: ImageBranchProps) => {
 
   return (
     <div
-      className={cn('absolute block text-[0.625rem] size-5 rounded-full bg-secondary flex items-center justify-center', position)}
+      className={cn('absolute block text-[0.625rem] size-5 rounded-full bg-secondary flex items-center justify-center text-foreground', position)}
     >
       {isChainIcon ? (
-        getChainIcon(branch.symbol, 'w-full h-full') || (
-          <div className="w-full h-full flex items-center justify-center text-[8px]">
+        getChainIcon(branch.symbol, 'w-full h-full', 20) || (
+          <div className="w-full h-full flex items-center justify-center text-[8px] text-foreground">
             {getInitials(branch.symbol)}
           </div>
         )
       ) : (
-        getProtocolIcon(branch.symbol, 'w-full h-full') || (
-          <div className="w-full h-full flex items-center justify-center text-[8px]">
+        getProtocolIcon(branch.symbol, 'w-full h-full', 20) || (
+          <div className="w-full h-full flex items-center justify-center text-[8px] text-foreground">
             {getInitials(branch.symbol)}
           </div>
         )
@@ -383,19 +383,19 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
           </div>
           <div className="w-full h-1/2 flex justify-center items-center">
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {parseFloat((metadata?.apy ?? 0)).toFixed(2)}{' '}%
               </span>
-              <span className="text-xs opacity-50">APY</span>
+              <span className="text-xs opacity-50 text-foreground">APY</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 $
                 {metadata?.metadata?.tvl && Number(metadata?.metadata?.tvl) > 1
                   ? millify(Number(metadata?.metadata?.tvl))
                   : '0.00'}
               </span>
-              <span className="text-xs opacity-50">TVL</span>
+              <span className="text-xs opacity-50 text-foreground">TVL</span>
             </div>
           </div>
         </div>
@@ -410,7 +410,7 @@ const LendingItem = ({ tokenName, metadata, images, branches }: LendingItemProps
           <a href={metadata?.url} target="_blank">
             <Avatar.Root className="w-3.5 h-3.5 inline-block rounded-full overflow-hidden">
               <div className="rounded-full w-full h-full flex items-center justify-center">
-                {getProtocolIcon(metadata?.protocol, 'w-full h-full') || (
+                {getProtocolIcon(metadata?.protocol, 'w-full h-full', 14) || (
                   <div className="text-[8px]">P</div>
                 )}
               </div>
@@ -491,21 +491,21 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
           </div>
           <div className="w-full h-1/2 flex justify-center items-center">
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {metadata?.minApy === metadata?.maxApy
                   ? parseFloat(metadata?.minApy ?? 0).toFixed(2)
                   : `${parseFloat(metadata?.minApy ?? 0).toFixed(2)} - ${parseFloat(metadata?.maxApy ?? 0).toFixed(2)}`}{' '}%
               </span>
-              <span className="text-xs opacity-50">APY</span>
+              <span className="text-xs opacity-50 text-foreground">APY</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 $
                 {metadata?.metadata?.tvl && Number(metadata?.metadata?.tvl) > 1
                   ? millify(Number(metadata?.metadata?.tvl))
                   : '0.00'}
               </span>
-              <span className="text-xs opacity-50">TVL</span>
+              <span className="text-xs opacity-50 text-foreground">TVL</span>
             </div>
           </div>
         </div>
@@ -520,7 +520,7 @@ const LiquidityItem = ({ tokenName, metadata, images, branches }: LiquidityItemP
           <a href={metadata?.url} target="_blank">
             <Avatar.Root className="w-3.5 h-3.5 inline-block rounded-full overflow-hidden">
               <div className="rounded-full w-full h-full flex items-center justify-center">
-                {getProtocolIcon(metadata?.protocol, 'w-full h-full') || (
+                {getProtocolIcon(metadata?.protocol, 'w-full h-full', 14) || (
                   <div className="text-[8px]">P</div>
                 )}
               </div>
@@ -601,21 +601,21 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
           </div>
           <div className="w-full h-1/2 flex justify-center items-center">
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 {metadata?.minApy === metadata?.maxApy
                   ? parseFloat(metadata?.minApy ?? 0).toFixed(2)
                   : `${parseFloat(metadata?.minApy ?? 0).toFixed(2)} - ${parseFloat(metadata?.maxApy ?? 0).toFixed(2)}`}{' '}%
               </span>
-              <span className="text-xs opacity-50">APY</span>
+              <span className="text-xs opacity-50 text-foreground">APY</span>
             </div>
             <div className="w-1/3 h-full flex flex-col justify-center items-center gap-1">
-              <span className="text-xl font-bold">
+              <span className="text-xl font-bold text-foreground">
                 $
                 {metadata?.metadata?.tvl && Number(metadata?.metadata?.tvl) > 1
                   ? millify(Number(metadata?.metadata?.tvl))
                   : '0.00'}
               </span>
-              <span className="text-xs opacity-50">TVL</span>
+              <span className="text-xs opacity-50 text-foreground">TVL</span>
             </div>
           </div>
         </div>
@@ -630,7 +630,7 @@ const VaultItem = ({ tokenName, metadata, images, branches }: LiquidityItemProps
           <a href={metadata?.url} target="_blank">
             <Avatar.Root className="w-3.5 h-3.5 inline-block rounded-full overflow-hidden">
               <div className="rounded-full w-full h-full flex items-center justify-center">
-                {getProtocolIcon(metadata?.protocol, 'w-full h-full') || (
+                {getProtocolIcon(metadata?.protocol, 'w-full h-full', 14) || (
                   <div className="text-[8px]">P</div>
                 )}
               </div>

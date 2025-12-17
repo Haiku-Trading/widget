@@ -19,12 +19,12 @@ export function AvatarTooltip({ tooltipContent, chainId, protocol, ...props }: A
             <Avatar {...props} />
             {chainId && (
               <div className="size-3.5 absolute -bottom-1 -right-1 rounded-full">
-                {getChainIcon(chainId.toString(), "size-3.5")}
+                {getChainIcon(chainId.toString(), "size-3.5", 14)}
               </div>
             )}
             {protocol && (
               <div className="size-3.5 absolute -bottom-1 -right-1 rounded-full">
-                {getProtocolIcon(protocol, "size-3.5")}
+                {getProtocolIcon(protocol, "size-3.5", 14)}
               </div>
             )}
           </div>

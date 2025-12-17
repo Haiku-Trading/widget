@@ -126,13 +126,13 @@ const ImageBranch = memo(({ index, branch }: ImageBranchProps) => {
       className={cn('absolute block text-[0.625rem] size-5 rounded-full bg-secondary flex items-center justify-center', position)}
     >
       {isChainIcon ? (
-        getChainIcon(branch.symbol, 'w-full h-full') || (
+        getChainIcon(branch.symbol, 'w-full h-full', 20) || (
           <div className="w-full h-full flex items-center justify-center text-[8px]">
             {getInitials(branch.symbol)}
           </div>
         )
       ) : (
-        getProtocolIcon(branch.symbol, 'w-full h-full') || (
+        getProtocolIcon(branch.symbol, 'w-full h-full', 20) || (
           <div className="w-full h-full flex items-center justify-center text-[8px]">
             {getInitials(branch.symbol)}
           </div>

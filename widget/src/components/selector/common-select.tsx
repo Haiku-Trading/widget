@@ -25,14 +25,14 @@ const CommonSelect = ({
         <div className="w-5 h-5 flex items-center justify-center">
           {valueChain === 'all-chains' ? (
             <div className="grid grid-cols-2 gap-0 w-5 h-5">
-              {getChainIcon('1', 'w-2.5 h-2.5')}
-              {getChainIcon('80094', 'w-2.5 h-2.5')}
-              {getChainIcon('56', 'w-2.5 h-2.5')}
-              {getChainIcon('8453', 'w-2.5 h-2.5')}
+              {getChainIcon('1', 'w-2.5 h-2.5', 10)}
+              {getChainIcon('80094', 'w-2.5 h-2.5', 10)}
+              {getChainIcon('56', 'w-2.5 h-2.5', 10)}
+              {getChainIcon('8453', 'w-2.5 h-2.5', 10)}
             </div>
           ) : (
             <div>
-              {getChainIcon(valueChain, 'w-5 h-5')}
+              {getChainIcon(valueChain, 'w-5 h-5', 20)}
             </div>
           )}
         </div>

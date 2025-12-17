@@ -1,22 +1,67 @@
-import React from 'react'
+import React from "react";
 
-interface BalancerV2IconProps extends React.SVGProps<SVGSVGElement> {}
-
-export const BalancerV2Icon: React.FC<BalancerV2IconProps> = (props) => {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-
-<path d="M0 16C0 7.16344 7.16344 0 16 0V0C24.8366 0 32 7.16344 32 16V16C32 24.8366 24.8366 32 16 32V32C7.16344 32 0 24.8366 0 16V16Z" fill="#1E1E1E"/>
-<g clipPath="url(#clip0_8555_56308)">
-<path d="M16.1545 11.9138C19.2929 11.9138 21.8383 11.0638 21.8383 10.0146C21.8383 8.96535 19.2937 8.11536 16.1537 8.11536C13.0153 8.11536 10.4707 8.96535 10.4707 10.0153C10.4707 11.0638 13.0153 11.9138 16.1545 11.9138Z" fill="white"/>
-<path fillRule="evenodd" clipRule="evenodd" d="M19.9854 17.4385C23.3092 17.93 25.6284 19.0416 25.6284 20.3346C25.6284 22.0823 21.3869 23.5 16.1554 23.5C10.9231 23.5 6.68164 22.0823 6.68164 20.3346C6.68164 19.0423 9.00085 17.93 12.3254 17.4385C13.467 17.6708 14.7708 17.8023 16.1554 17.8023C17.4116 17.8076 18.6653 17.6916 19.8992 17.4562L19.9854 17.4385ZM18.5538 12.2332C21.5646 12.5685 23.7346 13.5178 23.7346 14.6362C23.7346 16.0354 20.3423 17.1693 16.1562 17.1693C11.9708 17.1693 8.57778 16.0354 8.57778 14.6362C8.57778 13.5178 10.7478 12.5685 13.7585 12.2332C14.5514 12.36 15.3532 12.4228 16.1562 12.4208C16.9762 12.4208 17.7592 12.3593 18.4761 12.2462L18.5538 12.2332Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_8555_56308">
-<rect width="19.9998" height="16.1537" fill="white" transform="translate(6 7.9231)"/>
-</clipPath>
-</defs>
-
-    </svg>
-  )
+interface BalancerV2IconProps extends React.SVGProps<SVGSVGElement> {
+  width?: string | number;
+  height?: string | number;
+  size?: string | number; // Convenience prop for square icons
 }
+
+export const BalancerV2Icon: React.FC<BalancerV2IconProps> = ({
+  width,
+  height,
+  size,
+  ...props
+}) => {
+  // Convert size to pixels if it's a number
+  const svgWidth = size ?? width;
+  const svgHeight = size ?? height;
+
+  // Ensure numeric values are converted to pixel strings
+  const widthValue = typeof svgWidth === "number" ? `${svgWidth}px` : svgWidth;
+  const heightValue =
+    typeof svgHeight === "number" ? `${svgHeight}px` : svgHeight;
+
+  // Build style object for inline styles (highest CSS specificity)
+  const style: React.CSSProperties = {};
+  if (widthValue) style.width = widthValue;
+  if (heightValue) style.height = heightValue;
+
+  return (
+    <svg
+      {...(widthValue && { width: widthValue })}
+      {...(heightValue && { height: heightValue })}
+      style={style}
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M0 16C0 7.16344 7.16344 0 16 0V0C24.8366 0 32 7.16344 32 16V16C32 24.8366 24.8366 32 16 32V32C7.16344 32 0 24.8366 0 16V16Z"
+        fill="#1E1E1E"
+      />
+      <g clipPath="url(#clip0_8555_56308)">
+        <path
+          d="M16.1545 11.9138C19.2929 11.9138 21.8383 11.0638 21.8383 10.0146C21.8383 8.96535 19.2937 8.11536 16.1537 8.11536C13.0153 8.11536 10.4707 8.96535 10.4707 10.0153C10.4707 11.0638 13.0153 11.9138 16.1545 11.9138Z"
+          fill="white"
+        />
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M19.9854 17.4385C23.3092 17.93 25.6284 19.0416 25.6284 20.3346C25.6284 22.0823 21.3869 23.5 16.1554 23.5C10.9231 23.5 6.68164 22.0823 6.68164 20.3346C6.68164 19.0423 9.00085 17.93 12.3254 17.4385C13.467 17.6708 14.7708 17.8023 16.1554 17.8023C17.4116 17.8076 18.6653 17.6916 19.8992 17.4562L19.9854 17.4385ZM18.5538 12.2332C21.5646 12.5685 23.7346 13.5178 23.7346 14.6362C23.7346 16.0354 20.3423 17.1693 16.1562 17.1693C11.9708 17.1693 8.57778 16.0354 8.57778 14.6362C8.57778 13.5178 10.7478 12.5685 13.7585 12.2332C14.5514 12.36 15.3532 12.4228 16.1562 12.4208C16.9762 12.4208 17.7592 12.3593 18.4761 12.2462L18.5538 12.2332Z"
+          fill="white"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_8555_56308">
+          <rect
+            width="19.9998"
+            height="16.1537"
+            fill="white"
+            transform="translate(6 7.9231)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};

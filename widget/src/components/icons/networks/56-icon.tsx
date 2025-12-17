@@ -1,10 +1,40 @@
 import React from 'react'
 
-interface Chain56IconProps extends React.SVGProps<SVGSVGElement> {}
+interface Chain56IconProps extends React.SVGProps<SVGSVGElement> {
+  width?: string | number
+  height?: string | number
+  size?: string | number // Convenience prop for square icons
+}
 
-export const Chain56Icon: React.FC<Chain56IconProps> = (props) => {
+export const Chain56Icon: React.FC<Chain56IconProps> = ({ 
+  width, 
+  height, 
+  size,
+  ...props 
+}) => {
+  // Convert size to pixels if it's a number
+  const svgWidth = size ?? width
+  const svgHeight = size ?? height
+  
+  // Ensure numeric values are converted to pixel strings
+  const widthValue = typeof svgWidth === 'number' ? `${svgWidth}px` : svgWidth
+  const heightValue = typeof svgHeight === 'number' ? `${svgHeight}px` : svgHeight
+  
+  // Build style object for inline styles (highest CSS specificity)
+  const style: React.CSSProperties = {}
+  if (widthValue) style.width = widthValue
+  if (heightValue) style.height = heightValue
+
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg 
+      {...(widthValue && { width: widthValue })}
+      {...(heightValue && { height: heightValue })}
+      style={style}
+      viewBox="0 0 32 32" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+      {...props}
+    >
 
 <g clipPath="url(#clip0_8336_24831)">
 <mask id="mask0_8336_24831" style={{ maskType: 'luminance' }} maskUnits="userSpaceOnUse" x="0" y="0" width="32" height="32">

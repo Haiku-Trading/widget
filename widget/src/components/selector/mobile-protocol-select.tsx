@@ -110,7 +110,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain, isSimpleMode
             <span className="text-foreground">All Protocols</span>
           ) : value.length === 1 ? (
             <div className="flex gap-2">
-              {getProtocolIcon(value[0], 'w-5 h-5')}
+              {getProtocolIcon(value[0], 'w-5 h-5', 20)}
               <span className="text-foreground">{formatProtocolName(value[0])}</span>
             </div>
           ) : (
@@ -199,7 +199,7 @@ export function MobileProtocolSelect({ value, onValueChange, chain, isSimpleMode
                     )}
                   >
                     <div className="flex-shrink-0">
-                      {getProtocolIcon(protocol.symbol, 'size-5')}
+                      {getProtocolIcon(protocol.symbol, 'size-5', 20)}
                     </div>
                     <span className="truncate text-foreground text-left flex-1">{protocol.name}</span>
                     {isSelected && (
