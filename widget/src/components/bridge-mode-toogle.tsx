@@ -2,11 +2,19 @@ import { Popup } from "./popup"
 
 import { BridgeMode } from "../enums/bridge-mode"
 import { useTradeStore } from "../providers"
+import { useConfig } from "../providers/config-provider"
 import { InfoIcon } from './icons'
 
 const BridgeModeToogle = () => {
     const bridgeMode = useTradeStore((state) => state.bridgeMode)
     const setBridgeMode = useTradeStore((state) => state.setBridgeMode)
+    const { config } = useConfig()
+
+    // Hide the toggle if bridgeMode is set to 'fast' or 'economy' in config
+    // Only show when bridgeMode is 'open' or undefined (default behavior)
+    if (config.bridgeMode === 'fast' || config.bridgeMode === 'economy') {
+        return null
+    }
 
     return (
         <div className="flex flex-col gap-3">

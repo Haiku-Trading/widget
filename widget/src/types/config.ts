@@ -11,6 +11,7 @@ export interface WidgetConfig {
   lockedInputs?: boolean
   lockedOutputs?: boolean
   tokenSelect?: 'simple' | 'default'
+  bridgeMode?: 'open' | 'fast' | 'economy'
 }
 
 export interface ConfigProviderProps {

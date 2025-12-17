@@ -129,6 +129,7 @@ function DevApp() {
     const [lockedInputs, setLockedInputs] = useState(false);
     const [lockedOutputs, setLockedOutputs] = useState(false);
     const [tokenSelect, setTokenSelect] = useState<'simple' | 'default'>('default');
+    const [bridgeMode, setBridgeMode] = useState<'open' | 'fast' | 'economy' | undefined>(undefined);
 
     // Preselected tokens state
     const [preselectedInputs, setPreselectedInputs] = useState<Record<string, number>>({});
@@ -181,6 +182,7 @@ function DevApp() {
             preselectedInputs: Object.keys(preselectedInputs).length > 0 ? preselectedInputs : undefined,
             preselectedOutputs: Object.keys(preselectedOutputs).length > 0 ? preselectedOutputs : undefined,
             tokenSelect: tokenSelect !== 'default' ? tokenSelect : undefined,
+            bridgeMode: bridgeMode,
         };
     }, [
         configMode,
@@ -195,6 +197,7 @@ function DevApp() {
         preselectedInputs,
         preselectedOutputs,
         tokenSelect,
+        bridgeMode,
     ]);
 
     // Preview config (uses previewMode for preview widget display)
@@ -332,6 +335,7 @@ function DevApp() {
         setLockedInputs(false);
         setLockedOutputs(false);
         setTokenSelect('default');
+        setBridgeMode(undefined);
         setPreselectedInputs({});
         setPreselectedOutputs({});
         setNewInputTokenId("");
@@ -599,6 +603,21 @@ ${indentedConfig}
                                                 </select>
                                                 <p className="text-xs text-gray-500 mt-1">
                                                     Simple mode: Single unified section with inline filters
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 mb-1">Bridge Mode</label>
+                                                <select
+                                                    value={bridgeMode || 'open'}
+                                                    onChange={(e) => setBridgeMode(e.target.value === 'open' ? undefined : e.target.value as 'fast' | 'economy')}
+                                                    className="w-full p-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                    <option value="open">Open (default - shows toggle)</option>
+                                                    <option value="fast">Fast (locked, hidden toggle)</option>
+                                                    <option value="economy">Economy (locked, hidden toggle)</option>
+                                                </select>
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    Open: Shows toggle in settings, default is Fast. Fast/Economy: Locks mode and hides toggle.
                                                 </p>
                                             </div>
                                         </div>

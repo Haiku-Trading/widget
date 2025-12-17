@@ -290,7 +290,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
                       canToggleEIP7702={canToggleEIP7702}
                     />
                   )} */}
-                  {process.env.VERCEL_ENV !== 'production' && <BridgeModeToogle />}
+                  <BridgeModeToogle />
                 </div>
 
                 {(warningSlippage || errorSlippage) && (
