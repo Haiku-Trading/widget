@@ -47,31 +47,31 @@ export const Chain1135Icon: React.FC<Chain1135IconProps> = ({
         <filter x="0%" y="0%" width="100%" height="100%" id="92ebe26e88">
           <feColorMatrix
             values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           />
         </filter>
         <filter x="0%" y="0%" width="100%" height="100%" id="5a4d356582">
           <feColorMatrix
             values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.2126 0.7152 0.0722 0 0"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           />
         </filter>
         <clipPath id="baa8a1e992">
           <path
             d="M 187.5 0 C 83.945312 0 0 83.945312 0 187.5 C 0 291.054688 83.945312 375 187.5 375 C 291.054688 375 375 291.054688 375 187.5 C 375 83.945312 291.054688 0 187.5 0 Z M 187.5 0 "
-            clip-rule="nonzero"
+            clipRule="nonzero"
           />
         </clipPath>
         <clipPath id="9c01b3fe5e">
           <path
             d="M 0 0 L 375 0 L 375 375 L 0 375 Z M 0 0 "
-            clip-rule="nonzero"
+            clipRule="nonzero"
           />
         </clipPath>
         <clipPath id="d836a248ea">
           <path
             d="M 187.5 0 C 83.945312 0 0 83.945312 0 187.5 C 0 291.054688 83.945312 375 187.5 375 C 291.054688 375 375 291.054688 375 187.5 C 375 83.945312 291.054688 0 187.5 0 Z M 187.5 0 "
-            clip-rule="nonzero"
+            clipRule="nonzero"
           />
         </clipPath>
         <clipPath id="8f39bbfe74">
@@ -95,18 +95,18 @@ export const Chain1135Icon: React.FC<Chain1135IconProps> = ({
           </g>
         </mask>
       </defs>
-      <g clip-path="url(#baa8a1e992)">
+      <g clipPath="url(#baa8a1e992)">
         <g transform="matrix(1, 0, 0, 1, 0, 0)">
-          <g clip-path="url(#8f39bbfe74)">
-            <g clip-path="url(#9c01b3fe5e)">
-              <g clip-path="url(#d836a248ea)">
+          <g clipPath="url(#8f39bbfe74)">
+            <g clipPath="url(#9c01b3fe5e)">
+              <g clipPath="url(#d836a248ea)">
                 <rect
                   x="-82.5"
                   width="540"
                   fill="#ffffff"
                   height="539.999987"
                   y="-82.499998"
-                  fill-opacity="1"
+                  fillOpacity="1"
                 />
               </g>
             </g>

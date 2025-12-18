@@ -47,19 +47,19 @@ export const Chain143Icon: React.FC<Chain143IconProps> = ({
         <filter x="0%" y="0%" width="100%" height="100%" id="cb81297886">
           <feColorMatrix
             values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           />
         </filter>
         <filter x="0%" y="0%" width="100%" height="100%" id="944975448e">
           <feColorMatrix
             values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.2126 0.7152 0.0722 0 0"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
           />
         </filter>
         <clipPath id="dc0ed010f0">
           <path
             d="M 4 4 L 31.71875 4 L 31.71875 31 L 4 31 Z M 4 4 "
-            clip-rule="nonzero"
+            clipRule="nonzero"
           />
         </clipPath>
         <mask id="0821155bbb">
@@ -80,7 +80,7 @@ export const Chain143Icon: React.FC<Chain143IconProps> = ({
           </g>
         </mask>
       </defs>
-      <g clip-path="url(#dc0ed010f0)">
+      <g clipPath="url(#dc0ed010f0)">
         <g mask="url(#0821155bbb)">
           <g transform="matrix(0.152361, 0, 0, 0.150705, 3.989189, 3.502705)">
             <image
