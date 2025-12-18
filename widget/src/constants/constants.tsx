@@ -98,7 +98,9 @@ export const mappingChainNameToChainId: Record<string, number> = {
   ape: 33139,
   worldchain: 480,
   plasma: 9745,
-  bob: 60808
+  bob: 60808,
+  lisk: 1135,
+  monad: 143
 }
 
 export const INVALIDATE_QUERIES_DELAY = 8000
@@ -242,6 +244,18 @@ export const chainsConfig: {
     network: 'Bob',
     slug: 'bob',
     dexScreenId: 'bob',
+  },
+  1135: {
+    chainId: 1135,
+    network: 'Lisk',
+    slug: 'lisk',
+    dexScreenId: 'lisk',
+  },
+  143: {
+    chainId: 143,
+    network: 'Monad',
+    slug: 'monad',
+    dexScreenId: 'monad',
   },
 }
 

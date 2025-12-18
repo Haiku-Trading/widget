@@ -239,13 +239,13 @@ const ImageBranch = (props: ImageBranchProps) => {
     >
       {isChainIcon ? (
         getChainIcon(branch.symbol, 'w-full h-full', 20) || (
-          <div className="w-full h-full flex items-center justify-center text-[8px]">
+          <div className="w-full h-full flex items-center justify-center text-[8px] text-foreground">
             {getInitials(branch.symbol)}
           </div>
         )
       ) : (
         getProtocolIcon(branch.symbol, 'w-full h-full', 20) || (
-          <div className="w-full h-full flex items-center justify-center text-[8px]">
+          <div className="w-full h-full flex items-center justify-center text-[8px] text-foreground">
             {getInitials(branch.symbol)}
           </div>
         )

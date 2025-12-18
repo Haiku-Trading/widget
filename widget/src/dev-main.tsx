@@ -4,12 +4,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { WagmiProvider } from "wagmi";
-import { arbitrum, avalanche, base, berachain, bsc, gnosis, katana, mainnet, optimism, polygon, scroll, sei, sonic, worldchain, bob } from "wagmi/chains";
+import { arbitrum, avalanche, base, berachain, bsc, gnosis, katana, mainnet, optimism, polygon, scroll, sei, sonic, worldchain, bob, lisk, apeChain, unichain } from "wagmi/chains";
 import CustomDarkColor from "./components/custom-colors/custom-dark-color";
 import CustomLightColor from "./components/custom-colors/custom-light-color";
 import { DEFAULT_CONFIG } from "./components/haiku-widget";
 import { HaikuWidget, WidgetConfig, WidgetTheme } from "./index";
-import { plasma } from "./providers/wagmi-config";
+import { plasma, monad, hyperevm } from "./providers/wagmi-config";
 // Import dev styles (unscoped) for playground UI - separate from widget CSS
 import "./dev-styles.css";
 import { ColorPalette } from "./types/theme";
@@ -35,6 +35,11 @@ const chains = [
     plasma, // 9745: Plasma
     sonic, // 146: Sonic
     bob, // 60808: Bob
+    lisk, // 1135: Lisk
+    monad, // 143: Monad
+    hyperevm, // 999: HyperEVM
+    apeChain, // 33139: ApeChain
+    unichain, // 130: Unichain
 ];
 
 const config = getDefaultConfig({
@@ -61,6 +66,11 @@ const availableChains = [
     { id: 9745, name: "Plasma", chain: plasma },
     { id: 146, name: "Sonic", chain: sonic },
     { id: 60808, name: "Bob", chain: bob },
+    { id: 1135, name: "Lisk", chain: lisk },
+    { id: 143, name: "Monad", chain: monad },
+    { id: 999, name: "HyperEVM", chain: hyperevm },
+    { id: 33139, name: "Apechain", chain: apeChain },
+    { id: 130, name: "Unichain", chain: unichain },
 ];
 
 // Available protocols for testing
