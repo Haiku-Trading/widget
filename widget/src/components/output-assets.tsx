@@ -227,14 +227,14 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
               <Accordion.Header>
                 <Accordion.Trigger className="w-full">
                   <div className="flex mt-3 w-full justify-between">
-                    <span className=" text-14px-medium">Minimum received</span>
+                    <span className=" text-14px-medium text-foreground">Minimum received</span>
                     <div className="flex items-center gap-[5px]">
-                      <span className=" text-14px-medium">
+                      <span className=" text-14px-medium text-foreground">
                         {usdFormatter.fullValue.format(usdOutputTotal)}
                       </span>
                       <RiArrowDownSLine
                         size={16}
-                        className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+                        className={`transition-transform duration-200 text-foreground ${isOpen ? 'rotate-180' : 'rotate-0'}`}
                       />
                     </div>
                   </div>

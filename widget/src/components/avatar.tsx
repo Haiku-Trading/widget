@@ -27,7 +27,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>(
             alt={alt}
           />
           <PrimitiveAvatar.Fallback
-            className="bg-gray-200 leading-1 flex size-full items-center justify-center text-[9px] font-medium rounded-full"
+            className="bg-gray-200 leading-1 flex size-full items-center justify-center text-[9px] font-medium rounded-full text-foreground"
             delayMs={600}
             style={{ backgroundColor: color }}
           >
