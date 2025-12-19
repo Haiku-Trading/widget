@@ -66,23 +66,31 @@ export const Content = forwardRef<ContentElement, ContentProps>((props, ref) => 
 Content.displayName = 'AlertDialogContent'
 
 // Theme wrapper component for portaled content
-const AlertThemeWrapper = forwardRef<HTMLDivElement, { children: React.ReactNode }>(({ children }, ref) => {
+const AlertThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   const { theme } = useTheme()
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
+
+  const setRef = (node: HTMLDivElement | null) => {
+    wrapperRef.current = node
+    // Apply theme immediately when ref is set
+    if (node && theme) {
+      applyThemeToElement(node, theme)
+    }
+  }
 
   // Apply theme to the wrapper when theme changes
   useEffect(() => {
-    if (wrapperRef.current) {
+    if (wrapperRef.current && theme) {
       applyThemeToElement(wrapperRef.current, theme)
     }
   }, [theme])
 
   return (
-    <div ref={ref || wrapperRef} className="haiku-widget-theme-container">
+    <div ref={setRef} className="haiku-widget-theme-container">
       {children}
     </div>
   )
-})
+}
 
 /* -------------------------------------------------------------------------------------------------
  * Portal
@@ -98,11 +106,17 @@ function AlertPortal({ children, position, container }: PortalProps) {
   if (position === 'fixed') {
     // Get the theme container to use as portal container
     // This ensures the portaled content stays within the theme context
-    const themeContainer = useMemo(() => {
-      return typeof document !== 'undefined' 
-        ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-        : null
-    }, []) // Empty dependency array since the container doesn't change
+    // Use a function to find the container at render time, not just once
+    const getThemeContainer = () => {
+      if (typeof document === 'undefined') return null
+      // Find the root theme container (the one created by ThemeProvider)
+      // We want the first one that's not inside another theme container
+      const containers = document.querySelectorAll('.haiku-widget-theme-container')
+      // Return the outermost container (usually the first one)
+      return containers.length > 0 ? (containers[0] as HTMLElement) : null
+    }
+    
+    const themeContainer = useMemo(() => getThemeContainer(), [])
     
     // Use the theme container if available, otherwise fall back to document.body
     const portalContainer = container || themeContainer || (typeof document !== 'undefined' ? document.body : null)
@@ -151,11 +165,16 @@ const DrawerContent = forwardRef<DrawerContentElement, DrawerContentProps>((prop
   
   // Get the theme container to use as portal container
   // This ensures the portaled content stays within the theme context
-  const themeContainer = useMemo(() => {
-    return typeof document !== 'undefined' 
-      ? document.querySelector('.haiku-widget-theme-container') as HTMLElement
-      : null
-  }, []) // Empty dependency array since the container doesn't change
+  // Use a function to find the container at render time
+  const getThemeContainer = () => {
+    if (typeof document === 'undefined') return null
+    // Find the root theme container (the one created by ThemeProvider)
+    const containers = document.querySelectorAll('.haiku-widget-theme-container')
+    // Return the outermost container (usually the first one)
+    return containers.length > 0 ? (containers[0] as HTMLElement) : null
+  }
+  
+  const themeContainer = useMemo(() => getThemeContainer(), [])
   
   // Use the theme container if available, otherwise fall back to document.body
   const portalContainer = themeContainer || (typeof document !== 'undefined' ? document.body : null)

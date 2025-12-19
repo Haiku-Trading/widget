@@ -127,7 +127,7 @@ const TradeAlerts = () => {
           <button
             onClick={() => setView(AlertView.Warnings)}
             className={cn(
-              'text-sm text-warning-text font-medium',
+              'text-sm text-warning-text font-medium text-foreground',
               view !== AlertView.Warnings && 'opacity-50',
             )}
           >

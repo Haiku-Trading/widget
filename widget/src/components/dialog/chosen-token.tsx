@@ -336,6 +336,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null)
   const [filter, selectFilter] = useState<FilterType>({ sort: 'default', order: 'descending' })
   const [openCLId, setOpenCLId] = useState<string | null>(null)
+  const [clTokenTickRange, setClTokenTickRange] = useState<{ lower: string; upper: string } | null>(null)
 
   const tokens = useMemo(
     () => getTokensQuery?.data?.tokenList.tokens || [],
@@ -1063,23 +1064,44 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   }, [isSimpleMode, myTokens, matches, unifiedTokens])
 
   return (
-    <Dialog.Content
-      // className={`w-full ${!isShortScreen ? 'h-full' : ''} max-h-[730px] md:h-auto`}
-      className={cn(
-        'w-full md:max-h-[730px] md:h-auto',
-        isSimpleMode && 'md:max-w-[500px] md:w-[500px]'
-      )}
-      onOpenAutoFocus={(event) => event.preventDefault()}
-      overlayClassName={'w-full h-full'}
-      onInteractOutside={(event) => {
-        // Prevent closing when clicking on the side panel (chain/protocol selectors)
-        if (!isSimpleMode) {
-          const target = event.target as Element
-          if (target.closest('[data-side-panel]')) {
+    <>
+      <Dialog.Content
+        // className={`w-full ${!isShortScreen ? 'h-full' : ''} max-h-[730px] md:h-auto`}
+        className={cn(
+          'w-full md:max-h-[730px] md:h-auto',
+          isSimpleMode && 'md:max-w-[500px] md:w-[500px]',
+          openCLId && 'hidden pointer-events-none',
+        )}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        overlayClassName={'w-full h-full'}
+        onInteractOutside={(event) => {
+          // If UniswapV3 dialog is open, prevent closing the main dialog
+          if (openCLId) {
             event.preventDefault()
+            return
           }
-        }
-      }}
+          // Prevent closing when clicking on the side panel (chain/protocol selectors)
+          if (!isSimpleMode) {
+            const target = event.target as Element
+            if (target.closest('[data-side-panel]')) {
+              event.preventDefault()
+            }
+          }
+        }}
+        onPointerDownOutside={(event) => {
+          // If UniswapV3 dialog is open, prevent closing the main dialog
+          if (openCLId) {
+            event.preventDefault()
+            return
+          }
+          // Prevent closing when clicking on the side panel
+          if (!isSimpleMode) {
+            const target = event.target as Element
+            if (target.closest('[data-side-panel]')) {
+              event.preventDefault()
+            }
+          }
+        }}
       sideElement={
         !isSimpleMode ? (
           <div
@@ -1394,6 +1416,78 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
         </Dialog.Body>
       </div>
     </Dialog.Content>
+    
+    {/* Concentrated Liquidity Modal - replaces main dialog when open */}
+    {openCLId && (() => {
+      // Find the base CL token (without tick range)
+      const baseIid = openCLId.split('::')[0]
+      const clToken = allTokens.find((token) => {
+        if (token.tokenCategory === 'concentratedLiquidity') {
+          const [iid] = token.iid.split('::')
+          return iid === baseIid
+        }
+        return false
+      })
+      if (!clToken || clToken.type !== TokenType.ConcentratedLiquidity) return null
+      
+      return (
+        <Dialog.Root
+          open={!!openCLId}
+          onOpenChange={(open) => {
+            if (!open) {
+              setOpenCLId(null)
+              setClTokenTickRange(null)
+            }
+          }}
+          nested
+        >
+          <Dialog.Content
+            className="w-full max-w-full md:max-w-[700px] max-h-[95vh] overflow-hidden flex flex-col"
+            onPointerDownOutside={() => {
+              // Close nested dialog when clicking outside
+              setOpenCLId(null)
+              setClTokenTickRange(null)
+            }}
+            onInteractOutside={() => {
+              // Close nested dialog when interacting outside
+              setOpenCLId(null)
+              setClTokenTickRange(null)
+            }}
+          >
+            <Dialog.Body className="px-0 flex-1 overflow-y-auto">
+              <UniswapV3
+                onSelect={() => {
+                  // Create the token with the selected tick range
+                  if (clToken) {
+                    const [baseIid] = clToken.iid.split('::')
+                    // Use the stored tick range, or fall back to full range if not set
+                    const tickRange = clTokenTickRange || { lower: '-887272', upper: '887272' }
+                    const tokenWithRange = {
+                      ...clToken,
+                      iid: `${baseIid}::${tickRange.lower}:${tickRange.upper}`,
+                    } as APIToken
+                    toggleSelectedToken(tokenWithRange)
+                  }
+                  setOpenCLId(null)
+                  setClTokenTickRange(null)
+                }}
+                tokenInfo={clToken as any}
+                allTokens={allTokens as APIToken[]}
+                onSetTickRange={(range) => {
+                  // Store the tick range for when the user clicks "Add"
+                  setClTokenTickRange(range)
+                }}
+                onCancel={() => {
+                  setOpenCLId(null)
+                  setClTokenTickRange(null)
+                }}
+              />
+            </Dialog.Body>
+          </Dialog.Content>
+        </Dialog.Root>
+      )
+    })()}
+    </>
   )
 }
 
@@ -1575,53 +1669,37 @@ export const TokenCard = memo(function TokenCard({
     }
   }, [token])
 
-  useEffect(() => {
-    if (!isConcentratedLiquidity || !isOpenUniswapV3) return
+  // Check if this is a CL token with a tick range already selected
+  const hasTickRange = isConcentratedLiquidity && token.iid.match(/^[a-z0-9]+:0x[a-fA-F0-9]{40}::\-?\d+:\-?\d+$/)
 
-    const close = () => setOpenCLId?.(null)
-    document.addEventListener('click', close)
-
-    return () => document.removeEventListener('click', close)
-  }, [isOpenUniswapV3, isConcentratedLiquidity, setOpenCLId])
-
-  return (
-    <HoverCard.Root
-      open={isConcentratedLiquidity ? isOpenUniswapV3 : undefined}
-      onOpenChange={() => {
-        if (!isConcentratedLiquidity) return // allow hover for non-CL
-      }}
-    >
-      <HoverCard.Trigger
-        className="w-full"
+  const tokenCardButton = (
+    <Card variant="secondary" asChild className="p-2 w-full h-full">
+      <button
+        style={{ height: isFirstCard ? '70px' : '100%' }}
+        disabled={disabled}
+        className={cn(
+          'flex items-center border-0 justify-between h-full group transition-all duration-150',
+          'ring-1 ring-inset ring-transparent',
+          selected
+            ? 'bg-state-highlight-light/10 ring-1 ring-inset ring-state-highlight-light'
+            : 'hover:bg-section',
+          { grayscale: disabled },
+        )}
         onClick={(e) => {
-          if (!isConcentratedLiquidity) return
-          e.preventDefault()
-          e.stopPropagation()
+          if (
+            isConcentratedLiquidity &&
+            type === 'output' &&
+            !hasTickRange
+          ) {
+            e.preventDefault()
+            e.stopPropagation()
+            setOpenCLId?.(token.iid)
+            return
+          } else {
+            onSelect(selectedToken)
+          }
         }}
       >
-        <Card variant="secondary" asChild className="p-2 w-full h-full">
-          <button
-            style={{ height: isFirstCard ? '70px' : '100%' }}
-            disabled={disabled}
-            className={cn(
-              'flex items-center border-0 justify-between h-full group transition-all duration-150',
-              'ring-1 ring-inset ring-transparent',
-              selected
-                ? 'bg-state-highlight-light/10 ring-1 ring-inset ring-state-highlight-light'
-                : 'hover:bg-section',
-              { grayscale: disabled },
-            )}
-            onClick={(e) => {
-              if (isConcentratedLiquidity && type === 'output') {
-                e.preventDefault()
-                e.stopPropagation()
-                setOpenCLId?.(token.iid)
-                return
-              } else {
-                onSelect(selectedToken)
-              }
-            }}
-          >
             <div className="w-full flex flex-col">
               <div className="flex items-center justify-between">
                 <div className="h-full flex items-center gap-[13px]">
@@ -1734,17 +1812,51 @@ export const TokenCard = memo(function TokenCard({
             </div>
           </button>
         </Card>
-      </HoverCard.Trigger>
+  )
 
-      <HoverCardWithTheme>
-        <HoverCard.Content
-          onClick={(e) => isConcentratedLiquidity && e.stopPropagation()}
-          side={'right'}
-          align="start"
-          sideOffset={0}
-          className="z-50"
-        >
-          {token.type !== TokenType.ConcentratedLiquidity || (lowerTick && upperTick) ? (
+  // For CL tokens without tick range, the modal is handled at the parent level
+  // For CL tokens with tick range, show the token card directly
+  if (isConcentratedLiquidity && hasTickRange) {
+    return (
+      <HoverCard.Root>
+        <HoverCard.Trigger className="w-full">
+          {tokenCardButton}
+        </HoverCard.Trigger>
+        <HoverCardWithTheme>
+          <HoverCard.Content
+            side={'right'}
+            align="start"
+            sideOffset={0}
+            className="z-50"
+          >
+            <TaggingMetadataContent
+              value={token.name}
+              images={images}
+              branches={branches}
+              type={tokenType === 'CLAMM' || tokenType === 'Pool' ? 'Pool' : tokenType}
+              metadata={token || '{}'}
+            />
+            <HoverCard.Arrow className="fill-section h-[6px] w-3" />
+          </HoverCard.Content>
+        </HoverCardWithTheme>
+      </HoverCard.Root>
+    )
+  }
+
+  // For non-CL tokens, show with hover card
+  if (!isConcentratedLiquidity) {
+    return (
+      <HoverCard.Root>
+        <HoverCard.Trigger className="w-full">
+          {tokenCardButton}
+        </HoverCard.Trigger>
+        <HoverCardWithTheme>
+          <HoverCard.Content
+            side={'right'}
+            align="start"
+            sideOffset={0}
+            className="z-50"
+          >
             <TaggingMetadataContent
               value={token.name}
               images={images}
@@ -1752,18 +1864,13 @@ export const TokenCard = memo(function TokenCard({
               type={tokenType === 'CLAMM' ? 'Pool' : tokenType}
               metadata={token || '{}'}
             />
-          ) : (
-            <UniswapV3
-              onSelect={() => onSelect(selectedToken)}
-              tokenInfo={token as any}
-              allTokens={allTokens}
-              onSetTickRange={setTickRange}
-              onCancel={() => setOpenCLId?.(null)}
-            />
-          )}
-          <HoverCard.Arrow className="fill-section h-[6px] w-3" />
-        </HoverCard.Content>
-      </HoverCardWithTheme>
-    </HoverCard.Root>
-  )
+            <HoverCard.Arrow className="fill-section h-[6px] w-3" />
+          </HoverCard.Content>
+        </HoverCardWithTheme>
+      </HoverCard.Root>
+    )
+  }
+
+  // For CL tokens without tick range, just show the button (modal is handled at parent level)
+  return <>{tokenCardButton}</>
 })
