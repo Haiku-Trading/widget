@@ -79,6 +79,13 @@ const ImageGroup = (props: ImageGroupProps) => {
         FLUID: 'Fluid',
         BEND: 'Bend',
         QUICKSWAP_V3: 'Quickswap V3',
+        HYBRA_V2: 'Hybra V2',
+        HYBRA_V3: 'Hybra V3',
+        HYPERSWAP_V3: 'Hyperswap V3',
+        KINETIQ: 'Kinetiq',
+        LAMINAR_V3: 'Laminar V3',
+        PROJECTX_V3: 'ProjectX V3',
+        STAKED_HYPE: 'Staked Hype',
       }[protocol.symbol]
 
       names.unshift(protocolName)

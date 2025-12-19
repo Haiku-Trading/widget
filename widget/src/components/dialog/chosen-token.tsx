@@ -119,6 +119,19 @@ const ImageGroup = (props: ImageGroupProps) => {
         YEI: 'Yei',
         DRAGONSWAP_V2: 'Dragonswap V2',
         HYPERSWAP_V2: 'Hyperswap V2',
+        UNISWAP_V3: 'Uniswap V3',
+        HYPERSTABLE: 'Hyperstable',
+        BEND: 'Bend',
+        FLUID: 'Fluid',
+        QUICKSWAP_V3: 'Quickswap V3',
+        YEARN_FINANCE: 'Yearn Finance',
+        HYBRA_V2: 'Hybra V2',
+        HYBRA_V3: 'Hybra V3',
+        HYPERSWAP_V3: 'Hyperswap V3',
+        KINETIQ: 'Kinetiq',
+        LAMINAR_V3: 'Laminar V3',
+        PROJECTX_V3: 'ProjectX V3',
+        STAKED_HYPE: 'Staked Hype',
       }[protocol.symbol]
 
       names.unshift(protocolName)
