@@ -40,11 +40,13 @@ export function ProtocolSelect({ value, onValueChange, chain }: ProtocolSelectPr
     return true
   })
 
-  const filteredProtocols = filterByHiddenProtocols.filter(
-    (protocol) =>
-      protocol.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-      protocol.symbol.toLowerCase().includes(inputValue.toLowerCase()),
-  )
+  const filteredProtocols = filterByHiddenProtocols
+    .filter(
+      (protocol) =>
+        protocol.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+        protocol.symbol.toLowerCase().includes(inputValue.toLowerCase()),
+    )
+    .sort((a, b) => a.name.localeCompare(b.name))
 
   const handleClearClick = (e: React.MouseEvent) => {
     e.preventDefault()
