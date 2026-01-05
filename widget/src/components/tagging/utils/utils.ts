@@ -122,7 +122,7 @@ export const convertTokenListToMentionData = (
 
         matchSorter(searchProtocols, queryString, {
             keys: ['name', 'symbol'],
-            baseSort: (a, b) => a.name.localeCompare(b.name),
+            baseSort: (a, b) => a.item.name.localeCompare(b.item.name),
         }).forEach((protocol, index) => {
             items.push({
                 id: `${index}:protocol:${protocol.symbol}`,

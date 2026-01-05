@@ -2,7 +2,7 @@
 
 import { useConcentratedPoolData } from '../../../queries/concentrated-pool-data'
 import { MAX_TICK, MIN_TICK, nearestUsableTick } from '../../../utils/uniswapV3'
-import { APIToken } from '../../../services/get-tokens'
+import { APIToken, APIConcentratedLiquidityToken } from '../../../services/get-tokens'
 import { Button } from '../../button/button'
 import { cn } from '../../../utils'
 import { Avatar, Clipboard } from '@ark-ui/react'
@@ -25,7 +25,7 @@ const modes = [
 ]
 
 interface UniswapV3Props {
-  tokenInfo: APIToken
+  tokenInfo: APIConcentratedLiquidityToken
   allTokens?: APIToken[]
   onSetTickRange?: (range: { lower: string; upper: string }) => void
   onSelect?: () => void

@@ -366,7 +366,9 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
         ? calcConcentratedBalances((tokenBalanceQuery.data ?? {}) as any, lowerTick, upperTick)
         : tokenBalanceQuery.data
     const balance =
-      tokenCategory === TokenType.ConcentratedLiquidity ? calcBalance.balanceUSD : calcBalance
+      tokenCategory === TokenType.ConcentratedLiquidity 
+        ? (typeof calcBalance === 'object' && calcBalance ? calcBalance.balanceUSD : 0).toString() 
+        : (typeof calcBalance === 'string' ? calcBalance : '0')
 
     // const [isTokenView, setIsTokenView] = useState(true)
     const [usdValue, setUsdValue] = useState('0')
@@ -408,10 +410,10 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
           price1USD: parseFloat(concentratedPoolData?.token1PriceUSD ?? '0'),
         })
         if (isTokenView) {
-          onValueChange?.(value, calcBalance)
+          onValueChange?.(value, calcBalance as { balance: number; balanceUSD: number } | undefined)
           setUsdValue(usdValue.toString())
         } else {
-          onValueChange?.(usdValue.toString(), calcBalance)
+          onValueChange?.(usdValue.toString(), calcBalance as { balance: number; balanceUSD: number } | undefined)
           setUsdValue(value.toString())
         }
         return
@@ -436,7 +438,10 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
       }
 
       if (isTokenView) {
-        onValueChange?.(truncatedValue, calcBalance)
+        const balanceObj = typeof calcBalance === 'string' 
+          ? { balance: Number(calcBalance), balanceUSD: Number(calcBalance) * Number(usdPrice) }
+          : calcBalance
+        onValueChange?.(truncatedValue, balanceObj)
         const usdVal = BigNumber(truncatedValue || '0').multipliedBy(usdPrice)
         setUsdValue(usdVal.isEqualTo('0') ? '0.00' : usdVal.toFixed())
       } else {
@@ -444,7 +449,10 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
           .dividedBy(usdPrice)
           .toFixed(tokenDecimal, BigNumber.ROUND_DOWN)
 
-        onValueChange?.(tokenAmount, calcBalance)
+        const balanceObj = typeof calcBalance === 'string' 
+          ? { balance: Number(calcBalance), balanceUSD: Number(calcBalance) * Number(usdPrice) }
+          : calcBalance
+        onValueChange?.(tokenAmount, balanceObj)
         setUsdValue(truncatedValue)
       }
     }
@@ -554,7 +562,7 @@ export const AssetCard = forwardRef<AssetCardElement, AssetCardProps>(
 
     const usdBalance = useMemo(() => {
       return tokenCategory === TokenType.ConcentratedLiquidity
-        ? calcBalance.balanceUSD
+        ? (typeof calcBalance === 'object' && calcBalance ? calcBalance.balanceUSD : 0).toString()
         : BigNumber(balance).multipliedBy(usdPrice).toFixed()
     }, [balance, usdPrice, tokenCategory, calcBalance])
 
