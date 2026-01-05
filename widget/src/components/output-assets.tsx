@@ -62,16 +62,6 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
     }
   }, [ref, clearSlider])
 
-  const outputTokenPrices = useMemo(() => {
-    if (!solveIntentQuery.data?.outputTokenUsdPrices) return new Map()
-
-    const priceMap = new Map()
-    solveIntentQuery.data.outputTokenUsdPrices.forEach((ot) => {
-      priceMap.set(ot.iid, ot)
-    })
-    return priceMap
-  }, [solveIntentQuery.data?.outputTokenUsdPrices])
-
   const tokenBalances = useMemo(() => {
     if (!solveIntentQuery.data?.balances) return new Map()
 
@@ -82,9 +72,10 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
       const token = outputTokens.find((t) => {
         const [iid, tickRange] = t.iid.split('::')
         const tokenKey = `${iid.split(':')[1]}::${tickRange || ''}`
+        const balanceTokenKey = (balance.token as any).tokenKey
         return (
-          balance.token.tokenKey &&
-          tokenKey.toLowerCase() === balance.token.tokenKey.toLowerCase()
+          balanceTokenKey &&
+          tokenKey.toLowerCase() === balanceTokenKey.toLowerCase()
         )
       })
 
@@ -105,7 +96,10 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
         balanceKey = token.iid
       }
       const balance = tokenBalances.get(balanceKey)
-      const outputToken = outputTokenPrices.get(token.iid)
+      // Calculate priceUSD from balance if available
+      const priceUSD = balance && balance.amount && Number(balance.amount) > 0
+        ? String(Number(balance.amountUSD) / Number(balance.amount))
+        : '1'
       const tokenValue = balance?.amount || '0.00'
 
       const images = [
@@ -133,13 +127,13 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
         index,
         isLast,
         balance,
-        outputToken,
+        priceUSD,
         tokenValue,
         images,
         branches,
       }
     })
-  }, [outputTokens, tokenBalances, outputTokenPrices])
+  }, [outputTokens, tokenBalances])
 
   const minDebtToken = useMemo(
     () => outputTokens.find((token) => token.type === TokenType.VarDebt),
@@ -151,7 +145,7 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
       <div className="h-full p-4 flex flex-col gap-2 overflow-hidden justify-between">
         {/* Token cards */}
         <div className="flex flex-col gap-2">
-          {tokenData.map(({ token, isLast, outputToken, tokenValue, images, branches }) => (
+          {tokenData.map(({ token, isLast, priceUSD, tokenValue, images, branches }) => (
             <AssetCard
               images={images}
               branches={branches}
@@ -161,7 +155,7 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
               tokenDecimal={token.decimals}
               address={token.address as Address}
               chainId={token.network}
-              usdPrice={outputToken?.priceUSD || '1'}
+              usdPrice={priceUSD}
               tokenValue={tokenValue}
               onDismiss={() => stableRemoveOutputToken(token)}
               onValueChange={(value, balance) => stableSetTokenValue(token, value, balance)}
