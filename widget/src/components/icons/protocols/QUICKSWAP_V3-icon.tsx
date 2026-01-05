@@ -90,7 +90,7 @@ export const QuickswapV3Icon: React.FC<QuickswapV3IconProps> = ({
           <path
             fill="url(#50b08bdb13)"
             d="M 0.488281 0 L 35.515625 0 L 35.515625 35.027344 L 0.488281 35.027344 Z M 0.488281 0 "
-            fill-rule="nonzero"
+            fillRule="nonzero"
           />
         </g>
       </g>

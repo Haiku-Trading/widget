@@ -116,8 +116,8 @@ export const StakedHypeIcon: React.FC<StakedHypeIconProps> = ({
                   <path
                     fill="#ffffff"
                     d="M 0.488281 0.292969 L 35.21875 0.292969 L 35.21875 35.027344 L 0.488281 35.027344 Z M 0.488281 0.292969 "
-                    fill-opacity="1"
-                    fill-rule="nonzero"
+                    fillOpacity="1"
+                    fillRule="nonzero"
                   />
                 </g>
               </g>

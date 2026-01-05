@@ -1307,7 +1307,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                       >
                         <ImageGroup images={images} branches={branches} />
                         <div className="size-5 rounded-full bg-state-error-default flex items-center justify-center absolute top-0.5 -left-1.5 text-white p-1">
-                          <CloseIcon className="w-3 h-3" />
+                          <CloseIcon className="w-3 h-3" width={12} height={12} />
                         </div>
                       </button>
                     )

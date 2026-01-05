@@ -116,8 +116,8 @@ export const HybraV3Icon: React.FC<HybraV3IconProps> = ({
                   <path
                     fill="#000000"
                     d="M 0.488281 0 L 35.511719 0 L 35.511719 35.027344 L 0.488281 35.027344 Z M 0.488281 0 "
-                    fill-opacity="1"
-                    fill-rule="nonzero"
+                    fillOpacity="1"
+                    fillRule="nonzero"
                   />
                 </g>
               </g>

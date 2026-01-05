@@ -226,16 +226,17 @@ export function ConfirmSwapContent({
                 const balance = solveIntentQuery.data?.balances.find(
                   (ot) => ot.token.address.toLowerCase() === token.address.toLowerCase(),
                 )
-                const outputToken = solveIntentQuery.data?.outputTokenUsdPrices.find(
-                  (ot) => ot.address === token.address,
-                )
-                if (!outputToken) return null
                 if (!balance) return null
+
+                // Calculate priceUSD from balance if needed, or use amountUSD directly
+                const priceUSD = balance.amount && Number(balance.amount) > 0
+                  ? Number(balance.amountUSD) / Number(balance.amount)
+                  : 0
 
                 const usdBalance =
                   token.type === TokenType.ConcentratedLiquidity
-                    ? BigNumber(balance.amountMinUSD)
-                    : BigNumber(balance.amount).multipliedBy(outputToken.priceUSD)
+                    ? BigNumber(balance.amountMinUSD ?? balance.amountUSD)
+                    : BigNumber(balance.amountUSD)
 
                 const percentage =
                   Math.round(
@@ -256,13 +257,13 @@ export function ConfirmSwapContent({
                         ? usdFormatter.fullValue.format(usdBalance.toFixed())
                         : formatTokenAmount(
                             Number(balance.amount),
-                            Number(outputToken.priceUSD) || 0,
+                            priceUSD || 0,
                           )
                     }
                     amountUSD={usdFormatter.fullValue.format(usdBalance.toFixed())}
-                    icon={outputToken.logoURI ?? ''}
+                    icon={(balance.token as any).logoUri ?? ('logoURI' in token ? token.logoURI ?? '' : '')}
                     color={token.primaryColor ?? ''}
-                    symbol={outputToken.symbol}
+                    symbol={balance.token.symbol}
                     valuePercent={valuePercent}
                     chainId={token.network}
                   />
