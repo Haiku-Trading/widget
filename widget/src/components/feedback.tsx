@@ -12,15 +12,17 @@ type FeedbackDialogProps = {
 }
 
 export function FeedbackDialog({ description, status, title }: FeedbackDialogProps) {
+  const iconSize = 80 // 80px = size-20 in Tailwind
+  
   return (
     <div className="flex flex-col gap-6 h-full w-full justify-center items-center py-28">
       <div className={cn(
-        status === 'error' ? 'size-16' : 'size-14'
+        status === 'error' ? 'size-20' : 'size-20'
       )}>
-        {status === 'success' && <SuccessIcon />}
-        {status === 'error' && <FailedIcon className="w-full h-full" />}
-        {status === 'loading' && <RefreshCw04Icon className="animate-spin w-full h-full text-foreground" />}
-        {status === 'warning' && <WarningIcon />}
+        {status === 'success' && <SuccessIcon width={iconSize} height={iconSize} className="w-full h-full" />}
+        {status === 'error' && <FailedIcon width={iconSize} height={iconSize} className="w-full h-full" />}
+        {status === 'loading' && <RefreshCw04Icon width={iconSize} height={iconSize} className="animate-spin w-full h-full text-foreground" />}
+        {status === 'warning' && <WarningIcon width={iconSize} height={iconSize} className="w-full h-full" />}
       </div>
       <div className="flex flex-col gap-3 items-center">
         <h3 className="text-lg font-medium text-foreground">{title}</h3>
