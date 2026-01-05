@@ -218,6 +218,12 @@
     }
 }
 
+/* Remove focus outline for mouse clicks, but preserve for keyboard navigation */
+/* This improves UX while maintaining accessibility */
+.haiku-widget-theme-container *:focus:not(:focus-visible) {
+    outline: none;
+}
+
 /* SVG sizing consistency - ensure SVGs respect Tailwind size classes */
 /* These rules have high specificity to override host page CSS */
 .haiku-widget-theme-container svg {
