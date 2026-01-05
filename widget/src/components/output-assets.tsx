@@ -219,7 +219,7 @@ export function OutputAssets({ isShowMinDebt, onSelectTokens }: OutputAssetsProp
           >
             <Accordion.Item value="item-1">
               <Accordion.Header>
-                <Accordion.Trigger className="w-full">
+                <Accordion.Trigger className="w-full focus:outline-none">
                   <div className="flex mt-3 w-full justify-between">
                     <span className=" text-14px-medium text-foreground">Minimum received</span>
                     <div className="flex items-center gap-[5px]">

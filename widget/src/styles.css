@@ -218,10 +218,15 @@
     }
 }
 
-/* Remove focus outline for mouse clicks, but preserve for keyboard navigation */
-/* This improves UX while maintaining accessibility */
-.haiku-widget-theme-container *:focus:not(:focus-visible) {
-    outline: none;
+/* Force feedback dialog icons to fill their container */
+/* Override fixed width/height attributes on SVGs */
+.haiku-widget-theme-container [class*="size-20"] svg,
+.haiku-widget-theme-container [class*="size-20"] svg[width],
+.haiku-widget-theme-container [class*="size-20"] svg[height] {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
 }
 
 /* SVG sizing consistency - ensure SVGs respect Tailwind size classes */

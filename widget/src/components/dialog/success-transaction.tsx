@@ -46,7 +46,9 @@ const SuccessTransaction = ({
   const isOpen = openItem === 'item-1'
   return (
     <div className="flex w-full flex-col gap-2 items-center rounded-2xl pt-4">
-      <SuccessIcon />
+      <div className="size-20 flex items-center justify-center">
+        <SuccessIcon className="w-full h-full" style={{ width: '100%', height: '100%' }} />
+      </div>
       <div className="flex flex-col items-center gap-2 py-4">
         <span className="text-lg text-foreground">Transaction successful</span>
       </div>
