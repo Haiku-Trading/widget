@@ -41,12 +41,14 @@ export function MobileProtocolSelect({ value, onValueChange, chain, isSimpleMode
       : filterByChainProtocol
 
   // Filter out hidden protocols from config
-  const filterByHiddenProtocols = filterByEnvironment.filter((protocol) => {
-    if (widgetConfig.hiddenProtocols?.includes(protocol.symbol)) {
-      return false
-    }
-    return true
-  })
+  const filterByHiddenProtocols = filterByEnvironment
+    .filter((protocol) => {
+      if (widgetConfig.hiddenProtocols?.includes(protocol.symbol)) {
+        return false
+      }
+      return true
+    })
+    .sort((a, b) => a.name.localeCompare(b.name))
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

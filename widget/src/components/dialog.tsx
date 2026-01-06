@@ -244,7 +244,7 @@ export const Header = forwardRef<HeaderElement, HeaderProps>((props, ref) => {
       {/* TODO: add icon button */}
       <CloseWrapper asChild>
         <IconButton variant="outline" size="sm">
-          <CloseIcon />
+          <CloseIcon size={14} />
         </IconButton>
       </CloseWrapper>
     </div>

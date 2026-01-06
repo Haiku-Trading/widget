@@ -11,7 +11,7 @@ export default function CustomSlider({ onChange, value = 0 }: ICustomSlider) {
 
   return (
     <div className="w-full flex justify-between items-center gap-2 max-w-md mx-auto">
-      <div className="relative w-10/12">
+      <div className="relative w-10/12 h-5">
         <Slider.Root
           className="relative flex items-center select-none touch-none w-full h-5"
           value={[value]}
@@ -31,8 +31,8 @@ export default function CustomSlider({ onChange, value = 0 }: ICustomSlider) {
           />
         </Slider.Root>
 
-        {/* Position dots */}
-        <div className="absolute top-1/2 left-0 w-full -translate-y-1/2 pointer-events-none z-10">
+        {/* Position dots - aligned to center of track (h-2 = 8px, centered in h-5 = 20px container) */}
+        <div className="absolute top-1/2 left-0 w-full pointer-events-none z-10" style={{ transform: 'translateY(-50%)' }}>
           {dotPositions.map((position) => {
             const isActive = position <= value
             const isNearThumb = Math.abs(position - value) < 3
@@ -41,14 +41,18 @@ export default function CustomSlider({ onChange, value = 0 }: ICustomSlider) {
             return (
               <div
                 key={position}
-                className={`absolute w-2 h-2 rounded-full -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${
+                className={`absolute w-2 h-2 rounded-full transition-all duration-200 ${
                   isActive
                     ? 'bg-orange-500 opacity-100'
                     : shouldShow
                       ? 'bg-gray-500 opacity-100'
                       : 'opacity-0'
                 }`}
-                style={{ left: `${position}%`, top: '50%' }}
+                style={{ 
+                  left: `${position}%`, 
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)'
+                }}
               />
             )
           })}

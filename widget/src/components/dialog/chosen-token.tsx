@@ -33,6 +33,7 @@ import {
   APIVarDebtToken,
   APIVaultToken,
   APIWeightedLiquidityToken,
+  APIConcentratedLiquidityToken,
 } from '../../services/get-tokens'
 import { cn } from '../../utils'
 import { getChainIcon } from '../../utils/chain-utils'
@@ -48,7 +49,10 @@ import { Tooltip } from '../tooltip/tooltip'
 
 import millify from 'millify'
 import { TokenType } from '../../enums/token-type'
-import { enrichWeightedTokensWithLogos } from '../../utils/common'
+import { enrichWeightedTokensWithLogos, enrichConcentratedTokensWithLogos } from '../../utils/common'
+import { calcConcentratedBalances } from '../../utils/concentratedPool'
+import UniswapV3 from '../uniswapV3/components/uniswap-v3'
+import { formatWithZeroCountSubscript } from '../../utils/numberFormatting'
 import { formatTokenAmount } from '../../utils/numberFormatting'
 import { CloseIcon, MagniferIcon } from '../icons'
 import { ChainSelect } from '../selector/chain-select'
@@ -115,6 +119,19 @@ const ImageGroup = (props: ImageGroupProps) => {
         YEI: 'Yei',
         DRAGONSWAP_V2: 'Dragonswap V2',
         HYPERSWAP_V2: 'Hyperswap V2',
+        UNISWAP_V3: 'Uniswap V3',
+        HYPERSTABLE: 'Hyperstable',
+        BEND: 'Bend',
+        FLUID: 'Fluid',
+        QUICKSWAP_V3: 'Quickswap V3',
+        YEARN_FINANCE: 'Yearn Finance',
+        HYBRA_V2: 'Hybra V2',
+        HYBRA_V3: 'Hybra V3',
+        HYPERSWAP_V3: 'Hyperswap V3',
+        KINETIQ: 'Kinetiq',
+        LAMINAR_V3: 'Laminar V3',
+        PROJECTX_V3: 'ProjectX V3',
+        STAKED_HYPE: 'Staked Hype',
       }[protocol.symbol]
 
       names.unshift(protocolName)
@@ -235,13 +252,13 @@ const ImageBranch = (props: ImageBranchProps) => {
     >
       {isChainIcon ? (
         getChainIcon(branch.symbol, 'w-full h-full', 20) || (
-          <div className="w-full h-full flex items-center justify-center text-[8px]">
+          <div className="w-full h-full flex items-center justify-center text-[8px] text-foreground">
             {getInitials(branch.symbol)}
           </div>
         )
       ) : (
         getProtocolIcon(branch.symbol, 'w-full h-full', 20) || (
-          <div className="w-full h-full flex items-center justify-center text-[8px]">
+          <div className="w-full h-full flex items-center justify-center text-[8px] text-foreground">
             {getInitials(branch.symbol)}
           </div>
         )
@@ -267,6 +284,8 @@ type FilterTokensProps = {
   varDebtTokens: APIVarDebtToken[]
   weightedLiquidityTokens: APIWeightedLiquidityToken[]
   vaultTokens: APIVaultToken[]
+  concentratedLiquidityTokens: APIConcentratedLiquidityToken[]
+  type: 'input' | 'output'
 }
 
 type ChosenTokenDialogContentProps = {
@@ -316,6 +335,8 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   const [selectedTokens, setSelectedTokens] = useState<APIToken[]>([])
   const [activeTooltipId, setActiveTooltipId] = useState<string | null>(null)
   const [filter, selectFilter] = useState<FilterType>({ sort: 'default', order: 'descending' })
+  const [openCLId, setOpenCLId] = useState<string | null>(null)
+  const [clTokenTickRange, setClTokenTickRange] = useState<{ lower: string; upper: string } | null>(null)
 
   const tokens = useMemo(
     () => getTokensQuery?.data?.tokenList.tokens || [],
@@ -341,10 +362,34 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       ),
     [getTokensQuery?.data?.tokenList.weightedLiquidityTokens, tokens],
   )
+  const concentratedLiquidityTokens = useMemo(
+    () =>
+      enrichConcentratedTokensWithLogos(
+        getTokensQuery?.data?.tokenList.concentratedLiquidityTokens || [],
+        tokens as any,
+      ),
+    [getTokensQuery?.data?.tokenList.concentratedLiquidityTokens, tokens],
+  )
+
+  const allTokens = useMemo(() => {
+    return [
+      ...(tokens || []),
+      ...(collateralTokens || []),
+      ...(varDebtTokens || []),
+      ...(vaultTokens || []),
+      ...weightedLiquidityTokens,
+      ...(concentratedLiquidityTokens || []),
+    ]
+  }, [tokens, collateralTokens, varDebtTokens, vaultTokens, weightedLiquidityTokens, concentratedLiquidityTokens])
 
   const balances = useMemo(() => {
     if (!tokenBalancesQuery.data) return {} as Record<string, number>
     return (tokenBalancesQuery.data as any).wallet_positions || {}
+  }, [tokenBalancesQuery.data])
+
+  const concentratedBalances = useMemo(() => {
+    if (!tokenBalancesQuery.data) return {} as Record<string, Record<string, string>>
+    return (tokenBalancesQuery.data as any).categorised_wallet_positions?.concentrated_liquidity_positions || {}
   }, [tokenBalancesQuery.data])
 
   const filterTokens = ({
@@ -355,6 +400,8 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     varDebtTokens,
     vaultTokens,
     weightedLiquidityTokens,
+    concentratedLiquidityTokens,
+    type,
   }: FilterTokensProps) => {
     function removeSelectedTokens(token: { iid: string }) {
       return !allTokensSelected.some((tokenSelected) => tokenSelected.iid === token.iid)
@@ -401,6 +448,56 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
         })
     }
 
+    const addBalanceToConcentratedTokens = (tokens: APIConcentratedLiquidityToken[]) => {
+      return tokens
+        .filter(removeHiddenChainsAndProtocols)
+        .map((token) => {
+          // Parse tick range from iid if present (format: "baseIid::lowerTick:upperTick")
+          const [iid, tickSpace] = token.iid.split('::')
+          if (tickSpace && concentratedBalances[iid]) {
+            const [tickLower, tickUpper] = tickSpace.split(':')
+            // Find matching balance in nested structure
+            for (const key in concentratedBalances[iid]) {
+              const [, , lowerTick, upperTick] = key.split(':')
+              if (tickLower === lowerTick && tickUpper === upperTick) {
+                const balanceValue = concentratedBalances[iid][key].split(':')
+                return {
+                  ...token,
+                  balance: balanceValue[1] || '0', // balanceUSD
+                  balanceRaw: balanceValue[0] || '0', // raw balance
+                }
+              }
+            }
+          }
+          return { ...token, balance: '0', balanceRaw: '0' }
+        })
+    }
+
+    // Create separate token entries for each tick range when type === 'input'
+    const concentratedLPBalanceTokens: any[] = []
+    if (concentratedBalances && type === 'input') {
+      Object.keys(concentratedBalances).forEach((iidKey) => {
+        const concentratedToken = concentratedLiquidityTokens.find((token) => token.iid === iidKey)
+        if (concentratedToken) {
+          Object.keys(concentratedBalances[iidKey]).forEach((key) => {
+            const [, , tickLower, tickUpper] = key.split(':')
+            concentratedLPBalanceTokens.push({
+              ...concentratedToken,
+              name: `${concentratedToken.name} / ${tickLower} / ${tickUpper}`,
+              symbol: `${concentratedToken.symbol} / ${tickLower} / ${tickUpper}`,
+              iid: `${iidKey}::${tickLower}:${tickUpper}`,
+              balanceRaw: concentratedBalances[iidKey][key].split(':')[0],
+            })
+          })
+        }
+      })
+    }
+
+    // For output type, add all concentrated liquidity tokens
+    if (type === 'output') {
+      concentratedLPBalanceTokens.push(...concentratedLiquidityTokens)
+    }
+
     const filteredTokens = (() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let tokensWithBalance: any[] = []
@@ -415,6 +512,8 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .concat(weightedLiquidityTokens as any),
         )
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        tokensWithBalance = tokensWithBalance.concat(addBalanceToConcentratedTokens(concentratedLPBalanceTokens as any))
       } else {
         // Combine tokens from all selected categories
         if (selectedCategories.includes('token')) {
@@ -435,6 +534,16 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
         if (selectedCategories.includes('vault')) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           tokensWithBalance = tokensWithBalance.concat(addBalanceToTokens(vaultTokens as any))
+        }
+        if (selectedCategories.includes('concentratedLiquidity')) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          tokensWithBalance = tokensWithBalance.concat(
+            addBalanceToConcentratedTokens(
+              concentratedLPBalanceTokens.filter(
+                (token) => token.tokenCategory?.toString() === 'concentratedLiquidity',
+              ) as any,
+            ),
+          )
         }
         if (selectedCategories.includes('varDebt')) {
           tokensWithBalance = tokensWithBalance.concat(
@@ -778,6 +887,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       varDebtTokens: varDebtTokens.length,
       vaultTokens: vaultTokens.length,
       weightedLiquidityTokens: weightedLiquidityTokens.length,
+      concentratedLiquidityTokens: concentratedLiquidityTokens.length,
       search,
       selectedCategories,
       allTokensSelected: allTokensSelected.length,
@@ -785,6 +895,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       protocolValue,
       filter,
       balances: Object.keys(balances).length,
+      concentratedBalances: Object.keys(concentratedBalances).length,
       hiddenChains: widgetConfig.hiddenChains,
       hiddenProtocols: widgetConfig.hiddenProtocols,
     })
@@ -794,6 +905,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     varDebtTokens,
     vaultTokens,
     weightedLiquidityTokens,
+    concentratedLiquidityTokens,
     search,
     selectedCategories,
     allTokensSelected,
@@ -801,6 +913,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     protocolValue,
     filter,
     balances,
+    concentratedBalances,
     widgetConfig.hiddenChains,
     widgetConfig.hiddenProtocols,
   ])
@@ -825,6 +938,8 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       selectedCategories,
       vaultTokens,
       weightedLiquidityTokens,
+      concentratedLiquidityTokens,
+      type,
     })
 
     // Cache the results
@@ -832,7 +947,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     lastDepsRef.current = depsString
 
     return newTokens
-  }, [isOpen, depsString, tokens, collateralTokens, varDebtTokens, search, selectedCategories, vaultTokens, weightedLiquidityTokens])
+  }, [isOpen, depsString, tokens, collateralTokens, varDebtTokens, search, selectedCategories, vaultTokens, weightedLiquidityTokens, concentratedLiquidityTokens, filterTokens])
 
   const matches = useMemo(() => {
     return filteredTokens
@@ -949,23 +1064,44 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   }, [isSimpleMode, myTokens, matches, unifiedTokens])
 
   return (
-    <Dialog.Content
-      // className={`w-full ${!isShortScreen ? 'h-full' : ''} max-h-[730px] md:h-auto`}
-      className={cn(
-        'w-full md:max-h-[730px] md:h-auto',
-        isSimpleMode && 'md:max-w-[500px] md:w-[500px]'
-      )}
-      onOpenAutoFocus={(event) => event.preventDefault()}
-      overlayClassName={'w-full h-full'}
-      onInteractOutside={(event) => {
-        // Prevent closing when clicking on the side panel (chain/protocol selectors)
-        if (!isSimpleMode) {
-          const target = event.target as Element
-          if (target.closest('[data-side-panel]')) {
+    <>
+      <Dialog.Content
+        // className={`w-full ${!isShortScreen ? 'h-full' : ''} max-h-[730px] md:h-auto`}
+        className={cn(
+          'w-full md:max-h-[730px] md:h-auto',
+          isSimpleMode && 'md:max-w-[500px] md:w-[500px]',
+          openCLId && 'hidden pointer-events-none',
+        )}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        overlayClassName={'w-full h-full'}
+        onInteractOutside={(event) => {
+          // If UniswapV3 dialog is open, prevent closing the main dialog
+          if (openCLId) {
             event.preventDefault()
+            return
           }
-        }
-      }}
+          // Prevent closing when clicking on the side panel (chain/protocol selectors)
+          if (!isSimpleMode) {
+            const target = event.target as Element
+            if (target.closest('[data-side-panel]')) {
+              event.preventDefault()
+            }
+          }
+        }}
+        onPointerDownOutside={(event) => {
+          // If UniswapV3 dialog is open, prevent closing the main dialog
+          if (openCLId) {
+            event.preventDefault()
+            return
+          }
+          // Prevent closing when clicking on the side panel
+          if (!isSimpleMode) {
+            const target = event.target as Element
+            if (target.closest('[data-side-panel]')) {
+              event.preventDefault()
+            }
+          }
+        }}
       sideElement={
         !isSimpleMode ? (
           <div
@@ -1171,7 +1307,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                       >
                         <ImageGroup images={images} branches={branches} />
                         <div className="size-5 rounded-full bg-state-error-default flex items-center justify-center absolute top-0.5 -left-1.5 text-white p-1">
-                          <CloseIcon className="w-3 h-3" />
+                          <CloseIcon className="w-3 h-3" width={12} height={12} />
                         </div>
                       </button>
                     )
@@ -1236,8 +1372,12 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                           }
                           activeTooltipId={activeTooltipId}
                           setActiveTooltipId={setActiveTooltipId}
-                          onSelect={() => toggleSelectedToken(token)}
+                          onSelect={(selectedToken) => toggleSelectedToken(selectedToken)}
                           isFirstCard={isFirstCard}
+                          allTokens={allTokens}
+                          openCLId={openCLId}
+                          setOpenCLId={setOpenCLId}
+                          type={type}
                         />
                       </div>
                     )
@@ -1276,6 +1416,78 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
         </Dialog.Body>
       </div>
     </Dialog.Content>
+    
+    {/* Concentrated Liquidity Modal - replaces main dialog when open */}
+    {openCLId && (() => {
+      // Find the base CL token (without tick range)
+      const baseIid = openCLId.split('::')[0]
+      const clToken = allTokens.find((token) => {
+        if (token.tokenCategory === 'concentratedLiquidity') {
+          const [iid] = token.iid.split('::')
+          return iid === baseIid
+        }
+        return false
+      })
+      if (!clToken || clToken.type !== TokenType.ConcentratedLiquidity) return null
+      
+      return (
+        <Dialog.Root
+          open={!!openCLId}
+          onOpenChange={(open) => {
+            if (!open) {
+              setOpenCLId(null)
+              setClTokenTickRange(null)
+            }
+          }}
+          nested
+        >
+          <Dialog.Content
+            className="w-full max-w-full md:max-w-[700px] max-h-[95vh] overflow-hidden flex flex-col"
+            onPointerDownOutside={() => {
+              // Close nested dialog when clicking outside
+              setOpenCLId(null)
+              setClTokenTickRange(null)
+            }}
+            onInteractOutside={() => {
+              // Close nested dialog when interacting outside
+              setOpenCLId(null)
+              setClTokenTickRange(null)
+            }}
+          >
+            <Dialog.Body className="px-0 flex-1 overflow-y-auto">
+              <UniswapV3
+                onSelect={() => {
+                  // Create the token with the selected tick range
+                  if (clToken) {
+                    const [baseIid] = clToken.iid.split('::')
+                    // Use the stored tick range, or fall back to full range if not set
+                    const tickRange = clTokenTickRange || { lower: '-887272', upper: '887272' }
+                    const tokenWithRange = {
+                      ...clToken,
+                      iid: `${baseIid}::${tickRange.lower}:${tickRange.upper}`,
+                    } as APIToken
+                    toggleSelectedToken(tokenWithRange)
+                  }
+                  setOpenCLId(null)
+                  setClTokenTickRange(null)
+                }}
+                tokenInfo={clToken as any}
+                allTokens={allTokens as APIToken[]}
+                onSetTickRange={(range) => {
+                  // Store the tick range for when the user clicks "Add"
+                  setClTokenTickRange(range)
+                }}
+                onCancel={() => {
+                  setOpenCLId(null)
+                  setClTokenTickRange(null)
+                }}
+              />
+            </Dialog.Body>
+          </Dialog.Content>
+        </Dialog.Root>
+      )
+    })()}
+    </>
   )
 }
 
@@ -1317,10 +1529,14 @@ type TokenCardProps = {
   token: APIToken
   disabled?: boolean
   selected: boolean
-  onSelect: () => void
+  onSelect: (token: APIToken) => void
   activeTooltipId: string | null
   setActiveTooltipId: (id: string | null) => void
   isFirstCard: boolean
+  allTokens?: any[]
+  openCLId?: string | null
+  setOpenCLId?: (id: string | null) => void
+  type?: 'input' | 'output'
 }
 
 export const TokenCard = memo(function TokenCard({
@@ -1329,12 +1545,52 @@ export const TokenCard = memo(function TokenCard({
   disabled = false,
   onSelect,
   isFirstCard,
+  allTokens,
+  openCLId,
+  setOpenCLId,
+  type,
   // setActiveTooltipId,
   // activeTooltipId,
 }: TokenCardProps) {
-  // const [isHoveringContent, setIsHoveringContent] = useState(false)
-  const tokenBalanceQuery = useTokenBalanceQuery(token.iid)
-  const balance = tokenBalanceQuery.data || 0
+  const [tickRange, setTickRange] = useState<{ lower: string; upper: string } | undefined>(undefined)
+  const [selectedToken, setSelectedToken] = useState<APIToken>(token)
+  const isOpenUniswapV3 = openCLId === token.iid
+  const isConcentratedLiquidity = token.type === TokenType.ConcentratedLiquidity
+
+  // Parse iid to extract baseIid and tick range for CLAMM tokens
+  let tokenIid = ''
+  let lowerTick: string | undefined
+  let upperTick: string | undefined
+
+  if (token.tokenCategory === 'concentratedLiquidity') {
+    const [iid, tickSpace] = token.iid.split('::')
+    tokenIid = iid
+    if (tickSpace) {
+      const tickParts = tickSpace.split(':')
+      if (tickParts.length === 2) {
+        lowerTick = tickParts[0]
+        upperTick = tickParts[1]
+      }
+    }
+  } else {
+    tokenIid = token.iid
+  }
+
+  const tokenBalanceQuery = useTokenBalanceQuery(tokenIid)
+  
+  // For CLAMM tokens, calculate balance using calcConcentratedBalances
+  const balance = token.tokenCategory === 'concentratedLiquidity'
+    ? calcConcentratedBalances((tokenBalanceQuery.data ?? {}) as any, lowerTick, upperTick)
+    : tokenBalanceQuery.data || 0
+
+  useEffect(() => {
+    if (token.tokenCategory === 'concentratedLiquidity' && tickRange && !lowerTick && !upperTick) {
+      setSelectedToken({
+        ...token,
+        iid: `${tokenIid}::${tickRange.lower}:${tickRange.upper}`,
+      })
+    }
+  }, [lowerTick, tickRange, token, tokenIid, upperTick])
 
   // const result = Math.max(5 - balance.toString().length, 2)
 
@@ -1401,6 +1657,8 @@ export const TokenCard = memo(function TokenCard({
         return 'Pool'
       } else if (token.type === TokenType.Vault) {
         return 'Vault'
+      } else if (token.type === TokenType.ConcentratedLiquidity) {
+        return 'CLAMM'
       } else if (token.type === TokenType.Collateral || token.type === TokenType.VarDebt) {
         return 'Lending'
       } else {
@@ -1411,23 +1669,37 @@ export const TokenCard = memo(function TokenCard({
     }
   }, [token])
 
-  return (
-    <HoverCard.Root>
-      <HoverCard.Trigger className="w-full">
-        <Card variant="primary" asChild className="p-2 w-full h-full">
-          <button
-            style={{ height: isFirstCard ? '70px' : '100%' }}
-            disabled={disabled}
-            className={cn(
-              'flex items-center border-0 justify-between h-full group transition-all duration-150',
-              'ring-1 ring-inset ring-transparent',
-              selected
-                ? 'bg-state-highlight-light/10 ring-1 ring-inset ring-state-highlight-light'
-                : 'hover:bg-section',
-              { grayscale: disabled },
-            )}
-            onClick={onSelect}
-          >
+  // Check if this is a CL token with a tick range already selected
+  const hasTickRange = isConcentratedLiquidity && token.iid.match(/^[a-z0-9]+:0x[a-fA-F0-9]{40}::\-?\d+:\-?\d+$/)
+
+  const tokenCardButton = (
+    <Card variant="secondary" asChild className="p-2 w-full h-full">
+      <button
+        style={{ height: isFirstCard ? '70px' : '100%' }}
+        disabled={disabled}
+        className={cn(
+          'flex items-center border-0 justify-between h-full group transition-all duration-150',
+          'ring-1 ring-inset ring-transparent',
+          selected
+            ? 'bg-state-highlight-light/10 ring-1 ring-inset ring-state-highlight-light'
+            : 'hover:bg-section',
+          { grayscale: disabled },
+        )}
+        onClick={(e) => {
+          if (
+            isConcentratedLiquidity &&
+            type === 'output' &&
+            !hasTickRange
+          ) {
+            e.preventDefault()
+            e.stopPropagation()
+            setOpenCLId?.(token.iid)
+            return
+          } else {
+            onSelect(selectedToken)
+          }
+        }}
+      >
             <div className="w-full flex flex-col">
               <div className="flex items-center justify-between">
                 <div className="h-full flex items-center gap-[13px]">
@@ -1440,11 +1712,23 @@ export const TokenCard = memo(function TokenCard({
                       {token.name || token.symbol}
                     </p>
                     <div className="flex gap-1 items-center">
-                      {Number(balance) > 0 && (
-                        <p className="text-xs opacity-55 text-grey-secondary">
-                          {formatTokenAmount(Number(balance), Number(token.priceUSD) || 0)}
-                        </p>
-                      )}
+                      {token.tokenCategory !== 'concentratedLiquidity'
+                        ? Number(balance) > 0 && (
+                            <p className="text-xs opacity-55 text-grey-secondary">
+                              {formatTokenAmount(Number(balance), Number(token.priceUSD) || 0)}
+                            </p>
+                          )
+                        : Number((balance as any).balanceUSD ?? 0) > 0 && (
+                            <p className="text-xs opacity-55 text-grey-secondary">
+                              $
+                              {Number((balance as any).balanceUSD ?? 0) < 1
+                                ? formatWithZeroCountSubscript(
+                                    Number((balance as any).balanceUSD ?? 0),
+                                    18,
+                                  )
+                                : millify(Number((balance as any).balanceUSD ?? 0))}
+                            </p>
+                          )}
                       <p
                         title={token.symbol}
                         className="text-left text-xs opacity-55 truncate max-w-[77px] text-grey-secondary"
@@ -1464,19 +1748,26 @@ export const TokenCard = memo(function TokenCard({
                 </div>
                 <div className="w-max flex flex-col items-end gap-0.5">
                   <p className="text-16px-medium text-grey-primary">
-                    {balance !== 0
-                      ? new Intl.NumberFormat('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
-                        }).format(
-                          BigNumber(balance)
-                            .multipliedBy(token.priceUSD ?? 0)
-                            .toNumber(),
-                        )
-                      : token.type !== TokenType.Token
-                        ? `$${token?.metadata?.tvl && Number(token?.metadata?.tvl) > 1 ? millify(Number(token?.metadata?.tvl)) : '0.00'} ` +
-                          'TVL'
-                        : '$0.00'}
+                    {token.tokenCategory !== 'concentratedLiquidity'
+                      ? Number(balance ?? 0) !== Number(0)
+                        ? new Intl.NumberFormat('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                          }).format(
+                            BigNumber(typeof balance === 'object' ? '0' : balance)
+                              .multipliedBy(token.priceUSD ?? 0)
+                              .toNumber(),
+                          )
+                        : token.type !== TokenType.Token
+                          ? `$${token?.metadata?.tvl && Number(token?.metadata?.tvl) > 1 ? millify(Number(token?.metadata?.tvl)) : '0.00'} ` +
+                            'TVL'
+                          : '$0.00'
+                      : Number((balance as any).balanceUSD ?? 0) !== Number(0)
+                        ? `$${Number((balance as any).balanceUSD).toFixed(2)}`
+                        : token.type !== TokenType.Token
+                          ? `$${token?.metadata?.tvl && Number(token?.metadata?.tvl) > 1 ? millify(Number(token?.metadata?.tvl)) : '0.00'} ` +
+                            'TVL'
+                          : '$0.00'}
                   </p>
                   {/* <p className="text-16px-medium text-grey-primary">
                     {formatWithZeroCountSubscript(format.format(Number(balance)), 8)}
@@ -1521,20 +1812,65 @@ export const TokenCard = memo(function TokenCard({
             </div>
           </button>
         </Card>
-      </HoverCard.Trigger>
-
-      <HoverCardWithTheme>
-        <HoverCard.Content side={'right'} align="start" sideOffset={0} className="z-50">
-          <TaggingMetadataContent
-            value={token.name}
-            images={images}
-            branches={branches}
-            type={tokenType}
-            metadata={token || '{}'}
-          />
-          <HoverCard.Arrow className="fill-section h-[6px] w-3" />
-        </HoverCard.Content>
-      </HoverCardWithTheme>
-    </HoverCard.Root>
   )
+
+  // For CL tokens without tick range, the modal is handled at the parent level
+  // For CL tokens with tick range, show the token card directly
+  if (isConcentratedLiquidity && hasTickRange) {
+    return (
+      <HoverCard.Root>
+        <HoverCard.Trigger className="w-full">
+          {tokenCardButton}
+        </HoverCard.Trigger>
+        <HoverCardWithTheme>
+          <HoverCard.Content
+            side={'right'}
+            align="start"
+            sideOffset={0}
+            className="z-50"
+          >
+            <TaggingMetadataContent
+              value={token.name}
+              images={images}
+              branches={branches}
+              type={tokenType === 'CLAMM' || tokenType === 'Pool' ? 'Pool' : tokenType}
+              metadata={token || '{}'}
+            />
+            <HoverCard.Arrow className="fill-section h-[6px] w-3" />
+          </HoverCard.Content>
+        </HoverCardWithTheme>
+      </HoverCard.Root>
+    )
+  }
+
+  // For non-CL tokens, show with hover card
+  if (!isConcentratedLiquidity) {
+    return (
+      <HoverCard.Root>
+        <HoverCard.Trigger className="w-full">
+          {tokenCardButton}
+        </HoverCard.Trigger>
+        <HoverCardWithTheme>
+          <HoverCard.Content
+            side={'right'}
+            align="start"
+            sideOffset={0}
+            className="z-50"
+          >
+            <TaggingMetadataContent
+              value={token.name}
+              images={images}
+              branches={branches}
+              type={tokenType === 'CLAMM' ? 'Pool' : tokenType}
+              metadata={token || '{}'}
+            />
+            <HoverCard.Arrow className="fill-section h-[6px] w-3" />
+          </HoverCard.Content>
+        </HoverCardWithTheme>
+      </HoverCard.Root>
+    )
+  }
+
+  // For CL tokens without tick range, just show the button (modal is handled at parent level)
+  return <>{tokenCardButton}</>
 })

@@ -4,6 +4,7 @@ import {
   APIVarDebtToken,
   APIVaultToken,
   APIWeightedLiquidityToken,
+  APIConcentratedLiquidityToken,
 } from '../services/get-tokens'
 
 export interface TokenListData {
@@ -12,9 +13,10 @@ export interface TokenListData {
   varDebtTokens: APIVarDebtToken[]
   vaultTokens: APIVaultToken[]
   weightedLiquidityTokens: APIWeightedLiquidityToken[]
+  concentratedLiquidityTokens?: APIConcentratedLiquidityToken[]
 }
 
-export type AnyAPIToken = APIToken | APICollateralToken | APIVarDebtToken | APIVaultToken | APIWeightedLiquidityToken
+export type AnyAPIToken = APIToken | APICollateralToken | APIVarDebtToken | APIVaultToken | APIWeightedLiquidityToken | APIConcentratedLiquidityToken
 
 /**
  * Resolves an array of token iids to actual token objects from the token list data
@@ -44,6 +46,7 @@ export function resolveTokensFromIids(
     ...tokenData.varDebtTokens,
     ...tokenData.vaultTokens,
     ...tokenData.weightedLiquidityTokens,
+    ...(tokenData.concentratedLiquidityTokens || []),
   ]
 
   for (const iid of iids) {
@@ -99,6 +102,7 @@ export function resolveTokensFromMap(
     ...tokenData.varDebtTokens,
     ...tokenData.vaultTokens,
     ...tokenData.weightedLiquidityTokens,
+    ...(tokenData.concentratedLiquidityTokens || []),
   ]
 
   for (const [iid, amount] of Object.entries(tokenMap)) {

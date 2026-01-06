@@ -114,13 +114,15 @@ export const convertTokenListToMentionData = (
     }
 
     if (Object.values(protocolsConfig)) {
-        const searchProtocols = Object.values(protocolsConfig).filter(
-            (protocol) => protocol.name.toLowerCase().includes(queryString.toLowerCase()) || String(protocol.symbol).toLowerCase().includes(queryString.toLowerCase())
-        )
+        const searchProtocols = Object.values(protocolsConfig)
+            .filter(
+                (protocol) => protocol.name.toLowerCase().includes(queryString.toLowerCase()) || String(protocol.symbol).toLowerCase().includes(queryString.toLowerCase())
+            )
+            .sort((a, b) => a.name.localeCompare(b.name))
 
         matchSorter(searchProtocols, queryString, {
             keys: ['name', 'symbol'],
-            baseSort: (a, b) => a.index - b.index,
+            baseSort: (a, b) => a.item.name.localeCompare(b.item.name),
         }).forEach((protocol, index) => {
             items.push({
                 id: `${index}:protocol:${protocol.symbol}`,

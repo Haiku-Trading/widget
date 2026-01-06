@@ -8,6 +8,7 @@ import {
   Chain1329Icon, 
   Chain137Icon, 
   Chain146Icon, 
+  Chain143Icon,
   Chain33139Icon, 
   Chain42161Icon, 
   Chain43114Icon, 
@@ -18,7 +19,8 @@ import {
   Chain8453Icon, 
   Chain999Icon,
   Chain9745Icon,
-  Chain60808Icon
+  Chain60808Icon,
+  Chain1135Icon
 } from '../components/icons'
 
 /**
@@ -40,6 +42,7 @@ export const getChainIcon = (
     '100': Chain100Icon,
     '130': Chain130Icon,
     '137': Chain137Icon,
+    '143': Chain143Icon,
     '146': Chain146Icon,
     '42161': Chain42161Icon,
     '43114': Chain43114Icon,
@@ -53,6 +56,7 @@ export const getChainIcon = (
     '747474': Chain747474Icon,
     '9745': Chain9745Icon,
     '60808': Chain60808Icon,
+    '1135': Chain1135Icon,
   }
   
   const IconComponent = iconMap[chainId]

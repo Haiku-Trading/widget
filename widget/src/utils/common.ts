@@ -1,5 +1,5 @@
 import { APIToken } from '../services/get-tokens'
-import { APIWeightedLiquidityToken } from '../services/get-tokens'
+import { APIWeightedLiquidityToken, APIConcentratedLiquidityToken } from '../services/get-tokens'
 
 export const enrichWeightedTokensWithLogos = (
   weightedLiquidityTokens: APIWeightedLiquidityToken[],
@@ -20,5 +20,27 @@ export const enrichWeightedTokensWithLogos = (
 
     // return new object (non-mutating)
     return { ...w, imgSrc }
+  })
+}
+
+export const enrichConcentratedTokensWithLogos = (
+  concentratedLiquidityTokens: APIConcentratedLiquidityToken[],
+  tokens: APIToken[],
+) => {
+  // Map iid (lowercase) -> token object
+  const tokenByIid = new Map(tokens.map((t) => [String(t.iid).toLowerCase(), t]))
+
+  return concentratedLiquidityTokens.map((c) => {
+    const imgSrc = (c.underlying_iids || []).map((iid) => {
+      if (!iid) return null
+      const token = tokenByIid.get(String(iid).toLowerCase())
+      if (!token) return null
+
+      // Prefer common image fields if present
+      return token.logoURI || ''
+    })
+
+    // return new object (non-mutating)
+    return { ...c, imgSrc }
   })
 }

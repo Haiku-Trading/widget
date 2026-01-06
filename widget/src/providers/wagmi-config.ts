@@ -1,6 +1,6 @@
 import { defineChain } from 'viem'
 import { cookieStorage, createStorage, http } from 'wagmi'
-import { arbitrum, base, bsc, sonic, mainnet, polygon, optimism, unichain, avalanche, gnosis, scroll, apeChain, sei, worldchain, bob } from 'wagmi/chains'
+import { arbitrum, base, bsc, sonic, mainnet, polygon, optimism, unichain, avalanche, gnosis, scroll, apeChain, sei, worldchain, bob, lisk } from 'wagmi/chains'
 import { createConfig } from 'wagmi'
 
 // Custom chains for the widget
@@ -52,17 +52,42 @@ export const plasma = defineChain({
   },
 })
 
-// Function to get chains based on environment
+export const monad = defineChain({
+  id: 143,
+  name: 'Monad',
+  nativeCurrency: { name: 'Monad', symbol: 'MON', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://rpc1.monad.xyz'] },
+  },
+  blockExplorers: {
+    default: { name: 'Monad', url: 'https://monadvision.com/' },
+  },
+})
+
 const getChainsForEnvironment = () => {
-  const productionReadyChains = [arbitrum, base, berachain, bsc, sonic, mainnet, hyperevm, polygon, gnosis, scroll, apeChain, avalanche, worldchain, katana, sei, plasma, bob] as const
-  
-  // In production, only include these chains
-  if (process.env.VERCEL_ENV === 'production') {
-    return productionReadyChains
-  }
-  
-  // In development, include all chains
-  return [...productionReadyChains, optimism, unichain] as const
+  return [
+    arbitrum,
+    base,
+    berachain,
+    bsc,
+    sonic,
+    mainnet,
+    hyperevm,
+    polygon,
+    gnosis,
+    scroll,
+    apeChain,
+    avalanche,
+    worldchain,
+    katana,
+    sei,
+    plasma,
+    lisk,
+    bob,
+    monad,
+    optimism,
+    unichain,
+  ] as const
 }
 
 export const wagmiConfig = createConfig({
@@ -161,6 +186,16 @@ export const wagmiConfig = createConfig({
     [bob.id]: http(
       process.env.VERCEL_ENV === 'development'
         ? process.env.BOB_RPC
+        : undefined,
+    ),
+    [lisk.id]: http(
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.LISK_RPC
+        : undefined,
+    ),
+    [monad.id]: http(
+      process.env.VERCEL_ENV === 'development'
+        ? process.env.MONAD_RPC
         : undefined,
     ),
   },

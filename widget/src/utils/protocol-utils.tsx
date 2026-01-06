@@ -9,6 +9,7 @@ import {
   HypurrfiIcon,
   MorphoIcon,
   UniswapV2Icon,
+  UniswapV3Icon,
   YeiIcon,
   BeraborrowIcon,
   InfraredIcon,
@@ -18,7 +19,18 @@ import {
   HyperstableIcon,
   BerahubIcon,
   PendleIcon,
-  HyperswapV2Icon
+  HyperswapV2Icon,
+  BendIcon,
+  FluidIcon,
+  QuickswapV3Icon,
+  YearnFinanceIcon,
+  HybraV2Icon,
+  HybraV3Icon,
+  HyperswapV3Icon,
+  KinetiqIcon,
+  LaminarV3Icon,
+  ProjectXV3Icon,
+  StakedHypeIcon
 } from '../components/icons'
 
 /**
@@ -43,6 +55,7 @@ export const getProtocolIcon = (
     'HYPURRFI': HypurrfiIcon,
     'MORPHO': MorphoIcon,
     'UNISWAP_V2': UniswapV2Icon,
+    'UNISWAP_V3': UniswapV3Icon,
     'YEI': YeiIcon,
     'BERABORROW': BeraborrowIcon,
     'INFRARED': InfraredIcon,
@@ -53,6 +66,17 @@ export const getProtocolIcon = (
     'BERAHUB': BerahubIcon,
     'PENDLE': PendleIcon,
     'HYPERSWAP_V2': HyperswapV2Icon,
+    'BEND': BendIcon,
+    'FLUID': FluidIcon,
+    'QUICKSWAP_V3': QuickswapV3Icon,
+    'YEARN_FINANCE': YearnFinanceIcon,
+    'HYBRA_V2': HybraV2Icon,
+    'HYBRA_V3': HybraV3Icon,
+    'HYPERSWAP_V3': HyperswapV3Icon,
+    'KINETIQ': KinetiqIcon,
+    'LAMINAR_V3': LaminarV3Icon,
+    'PROJECTX_V3': ProjectXV3Icon,
+    'STAKED_HYPE': StakedHypeIcon,
   }
   
   const IconComponent = iconMap[protocolSymbol]

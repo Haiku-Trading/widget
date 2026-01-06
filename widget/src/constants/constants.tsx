@@ -1,6 +1,6 @@
 import { TokenType } from '../enums/token-type'
 
-export type TokenCategory = 'collateral' | 'varDebt' | 'token' | 'weightedLiquidity' | 'vault'
+export type TokenCategory = 'collateral' | 'varDebt' | 'token' | 'weightedLiquidity' | 'vault' | 'concentratedLiquidity'
 
 type TradeAlert = {
   id: TradeAlertId
@@ -13,6 +13,7 @@ export const categoriesNames: Record<string, string> = {
   varDebt: 'Debt',
   weightedLiquidity: 'Pool',
   vault: 'Vault',
+  concentratedLiquidity: 'CLAMM',
 }
 export const categoriesOrigNames: Record<string, string> = {
   token: 'Tokens',
@@ -20,6 +21,7 @@ export const categoriesOrigNames: Record<string, string> = {
   varDebt: 'Debts',
   weightedLiquidity: 'Pools',
   vault: 'Vaults',
+  concentratedLiquidity: 'CLAMM',
 }
 
 export const categoriesNamesByType: Record<TokenType, string> = {
@@ -28,6 +30,7 @@ export const categoriesNamesByType: Record<TokenType, string> = {
   [TokenType.VarDebt]: 'Debt',
   [TokenType.WeightedLiquidity]: 'Liquidity',
   [TokenType.Vault]: 'Vault',
+  [TokenType.ConcentratedLiquidity]: 'Concentrated',
 }
 
 export const categoriesTypesBadge: Record<TokenType, 'success' | 'failed' | 'info' | 'primary'> = {
@@ -36,6 +39,7 @@ export const categoriesTypesBadge: Record<TokenType, 'success' | 'failed' | 'inf
   [TokenType.VarDebt]: 'failed',
   [TokenType.WeightedLiquidity]: 'success',
   [TokenType.Vault]: 'success',
+  [TokenType.ConcentratedLiquidity]: 'primary',
 }
 
 export const tokenBadge: Record<TokenCategory, 'success' | 'failed' | 'info' | 'primary'> = {
@@ -44,6 +48,7 @@ export const tokenBadge: Record<TokenCategory, 'success' | 'failed' | 'info' | '
   token: 'info',
   weightedLiquidity: 'primary',
   vault: 'success',
+  concentratedLiquidity: 'primary',
 }
 
 export enum TradeAlertId {
@@ -93,7 +98,9 @@ export const mappingChainNameToChainId: Record<string, number> = {
   ape: 33139,
   worldchain: 480,
   plasma: 9745,
-  bob: 60808
+  bob: 60808,
+  lisk: 1135,
+  monad: 143
 }
 
 export const INVALIDATE_QUERIES_DELAY = 8000
@@ -238,6 +245,18 @@ export const chainsConfig: {
     slug: 'bob',
     dexScreenId: 'bob',
   },
+  1135: {
+    chainId: 1135,
+    network: 'Lisk',
+    slug: 'lisk',
+    dexScreenId: 'lisk',
+  },
+  143: {
+    chainId: 143,
+    network: 'Monad',
+    slug: 'monad',
+    dexScreenId: 'monad',
+  },
 }
 
 export enum Protocol {
@@ -259,6 +278,19 @@ export enum Protocol {
   Yei = "YEI",
   DragonswapV2 = 'DRAGONSWAP_V2',
   HyperswapV2 = 'HYPERSWAP_V2',
+  UniswapV3 = 'UNISWAP_V3',
+  Hyperstable = 'HYPERSTABLE',
+  Bend = 'BEND',
+  Fluid = 'FLUID',
+  QuickswapV3 = 'QUICKSWAP_V3',
+  YearnFinance = 'YEARN_FINANCE',
+  HybraV2 = 'HYBRA_V2',
+  HybraV3 = 'HYBRA_V3',
+  HyperswapV3 = 'HYPERSWAP_V3',
+  Kinetiq = 'KINETIQ',
+  LaminarV3 = 'LAMINAR_V3',
+  ProjectXV3 = 'PROJECTX_V3',
+  StakedHype = 'STAKED_HYPE',
 }
 
 export const protocolsConfig: {
@@ -375,6 +407,84 @@ export const protocolsConfig: {
     name: 'Hyperswap V2',
     symbol: 'HYPERSWAP_V2',
     url: 'https://app.hyperswap.xyz/',
+    supportedChains: [999],
+  },
+  [Protocol.UniswapV3]: {
+    name: 'Uniswap V3',
+    symbol: 'UNISWAP_V3',
+    url: 'https://app.uniswap.org/',
+    supportedChains: [42161, 8453, 1, 56, 130, 137, 10, 43114, 480],
+  },
+  [Protocol.Hyperstable]: {
+    name: 'Hyperstable',
+    symbol: 'HYPERSTABLE',
+    url: 'https://app.hyperstable.finance/',
+    supportedChains: [999],
+  },
+  [Protocol.Bend]: {
+    name: 'Bend',
+    symbol: 'BEND',
+    url: 'https://www.benddao.xyz/',
+    supportedChains: [1, 8453],
+  },
+  [Protocol.Fluid]: {
+    name: 'Fluid',
+    symbol: 'FLUID',
+    url: 'https://fluid.lending/',
+    supportedChains: [1, 8453, 42161],
+  },
+  [Protocol.QuickswapV3]: {
+    name: 'Quickswap V3',
+    symbol: 'QUICKSWAP_V3',
+    url: 'https://quickswap.exchange/',
+    supportedChains: [137],
+  },
+  [Protocol.YearnFinance]: {
+    name: 'Yearn Finance',
+    symbol: 'YEARN_FINANCE',
+    url: 'https://yearn.fi/',
+    supportedChains: [1, 42161, 8453, 10, 137],
+  },
+  [Protocol.HybraV2]: {
+    name: 'Hybra V2',
+    symbol: 'HYBRA_V2',
+    url: 'https://app.hybra.finance/',
+    supportedChains: [999],
+  },
+  [Protocol.HybraV3]: {
+    name: 'Hybra V3',
+    symbol: 'HYBRA_V3',
+    url: 'https://app.hybra.finance/',
+    supportedChains: [999],
+  },
+  [Protocol.HyperswapV3]: {
+    name: 'Hyperswap V3',
+    symbol: 'HYPERSWAP_V3',
+    url: 'https://app.hyperswap.xyz/',
+    supportedChains: [999],
+  },
+  [Protocol.Kinetiq]: {
+    name: 'Kinetiq',
+    symbol: 'KINETIQ',
+    url: 'https://app.kinetiq.finance/',
+    supportedChains: [999],
+  },
+  [Protocol.LaminarV3]: {
+    name: 'Laminar V3',
+    symbol: 'LAMINAR_V3',
+    url: 'https://app.laminar.finance/',
+    supportedChains: [999],
+  },
+  [Protocol.ProjectXV3]: {
+    name: 'ProjectX V3',
+    symbol: 'PROJECTX_V3',
+    url: 'https://app.projectx.finance/',
+    supportedChains: [999],
+  },
+  [Protocol.StakedHype]: {
+    name: 'Staked Hype',
+    symbol: 'STAKED_HYPE',
+    url: 'https://app.stakedhype.finance/',
     supportedChains: [999],
   },
 }
