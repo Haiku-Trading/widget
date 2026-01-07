@@ -390,7 +390,7 @@ export function ConfirmSwapContent({
         {(status === 'idle' || status === 'pending') && (
           <Button 
             onClick={onConfirm} 
-            className="flex-1 h-9 border" 
+            className="flex-1 h-9 border text-foreground" 
             style={{ borderColor: 'hsl(var(--button-text))' }}
             disabled={status === 'pending'}
           >
@@ -399,9 +399,9 @@ export function ConfirmSwapContent({
         )}
 
         {status === 'success' && !transactionQuery.data?.destinationTx?.protocolTxLink && (
-          <Button className="flex-1 h-9" disabled={transactionQuery.isFetching}>
+          <Button className="flex-1 h-9 text-foreground" disabled={transactionQuery.isFetching}>
             {transactionQuery.isFetching ? (
-              <Spinner className="h-5 w-5 bg-transparent" />
+              <Spinner className="h-5 w-5 bg-transparent text-foreground" />
             ) : (
               <a href={txURL} target="_blank" rel="noopener noreferrer">
                 View Transaction
