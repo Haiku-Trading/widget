@@ -236,7 +236,7 @@ export function TradeHeader({ tokenBalancesQuery }: TradeHeaderProps) {
             <PopoverContent
               align="end"
               sideOffset={8}
-              className="w-[206px] p-3"
+              className="w-[206px] p-3 z-[100]"
               onOpenAutoFocus={(event) => event.preventDefault()}
             >
               <div className="flex flex-col gap-2">
