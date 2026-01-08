@@ -290,7 +290,7 @@ export function ConfirmSwapContent({
                 '*:flex-1 *:rounded-full *:flex *:gap-1 *:items-center *:justify-center *:h-10 *:font-medium *:border *:border-transparent hover:*:border-border *:text-muted-foreground',
               )}
             >
-              <Tooltip content="Source Chain Transaction" className="text-sm p-2 rounded-lg">
+              <Tooltip content="Source Chain Transaction" className="text-sm p-2 rounded-lg text-foreground">
                 {transactionQuery.isFetching ? (
                   <Spinner />
                 ) : (
@@ -304,7 +304,7 @@ export function ConfirmSwapContent({
                 transactionQuery.data?.destinationTx?.chainId && (
                 <Tooltip
                   content={`${transactionQuery.data?.destinationTx?.status === 'REFUNDED' ? 'Refund Transaction' : 'Bridge Transaction'}`}
-                  className="text-sm p-2 rounded-lg"
+                  className="text-sm p-2 rounded-lg text-foreground"
                 >
                   {transactionQuery.isFetching ? (
                     <Spinner />
@@ -323,7 +323,7 @@ export function ConfirmSwapContent({
                 content={
                   transactionQuery.data?.destinationTx?.status === 'REFUNDED' ? 'Refund' : 'Bridge'
                 }
-                className="text-sm p-2 rounded-lg"
+                className="text-sm p-2 rounded-lg text-foreground"
               >
                 {transactionQuery.isFetching ? (
                   <Spinner />
@@ -368,7 +368,7 @@ export function ConfirmSwapContent({
                 <Dialog.Close asChild>
                   <Button 
                     onClick={onReset} 
-                    className="flex-1 h-9 border" 
+                    className="flex-1 h-9 border text-foreground" 
                     style={{ borderColor: 'hsl(var(--button-text))' }}
                   >
                     Try again
@@ -379,7 +379,7 @@ export function ConfirmSwapContent({
             return (
               <Button 
                 onClick={onReset} 
-                className="flex-1 h-9 border" 
+                className="flex-1 h-9 border text-foreground" 
                 style={{ borderColor: 'hsl(var(--button-text))' }}
               >
                 Try again
