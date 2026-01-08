@@ -1,6 +1,5 @@
 import * as common from '@mozaic-fi/intent-swapper-sdk-common'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { getWalletClient } from '@wagmi/core'
 import { providers } from 'ethers5'
 import { WalletClient } from 'viem'
 import { useAccount, useClient, useConfig, useSwitchChain } from 'wagmi'
@@ -8,6 +7,7 @@ import { INVALIDATE_QUERIES_DELAY } from '../constants/constants'
 import { useSessionStore } from '../providers/session'
 import { buildIntent, SolveIntentResponse } from '../services/solve-intent'
 import { useHttpClient } from '../providers/http-client'
+import { getWalletClientSafely, getWalletClientAfterSwitch } from '../utils/wagmi-utils'
 
 type FeedbackPayload = {
   operation?: string
@@ -107,10 +107,10 @@ export const useSwapMutation = (chainIdInput: number) => {
 
       if (response.destinationBridge) {
         const { unsignedTypeV4Digest, chainId: chainIdOutput } = response.destinationBridge
-        if (chainIdOutput !== account.chainId) {
-          await switchChainAsync({ chainId: chainIdOutput })
-        }
-        const walletClientOutput = await getWalletClient(config, { chainId: chainIdOutput })
+        // Use safe wallet client getter to avoid connector.getChainId() errors
+        const walletClientOutput = chainIdOutput !== account.chainId
+          ? await getWalletClientAfterSwitch(config, chainIdOutput, switchChainAsync, account.chainId)
+          : await getWalletClientSafely(config, chainIdOutput)
         const walletOutput = walletClientToSigner(walletClientOutput)
 
         try {
@@ -135,11 +135,10 @@ export const useSwapMutation = (chainIdInput: number) => {
         await switchChainAsync({ chainId })
       }
 
-      if (chainId !== account.chainId) {
-        await switchChainAsync({ chainId })
-      }
-
-      const walletClient = await getWalletClient(config, { chainId })
+      // Use safe wallet client getter to avoid connector.getChainId() errors
+      const walletClient = chainId !== account.chainId
+        ? await getWalletClientAfterSwitch(config, chainId, switchChainAsync, account.chainId)
+        : await getWalletClientSafely(config, chainId)
       const wallet = walletClientToSigner(walletClient)
 
       if (response.approvals.length > 0) {
