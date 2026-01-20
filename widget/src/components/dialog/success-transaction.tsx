@@ -1,6 +1,5 @@
 
-import { Avatar } from '../avatar'
-import { usdFormatter } from '../../utils'
+import { usdFormatter, getChainIcon, getProtocolIcon, cn } from '../../utils'
 import { formatTokenAmount } from '../../utils/numberFormatting'
 import { RiArrowDownSLine } from '@remixicon/react'
 import BigNumber from 'bignumber.js'
@@ -12,6 +11,8 @@ import { TransactionOverview } from '../transaction-overview'
 import { TokenType } from '../../enums/token-type'
 import { TransactionDataTypeResponse } from '../../queries/use-transaction-query'
 import { SuccessIcon } from '../icons'
+import { getInitials } from '../../utils/get-initials'
+import { Avatar as PrimitiveAvatar } from 'radix-ui'
 
 interface SuccessTransactionProps {
   filteredInputTokens: AnyAPIToken[]
@@ -30,6 +31,8 @@ type CardTokenProps = {
   symbol?: string
   chainId?: number
   type?: TokenType
+  network?: number
+  protocol?: string
 }
 
 const SuccessTransaction = ({
@@ -73,6 +76,8 @@ const SuccessTransaction = ({
               icon={'logoURI' in token ? token.logoURI || '' : ''}
               symbol={token.symbol}
               type={token.type}
+              network={token.network}
+              protocol={'protocol' in token ? token.protocol : undefined}
             />
           )
         })}
@@ -101,6 +106,8 @@ const SuccessTransaction = ({
                 ? TokenType[transactionData.refundAmount.type as keyof typeof TokenType] ?? TokenType.Token
                 : transactionData.refundAmount.type ?? TokenType.Token
             }
+            network={transactionData.refundAmount.chainId}
+            protocol={transactionData.destinationTx?.protocol}
           />
         ) : (
           outputTokens.map((token) => {
@@ -119,6 +126,8 @@ const SuccessTransaction = ({
                 symbol={token.symbol}
                 icon={'logoURI' in token ? token.logoURI || '' : ''}
                 type={token.type}
+                network={token.network}
+                protocol={'protocol' in token ? token.protocol : undefined}
               />
             )
           })
@@ -158,12 +167,46 @@ const SuccessTransaction = ({
 }
 
 const TokenInformation = (props: CardTokenProps) => {
-  const { amountToken, amountUSD, icon, color, symbol, type } = props
+  const { amountToken, amountUSD, icon, color, symbol, type, network, protocol } = props
+
+  // Build branches array for chain and protocol badges
+  const branches: Array<{ symbol: string; src?: string; color?: string }> = []
+  if (network !== undefined) {
+    branches.push({ symbol: network.toString() })
+  }
+  if (protocol) {
+    branches.push({ symbol: protocol })
+  }
 
   return (
     <div className="flex justify-between">
       <div className="flex gap-2 items-center justify-center">
-        <Avatar alt="Token" src={icon} fallbackName={symbol} color={color} rootClassName="size-5" />
+        <PrimitiveAvatar.Root
+          className={cn(
+            'relative inline-flex size-5 select-none items-center justify-center overflow-visible rounded-full bg-blackA1 align-middle',
+          )}
+        >
+          <PrimitiveAvatar.Image
+            className="size-full rounded-[inherit] object-cover"
+            src={icon}
+            alt={symbol || 'Token'}
+          />
+          <PrimitiveAvatar.Fallback
+            className="bg-gray-200 leading-1 flex size-full items-center justify-center text-[9px] font-medium rounded-full text-foreground"
+            delayMs={600}
+            style={{ backgroundColor: color }}
+          >
+            {getInitials(symbol || 'Token')}
+          </PrimitiveAvatar.Fallback>
+
+          {branches.map((branch, index) => (
+            <ImageBranch
+              key={`branch:${branch.symbol}:${index}`}
+              index={index}
+              branch={branch}
+            />
+          ))}
+        </PrimitiveAvatar.Root>
         <span className="text-base font-medium text-foreground">{amountToken}</span>
         <span className="text-sm font-medium text-foreground">
           {String(symbol).length > 8 ? `${String(symbol).slice(0, 8)}...` : symbol}
@@ -173,6 +216,45 @@ const TokenInformation = (props: CardTokenProps) => {
         {type === TokenType.VarDebt ? '-' : ''}
         {amountUSD}
       </span>
+    </div>
+  )
+}
+
+type ImageBranchProps = {
+  index: number
+  branch: { symbol: string; src?: string; color?: string }
+}
+
+const ImageBranch = (props: ImageBranchProps) => {
+  const { index, branch } = props
+
+  if (index < 0 || index > 1) {
+    return null
+  }
+
+  // Determine if this is a chain or protocol icon based on the symbol
+  const isChainIcon = !isNaN(Number(branch.symbol))
+
+  return (
+    <div
+      className={cn(
+        'absolute block text-[0.625rem] size-[13px] rounded-full bg-secondary flex items-center justify-center',
+        index === 0 ? '-bottom-1.5 -right-1.5' : '-top-1.5 -right-1.5',
+      )}
+    >
+      {isChainIcon ? (
+        getChainIcon(branch.symbol, 'w-full h-full', 13) || (
+          <div className="w-full h-full flex items-center justify-center text-[8px]">
+            {getInitials(branch.symbol)}
+          </div>
+        )
+      ) : (
+        getProtocolIcon(branch.symbol, 'w-full h-full', 13) || (
+          <div className="w-full h-full flex items-center justify-center text-[8px]">
+            {getInitials(branch.symbol)}
+          </div>
+        )
+      )}
     </div>
   )
 }
