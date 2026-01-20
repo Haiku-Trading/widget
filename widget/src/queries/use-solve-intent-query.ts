@@ -4,13 +4,13 @@ import { useHttpClient } from '../providers/http-client'
 import { tradeKeys } from '.'
 import { useClassicSolveIntentPayload } from '../hooks/use-solve-intent-payload'
 import { useConfig } from 'wagmi'
-import { getWalletClient } from '@wagmi/core'
 import { mappingChainNameToChainId } from '../constants/constants'
 import { useEIP7702 } from '../hooks/use-eip-7702'
 import { AxiosError } from 'axios'
 import { mappingErrorCodeMessage } from '../constants/constants'
 import { useSolveIntentErrorStore } from '../stores/solve-intent-error'
 import { useTransactionConfirmingStore } from '../stores/tx-confirming'
+import { getWalletClientSafely } from '../utils/wagmi-utils'
 
 const sleep = (ms = 1000) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -48,7 +48,8 @@ export function useSolveIntentQuery(
         let isEIP7702 = false
         try {
           const chainId = getChainIdFromPositions(payload.intent.inputPositions)
-          const walletClient = await getWalletClient(config, { chainId })
+          // Use safe wallet client getter to avoid connector.getChainId() errors
+          const walletClient = await getWalletClientSafely(config, chainId)
           const capabilities = await walletClient.getCapabilities({
             account: walletClient.account,
             chainId,

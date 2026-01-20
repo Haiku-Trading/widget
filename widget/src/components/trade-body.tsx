@@ -1,7 +1,6 @@
 
 
 import { RiAddLine } from '@remixicon/react'
-import { getWalletClient } from '@wagmi/core'
 import { AxiosError } from 'axios'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -19,6 +18,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useAccount, useConfig } from 'wagmi'
 import { mappingChainNameToChainId } from '../constants/constants'
 import { TokenType } from '../enums/token-type'
+import { getWalletClientSafely } from '../utils/wagmi-utils'
 import { TradeAlert } from '../enums/trade-alert'
 import { useSwapOutputTotal } from '../hooks'
 import { useGetTransactionURL } from '../hooks/use-get-transaction-url'
@@ -303,7 +303,8 @@ export function TradeBody() {
 
       try {
         const chainId = getChainIdFromPositions(inputPositions)
-        const walletClient = await getWalletClient(config, { chainId })
+        // Use safe wallet client getter to avoid connector.getChainId() errors
+        const walletClient = await getWalletClientSafely(config, chainId)
         const capabilities = await walletClient.getCapabilities({
           account: walletClient.account,
           chainId,

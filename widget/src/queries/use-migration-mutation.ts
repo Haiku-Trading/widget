@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { migrateVault, MigrateVaultPayload } from '../services/solve-intent'
 import { useAccount, useClient, useConfig, useSwitchChain } from 'wagmi'
 import { Chain } from '../enums/chains'
-import { getWalletClient } from '@wagmi/core'
 import { WalletClient } from 'viem'
 import { providers } from 'ethers5'
+import { getWalletClientSafely, getWalletClientAfterSwitch } from '../utils/wagmi-utils'
 
 export function useMigrateVaultMutation() {
   const account = useAccount()
@@ -31,6 +31,7 @@ export function useMigrateVaultMutation() {
     return signer
   }
 
+
   return useMutation({
     mutationFn: async (payload: MigrateVaultPayload) => {
       if (!account.address) {
@@ -41,11 +42,10 @@ export function useMigrateVaultMutation() {
         console.log('Client not found')
         throw Error('Client not found')
       }
-      if (chainId !== account.chainId) {
-        await switchChainAsync({ chainId })
-      }
-
-      const walletClient = await getWalletClient(config, { chainId })
+      // Use safe wallet client getter to avoid connector.getChainId() errors
+      const walletClient = chainId !== account.chainId
+        ? await getWalletClientAfterSwitch(config, chainId, switchChainAsync, account.chainId)
+        : await getWalletClientSafely(config, chainId)
       const wallet = walletClientToSigner(walletClient)
 
       const transactions = await migrateVault(payload, null)
