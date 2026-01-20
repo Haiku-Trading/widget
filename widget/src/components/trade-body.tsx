@@ -5,7 +5,7 @@ import { AxiosError } from 'axios'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useEIP7702 } from '../hooks/use-eip-7702'
-import { usdFormatter } from '../utils'
+import { usdFormatter, resolveTokensFromMap, type TokenListData } from '../utils'
 import { useStableCallback } from '../utils/react-19-compat'
 import { mappingErrorCodeMessage } from './../constants/constants'
 import { Avatar } from './avatar'
@@ -25,7 +25,7 @@ import { useGetTransactionURL } from '../hooks/use-get-transaction-url'
 import { useTradeStore } from '../providers'
 import { useConfig as useWidgetConfig } from '../providers/config-provider'
 import { usePreselectedTokensContext } from '../providers/preselected-tokens-provider'
-import { tradeKeys } from '../queries'
+import { tradeKeys, useGetTokensQuery } from '../queries'
 import { useSwapMutation } from '../queries/mutations'
 import { useClassicSolveIntentQuery } from '../queries/use-solve-intent-query'
 import { AnyAPIToken, APIToken } from '../services/get-tokens'
@@ -62,6 +62,10 @@ export function TradeBody() {
   const addMoreAlerts = useTradeStore((state) => state.addMoreAlerts)
   const removeAlerts = useTradeStore((state) => state.removeAlerts)
   const clearAlerts = useTradeStore((state) => state.clearAlerts)
+  const setPreselectedInputTokens = useTradeStore((state) => state.setPreselectedInputTokens)
+  const setPreselectedOutputTokens = useTradeStore((state) => state.setPreselectedOutputTokens)
+  const { config: widgetConfig } = useWidgetConfig()
+  const getTokensQuery = useGetTokensQuery()
 
   const usdOutputTotal = useSwapOutputTotal()
 
@@ -219,6 +223,83 @@ export function TradeBody() {
   const resetOutputTokens = () => {
     outputTokens.forEach(removeOutputToken)
   }
+
+  const restorePreselectedTokens = useCallback(() => {
+    // First, reset everything to blank state
+    reset()
+
+    // Check if we have token data and preselected tokens in config
+    if (!getTokensQuery.data?.tokenList) {
+      // If no token data, we've already reset, so just return
+      return
+    }
+
+    const hasPreselectedInputs = widgetConfig.preselectedInputs && Object.keys(widgetConfig.preselectedInputs).length > 0
+    const hasPreselectedOutputs = widgetConfig.preselectedOutputs && Object.keys(widgetConfig.preselectedOutputs).length > 0
+
+    if (!hasPreselectedInputs && !hasPreselectedOutputs) {
+      // No preselected tokens, we've already reset, so just return
+      return
+    }
+
+    // Prepare token data for resolution
+    const tokenData: TokenListData = {
+      tokens: getTokensQuery.data.tokenList.tokens || [],
+      collateralTokens: getTokensQuery.data.tokenList.collateralTokens || [],
+      varDebtTokens: getTokensQuery.data.tokenList.varDebtTokens || [],
+      vaultTokens: getTokensQuery.data.tokenList.vaultTokens || [],
+      weightedLiquidityTokens: getTokensQuery.data.tokenList.weightedLiquidityTokens || [],
+    }
+
+    // Handle preselected input tokens
+    if (hasPreselectedInputs) {
+      const resolvedInputTokens = resolveTokensFromMap(
+        widgetConfig.preselectedInputs!,
+        tokenData,
+        widgetConfig.hiddenChains,
+        widgetConfig.hiddenProtocols
+      )
+
+      // Respect multiInput setting - if false, only take the first token
+      const tokensToSet = widgetConfig.multiInput 
+        ? resolvedInputTokens 
+        : resolvedInputTokens.slice(0, 1)
+
+      if (tokensToSet.length > 0) {
+        setPreselectedInputTokens(tokensToSet)
+      }
+    }
+
+    // Handle preselected output tokens
+    if (hasPreselectedOutputs) {
+      const resolvedOutputTokens = resolveTokensFromMap(
+        widgetConfig.preselectedOutputs!,
+        tokenData,
+        widgetConfig.hiddenChains,
+        widgetConfig.hiddenProtocols
+      )
+
+      // Respect multiOutput setting - if false, only take the first token
+      const tokensToSet = widgetConfig.multiOutput 
+        ? resolvedOutputTokens 
+        : resolvedOutputTokens.slice(0, 1)
+
+      if (tokensToSet.length > 0) {
+        setPreselectedOutputTokens(tokensToSet)
+      }
+    }
+  }, [
+    getTokensQuery.data,
+    widgetConfig.preselectedInputs,
+    widgetConfig.preselectedOutputs,
+    widgetConfig.multiInput,
+    widgetConfig.multiOutput,
+    widgetConfig.hiddenChains,
+    widgetConfig.hiddenProtocols,
+    reset,
+    setPreselectedInputTokens,
+    setPreselectedOutputTokens,
+  ])
 
   const handleAddInputToken = (tokens: AnyAPIToken[]) => {
     setType('input')
@@ -504,8 +585,7 @@ export function TradeBody() {
                   onCloseAutoFocus={() => {
                     swapMutation.reset()
                     if (isSuccess) {
-                      reset()
-                      resetOutputTokens()
+                      restorePreselectedTokens()
                       setIsSuccess(false)
                       setTxHash('')
                       setTxURL('')

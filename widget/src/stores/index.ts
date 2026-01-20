@@ -182,12 +182,14 @@ export const createTradeStore = (initState: TradeState = defaultTradeInitState) 
           ...state.inputPositions,
           ...Object.fromEntries(inputPositionsEntries),
         }
+        const usdInputTotal = getTotalUSD(newInputPositions, modifyTokens)
         return {
           inputTokens: modifyTokens,
           inputPositions: newInputPositions,
           inputChainIds: Array.from(
             new Set(tokensWithAmounts.map(({ token }) => token.network)),
           ),
+          usdInputTotal,
         }
       })
     },
