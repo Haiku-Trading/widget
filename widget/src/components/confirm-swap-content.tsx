@@ -397,7 +397,7 @@ export function ConfirmSwapContent({
           <Button 
             onClick={onConfirm} 
             className="flex-1 h-9 border text-foreground" 
-            style={{ borderColor: 'hsl(var(--button-text))' }}
+            style={{ borderColor: 'hsl(var(--foreground))', color: 'hsl(var(--foreground))' }}
             disabled={status === 'pending'}
           >
             {status === 'pending' ? 'Swapping...' : 'Confirm'}
