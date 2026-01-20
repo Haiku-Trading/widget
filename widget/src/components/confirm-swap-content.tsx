@@ -125,6 +125,13 @@ export function ConfirmSwapContent({
     return false
   }
 
+  const isBridged = useMemo(() => {
+    if (!transactionQuery.data?.sourceTx || !transactionQuery.data?.destinationTx) {
+      return false
+    }
+    return transactionQuery.data.sourceTx.chainId !== transactionQuery.data.destinationTx.chainId
+  }, [transactionQuery.data?.sourceTx?.chainId, transactionQuery.data?.destinationTx?.chainId])
+
   return (
     <>
       <Dialog.Title className="sr-only">Confirm Your Trade</Dialog.Title>
@@ -277,11 +284,11 @@ export function ConfirmSwapContent({
       </Dialog.Body>
       <Dialog.Footer
         className={cn(
-          !!transactionQuery.data?.destinationTx?.protocolTxLink && 'flex-col',
+          isBridged && 'flex-col',
           'border-t-0',
         )}
       >
-        {!!transactionQuery.data?.destinationTx?.protocolTxLink && (
+        {isBridged && (
           <div className="flex flex-col gap-2 items-center">
             <p className="font-medium text-foreground">See the details of your transaction</p>
             <div
@@ -300,8 +307,7 @@ export function ConfirmSwapContent({
                   </a>
                 )}
               </Tooltip>
-              {transactionQuery.data?.sourceTx?.chainId !==
-                transactionQuery.data?.destinationTx?.chainId && (
+              {isBridged && (
                 <Tooltip
                   content={`${transactionQuery.data?.destinationTx?.status === 'REFUNDED' ? 'Refund Transaction' : 'Bridge Transaction'}`}
                   className="text-sm p-2 rounded-lg text-foreground"
@@ -347,10 +353,10 @@ export function ConfirmSwapContent({
         {!isFeeBridgeChangeError(error) && (
           <Dialog.Close asChild>
             <Button
-              variant={transactionQuery.data?.destinationTx?.protocolTxLink ? 'primary' : 'outline'}
+              variant={isBridged ? 'primary' : 'outline'}
               className={cn(
                 'h-10',
-                !transactionQuery.data?.destinationTx?.protocolTxLink && 'flex-1',
+                !isBridged && 'flex-1',
               )}
               onClick={() => {
                 updateTransactionConfirming(false)
@@ -398,7 +404,7 @@ export function ConfirmSwapContent({
           </Button>
         )}
 
-        {status === 'success' && !transactionQuery.data?.destinationTx?.protocolTxLink && (
+        {status === 'success' && !isBridged && (
           <Button className="flex-1 h-9 text-foreground" disabled={transactionQuery.isFetching}>
             {transactionQuery.isFetching ? (
               <Spinner className="h-5 w-5 bg-transparent text-foreground" />
