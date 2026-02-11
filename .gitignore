@@ -21,7 +21,7 @@ build/
 env.development.json
 env.production.json
 
-# IDE and editor files
+# IDE files
 .vscode/
 .idea/
 *.swp
@@ -82,16 +82,33 @@ jspm_packages/
 .cache
 .parcel-cache
 
-# Next.js build output
+# next.js build output
 .next
 
-# Nuxt.js build / generate output
+# nuxt.js build output
 .nuxt
 
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
 # Storybook build outputs
-.out
 .storybook-out
 
 # Temporary folders
 tmp/
 temp/
+
+# Firebase
+firebase-debug.log
