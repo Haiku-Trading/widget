@@ -3,23 +3,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const iconsDir = path.join(__dirname, 'widget/src/components/icons');
+const iconsDir = path.join(__dirname, 'src/components/icons');
 const networksDir = path.join(iconsDir, 'networks');
 const protocolsDir = path.join(iconsDir, 'protocols');
 
-// Function to convert filename to proper component name
-function getComponentName(fileName) {
-  // Handle numeric names (chain IDs)
-  if (/^\d/.test(fileName)) {
-    return `Chain${fileName}Icon`;
-  }
-  
-  // Convert kebab-case to PascalCase
-  return fileName
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join('') + 'Icon';
-}
+// Read the current index.ts
+const indexPath = path.join(iconsDir, 'index.ts');
+let content = fs.readFileSync(indexPath, 'utf8');
 
 // Get all icon files in each directory
 const mainIcons = fs.readdirSync(iconsDir)
@@ -33,6 +23,14 @@ const networkIcons = fs.readdirSync(networksDir)
 const protocolIcons = fs.readdirSync(protocolsDir)
   .filter(file => file.endsWith('-icon.tsx'))
   .map(file => file.replace('-icon.tsx', ''));
+
+// Function to convert filename to component name
+function getComponentName(fileName) {
+  if (/^\d/.test(fileName)) {
+    return `Chain${fileName}Icon`;
+  }
+  return fileName.charAt(0).toUpperCase() + fileName.slice(1).toLowerCase() + 'Icon';
+}
 
 // Generate new exports
 let newExports = [];
@@ -57,17 +55,10 @@ protocolIcons.forEach(fileName => {
 
 // Write the new index.ts
 const newContent = newExports.join('\n') + '\n';
-fs.writeFileSync(path.join(iconsDir, 'index.ts'), newContent);
+fs.writeFileSync(indexPath, newContent);
 
-console.log('Fixed index.ts with proper component names:');
+console.log('Updated index.ts with organized folder structure:');
 console.log(`- Main icons: ${mainIcons.length}`);
 console.log(`- Network icons: ${networkIcons.length}`);
 console.log(`- Protocol icons: ${protocolIcons.length}`);
 console.log(`- Total exports: ${newExports.length}`);
-
-// Show some examples
-console.log('\nExample component names:');
-console.log(`alert-circle -> ${getComponentName('alert-circle')}`);
-console.log(`chevron-down -> ${getComponentName('chevron-down')}`);
-console.log(`1 -> ${getComponentName('1')}`);
-console.log(`AAVE_V3 -> ${getComponentName('AAVE_V3')}`);
