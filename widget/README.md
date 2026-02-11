@@ -1,107 +1,40 @@
 # Haiku Swap Widget
 
-A powerful, self-contained swap widget for DeFi applications that allows users to easily integrate Haiku's swap functionality into their websites. The widget includes built-in HTTP client and session management.
+A self-contained swap widget for DeFi applications. Integrate [Haiku's](https://haiku.trade/) multi-chain multi-token declarative transaction functionality into your website with a single React component.
 
-## Features
-
-- 🚀 **Easy Integration** - Simple React component that works with any React application
-- 🎨 **Fully Customizable** - Theme support with light/dark modes and custom colors
-- 🔗 **Multi-Chain Support** - Works with 13+ supported networks including Ethereum, Berachain, and more
-- 💰 **Smart Routing** - Advanced swap routing for optimal prices and gas efficiency
-- 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
-- 🔒 **Secure** - Built with security best practices and wallet integration
-- ⚡ **Self-Contained** - Includes HTTP client and session management
-- 🎛️ **Flexible Configuration** - Control chains, protocols, and token preselection
-
-## Requirements
-
-The widget requires the following providers to be set up in your host application:
-
-- **WagmiProvider**: For wallet connection and blockchain interactions
-- **QueryClientProvider**: For React Query state management
-- **RainbowKitProvider**: For wallet connection UI (optional but recommended)
-
-The widget will use your existing wallet connection and share the same state with your application.
+Just specify inputs and outputs and the Haiku widget does the rest.
 
 ## Installation
 
+1. Install peer dependencies
+```bash
+npm install react react-dom wagmi viem @wagmi/core @tanstack/react-query
+```
+
+2. Install Haiku widget
 ```bash
 npm install @haiku-trade/widget
-# or
-yarn add @haiku-trade/widget
-# or
-pnpm add @haiku-trade/widget
 ```
 
-## Peer Dependencies
-
-The widget requires the following peer dependencies to be installed in your project:
-
-### Required Dependencies
+3. Optionally, install RainbowKit for wallet connection UI:
 
 ```bash
-npm install react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0
+npm install @rainbow-me/rainbowkit
 ```
 
-### Optional Dependencies (Recommended)
+## Provider Requirements
 
-For the best experience, we also recommend installing RainbowKit for wallet connection UI:
+The widget must be rendered inside the following providers from your host application:
 
-```bash
-npm install @rainbow-me/rainbowkit@>=2.0.0
-```
+| Provider | Package | Required | Purpose |
+|----------|---------|----------|---------|
+| `WagmiProvider` | `wagmi` | Yes | The widget uses your app's existing wallet connection to sign transactions and read on-chain data. It does not create its own wallet connection. |
+| `QueryClientProvider` | `@tanstack/react-query` | Yes | The widget uses your app's query client for data fetching, caching, and state management. |
+| `RainbowKitProvider` | `@rainbow-me/rainbowkit` | No (recommended) | Provides wallet connection UI. You can use any wallet connection solution compatible with Wagmi. |
 
-### Complete Installation
-
-Here's the complete installation command for a new project:
-
-```bash
-# Install the widget and all required dependencies
-npm install @haiku-trade/widget react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0 @rainbow-me/rainbowkit@>=2.0.0
-
-# Or with yarn
-yarn add @haiku-trade/widget react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0 @rainbow-me/rainbowkit@>=2.0.0
-
-# Or with pnpm
-pnpm add @haiku-trade/widget react@>=18.0.0 react-dom@>=18.0.0 wagmi@>=2.0.0 @tanstack/react-query@>=5.0.0 @rainbow-me/rainbowkit@>=2.0.0
-```
-
-### Quick Setup for Different Project Types
-
-#### New React Project (Create React App, Vite, Next.js)
-```bash
-# Create a new project
-npx create-react-app my-defi-app
-# or
-npm create vite@latest my-defi-app -- --template react-ts
-# or
-npx create-next-app@latest my-defi-app
-
-# Install the widget and dependencies
-npm install @haiku-trade/widget wagmi@^2.0.0 @tanstack/react-query@^5.0.0 @rainbow-me/rainbowkit@^2.0.0
-```
-
-#### Existing React Project
-```bash
-# Check if you already have the required dependencies
-npm list react wagmi @tanstack/react-query
-
-# Install missing dependencies
-npm install wagmi@^2.0.0 @tanstack/react-query@^5.0.0 @rainbow-me/rainbowkit@^2.0.0
-
-# Install the widget
-npm install @haiku-trade/widget
-```
-
-#### TypeScript Project
-Make sure you have TypeScript types installed:
-```bash
-npm install --save-dev @types/react @types/react-dom
-```
+The widget shares wallet and query state with your application -- if a user is already connected in your app, the widget will use that same connection.
 
 ## Quick Start
-
-The Haiku Swap Widget requires WagmiProvider and QueryClientProvider from the host application. Here's how to set it up:
 
 ```tsx
 import { HaikuWidget } from '@haiku-trade/widget';
@@ -110,14 +43,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { mainnet, arbitrum, base } from 'wagmi/chains';
 
-// Create your Wagmi configuration
 const wagmiConfig = getDefaultConfig({
   appName: "My DeFi App",
   projectId: "your-walletconnect-project-id", // Get from https://cloud.walletconnect.com
   chains: [mainnet, arbitrum, base],
 });
 
-// Create your query client
 const queryClient = new QueryClient();
 
 function App() {
@@ -125,7 +56,7 @@ function App() {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          <HaikuWidget />
+          <HaikuWidget widgetKey="your-widget-key" />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
@@ -133,192 +64,145 @@ function App() {
 }
 ```
 
-## Configuration Options
+## Props
 
-The widget accepts a `config` prop with the following options:
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `widgetKey` | `string` | Yes | Your Haiku widget API key |
+| `config` | `WidgetConfig` | No | Widget configuration (see below) |
+
+## Configuration
+
+Pass a `config` prop to customize the widget:
+
+```tsx
+<HaikuWidget widgetKey="your-widget-key" config={config} />
+```
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `theme` | `WidgetTheme` | `undefined` | Theme configuration with light/dark modes |
-| `hiddenChains` | `number[]` | `undefined` | Array of chain IDs to hide from selection |
-| `hiddenProtocols` | `string[]` | `undefined` | Array of protocol names to hide |
+| `theme` | `WidgetTheme` | See below | Theme with light/dark mode support |
+| `hiddenChains` | `number[]` | `undefined` | Chain IDs to hide from the UI |
+| `hiddenProtocols` | `string[]` | `undefined` | Protocol names to hide |
 | `multiInput` | `boolean` | `true` | Allow multiple input tokens |
 | `multiOutput` | `boolean` | `true` | Allow multiple output tokens |
-| `lockedInputs` | `boolean` | `false` | Lock input tokens from being changed |
-| `lockedOutputs` | `boolean` | `false` | Lock output tokens from being changed |
-| `preselectedInputs` | `Record<string, number>` | `undefined` | Pre-selected input tokens with amounts |
-| `preselectedOutputs` | `Record<string, number>` | `undefined` | Pre-selected output tokens with weights |
+| `lockedInputs` | `boolean` | `false` | Prevent users from changing input tokens |
+| `lockedOutputs` | `boolean` | `false` | Prevent users from changing output tokens |
+| `preselectedInputs` | `Record<string, number>` | `undefined` | Pre-selected input tokens (token IID -> amount) |
+| `preselectedOutputs` | `Record<string, number>` | `undefined` | Pre-selected output tokens (token IID -> weight) |
+| `tokenSelect` | `'simple' \| 'default'` | `'default'` | Token selector UI style |
+| `bridgeMode` | `'open' \| 'fast' \| 'economy'` | `undefined` | Bridge routing preference |
 
-### Theme Configuration
-
-The widget supports custom theming through the `theme` prop:
+### Theme
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget'
-
 const config: WidgetConfig = {
   theme: {
     mode: 'dark', // 'light' | 'dark' | 'auto'
     light: {
-      primaryColor: '#3B82F6', // Hex color for primary elements
-      secondaryColor: '#10B981' // Hex color for secondary elements
+      primaryColor: '#3B82F6',
+      backgroundColor: '#FFFFFF',
+      primaryText: '#020817',
+      secondaryText: '#666666',
+      borderColor: '#e2e8f0',
+      mutedBackground: '#f5f5f5',
     },
     dark: {
-      primaryColor: '#60A5FA', // Hex color for primary elements in dark mode
-      secondaryColor: '#34D399' // Hex color for secondary elements in dark mode
-    }
-  }
-}
-
-function App() {
-  return <HaikuWidget config={config} />
-}
+      primaryColor: '#60A5FA',
+      backgroundColor: '#0F172A',
+      primaryText: '#f8fafc',
+      secondaryText: '#b2bdcc',
+      borderColor: '#1d283a',
+      mutedBackground: '#1e293b',
+    },
+  },
+};
 ```
 
-#### Theme Properties
+All color palette properties (all optional):
 
-- **`mode`**: Controls the color scheme
-  - `'light'`: Forces light mode
-  - `'dark'`: Forces dark mode  
-  - `'auto'`: Uses system preference (default)
-- **`light`**: Color palette for light mode
-- **`dark`**: Color palette for dark mode
-
-#### Color Palette Properties
-
-- **`primaryColor`**: Hex color for primary elements (buttons, links, etc.)
-- **`secondaryColor`**: Hex color for secondary elements
-- **`accentColor`**: Hex color for accent elements
-- **`successColor`**: Hex color for success states
-- **`warningColor`**: Hex color for warning states
-- **`errorColor`**: Hex color for error states
-
-## Supported Chains
-
-The widget supports the following blockchain networks:
-
-- **Ethereum** (Chain ID: 1)
-- **Optimism** (Chain ID: 10)
-- **BSC** (Chain ID: 56)
-- **Gnosis** (Chain ID: 100)
-- **Polygon** (Chain ID: 137)
-- **Arbitrum** (Chain ID: 42161)
-- **Avalanche** (Chain ID: 43114)
-- **Base** (Chain ID: 8453)
-- **Scroll** (Chain ID: 534352)
-- **Berachain** (Chain ID: 80094)
-- **Sei** (Chain ID: 1329)
-- **Worldchain** (Chain ID: 480)
-- **Katana** (Chain ID: 747474)
+| Property | Description |
+|----------|-------------|
+| `primaryColor` | Primary elements (buttons, links) |
+| `secondaryColor` | Secondary elements |
+| `accentColor` | Accent elements |
+| `successColor` | Success states |
+| `warningColor` | Warning states |
+| `errorColor` | Error states |
+| `backgroundColor` | Widget background |
+| `button` | Button background |
+| `paper` | Card/paper background |
+| `borderColor` | Borders |
+| `mutedBackground` | Muted/subtle backgrounds |
+| `primaryText` | Primary text |
+| `secondaryText` | Secondary/muted text |
+| `swapButton` | Swap button color |
+| `iconsHeader` | Header icon color |
+| `swapIcon` | Swap direction icon color |
 
 ## Examples
-
-### Basic Usage with Configuration
-
-```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget';
-
-function App() {
-  const config: WidgetConfig = {
-    theme: {
-      mode: 'dark',
-      light: {
-        primaryColor: '#3B82F6',
-        secondaryColor: '#8B5CF6',
-      },
-      dark: {
-        primaryColor: '#60A5FA',
-        secondaryColor: '#A78BFA',
-      },
-    },
-    hiddenChains: [56, 137], // Hide BSC and Polygon
-    hiddenProtocols: ['SUSHISWAP', 'CURVE'],
-    multiInput: true,
-    multiOutput: true,
-  };
-
-  return <HaikuWidget config={config} />;
-}
-```
 
 ### Preselected Tokens
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget';
+const config: WidgetConfig = {
+  preselectedInputs: {
+    'base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee': 1.0, // 1 ETH on Base
+  },
+  preselectedOutputs: {
+    'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': 0.6, // 60% USDC
+    'base:0x4200000000000000000000000000000000000006': 0.4, // 40% WETH
+  },
+  lockedInputs: true,
+};
 
-function App() {
-  const config: WidgetConfig = {
-    preselectedInputs: {
-      'base:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee': 1.0, // 1 ETH on Base
-    },
-    preselectedOutputs: {
-      'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': 0.6, // 60% USDC
-      'base:0x4200000000000000000000000000000000000006': 0.4, // 40% WETH
-    },
-    lockedInputs: true, // Prevent changing input tokens
-  };
-
-  return <HaikuWidget config={config} />;
-}
+<HaikuWidget widgetKey="your-widget-key" config={config} />
 ```
 
-### Chain-Restricted Configuration
+### Restrict to Specific Chains
 
 ```tsx
-import { HaikuWidget, WidgetConfig } from '@haiku-trade/widget';
+const config: WidgetConfig = {
+  hiddenChains: [1, 137, 42161], // Hide Ethereum, Polygon, Arbitrum
+  multiInput: false,
+};
 
-function App() {
-  const config: WidgetConfig = {
-    hiddenChains: [1, 137, 42161], // Hide Ethereum, Polygon, Arbitrum
-    hiddenProtocols: ['SUSHISWAP', 'CURVE'],
-    multiInput: false, // Single input only
-    multiOutput: true,
-  };
-
-  return <HaikuWidget config={config} />;
-}
+<HaikuWidget widgetKey="your-widget-key" config={config} />
 ```
 
-## What's Included
+## Supported Chains
 
-The widget is self-contained and includes:
+| Chain | Chain ID |
+|-------|----------|
+| Ethereum | 1 |
+| Optimism | 10 |
+| BSC | 56 |
+| Gnosis | 100 |
+| Unichain | 130 |
+| Polygon | 137 |
+| Monad | 143 |
+| Sonic | 146 |
+| Worldchain | 480 |
+| HyperEVM | 999 |
+| Lisk | 1135 |
+| Sei | 1329 |
+| Base | 8453 |
+| Plasma | 9745 |
+| ApeChain | 33139 |
+| Arbitrum | 42161 |
+| Avalanche | 43114 |
+| Bob | 60808 |
+| Berachain | 80094 |
+| Scroll | 534352 |
+| Katana | 747474 |
 
-- **Trading Interface**: Complete swap interface with token selection
-- **HTTP Client**: Built-in API client for Haiku's swap infrastructure
-- **Session Management**: Internal session and trade state management
-- **Multi-chain Support**: Works with any chains configured in your Wagmi setup
-- **Wallet Integration**: Uses your existing Wagmi/RainbowKit setup
-- **Theme System**: Light/dark mode support with custom color palettes
+## Requirements
 
-## What You Need to Provide
-
-- **Wagmi Provider**: For wallet connection and blockchain interactions
-- **QueryClient Provider**: For data fetching and caching
-- **RainbowKit Provider**: For wallet connection UI (optional but recommended)
-
-## Development
-
-Run hot-reloading locally from source:
-`pnpm run dev:vite`
-
-Run hot-reloading locally from compiled dist folder:
-`pnpm run dev`
-`pnpm run dev:dist`
-
-
-### Project Structure
-
-```
-src/
-├── components/          # React components
-├── providers/          # Context providers
-├── stores/             # State management
-├── hooks/              # Custom hooks
-├── services/           # API services
-├── types/              # TypeScript types
-├── utils/              # Utility functions
-└── styles.css          # Global styles
-```
+- React 18+ or 19+
+- Wagmi v2+
+- viem v2+
+- @tanstack/react-query v5+
+- @rainbow-me/rainbowkit v2+ (optional, recommended)
 
 ## Browser Support
 
@@ -327,8 +211,6 @@ src/
 - Safari 14+
 - Edge 90+
 
-
-
 ## Support
 
-For support and questions, please contact the Haiku team or open an issue in this repository.
+For questions or issues, please open an issue in this repository.
