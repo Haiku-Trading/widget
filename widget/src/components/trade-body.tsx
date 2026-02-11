@@ -213,7 +213,6 @@ export function TradeBody() {
         queryClient.invalidateQueries({ queryKey: [account.address, 'balances'] })
       },
       onError: (error: unknown) => {
-        console.log('ERROR', error instanceof Error ? error.message : String(error))
         stableUpdateTransactionConfirming(false)
       },
     })

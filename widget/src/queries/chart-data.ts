@@ -34,24 +34,6 @@ export function useChartData({ poolIid, timeframe, aggregate, limit, key }: Prop
       const response = await httpClient.get<Array<[number, number, number, number, number]>>(
         `/ui/poolPriceData?iid=${poolIid}&timeframe=${timeframe}&aggregate=${aggregate}&limit=${limit}`,
       )
-      // const responseSecondToken = await httpClient.get<Array<[number, number]>>(
-      //   `/ui/tokenPriceData?iid=${iidSecondToken}&day=${day}`,
-      // )
-
-      // const minLength = Math.min(responseFirstToken.length, responseSecondToken.length)
-
-      // const merged = responseFirstToken.slice(0, minLength).reduce(
-      //   (acc, [timestamp, value], index) => {
-      //     const dateKey = new Date(timestamp).toISOString().slice(0, 10)
-      //     const ratio = value / responseSecondToken[index][1]
-      //     acc[dateKey] = { time: dateKey, value: ratio }
-      //     return acc
-      //   },
-      //   {} as Record<string, { time: string; value: number }>,
-      // )
-
-      // console.log('Merged chart data:', Object.values(merged))
-      // return Object.values(merged)
       const uniqueTimeDatas = response.filter(
         (data, index, self) => index === self.findIndex((d) => d[0] === data[0]),
       )

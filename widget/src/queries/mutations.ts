@@ -33,11 +33,6 @@ export function useFeedbackMutation() {
       const data = await httpClient.post(
         `/widget/saveSessionData`,
         { operation, payload },
-        { 
-          headers: { 
-            'api-key': '003f827f-b1da-4135-ac68-9a24fdd67599',
-          } 
-        },
       )
       return data
     },
@@ -53,7 +48,6 @@ function isUserRejectedError(error: unknown): boolean {
   if (!error) return false
 
   const e = error as { code?: number; message?: string }
-  console.log('e', e)
 
   return (
     e.code === 4001 || // MetaMask user rejection code
@@ -123,9 +117,6 @@ export const useSwapMutation = (chainIdInput: number) => {
           // Check if this is a user rejection for bridge signature
           if (isUserRejectedError(error)) {
             // User rejection is not a technical error, so we don't track it as a failure
-            if (process.env.VERCEL_ENV === 'development') {
-              console.log('User rejected bridge signature:', error)
-            }
             throw error // Re-throw to be handled by the main onError callback
           }
 
@@ -156,9 +147,6 @@ export const useSwapMutation = (chainIdInput: number) => {
           // Check if this is a user rejection for approval transactions
           if (isUserRejectedError(error)) {
             // User rejection is not a technical error, so we don't track it as a failure
-            if (process.env.VERCEL_ENV === 'development') {
-              console.log('User rejected approval transaction:', error)
-            }
             throw error // Re-throw to be handled by the main onError callback
           }
 
@@ -185,9 +173,6 @@ export const useSwapMutation = (chainIdInput: number) => {
           // Check if this is a user rejection for Permit2 signature
           if (isUserRejectedError(error)) {
             // User rejection is not a technical error, so we don't track it as a failure
-            if (process.env.VERCEL_ENV === 'development') {
-              console.log('User rejected Permit2 signature:', error)
-            }
             throw error // Re-throw to be handled by the main onError callback
           }
 
@@ -252,7 +237,6 @@ export const useSwapMutation = (chainIdInput: number) => {
           quoteId: response.quoteId,
         }
       } catch (error) {
-        console.log('Tx error', error)
         throw error
       }
     },
@@ -261,9 +245,6 @@ export const useSwapMutation = (chainIdInput: number) => {
       if (isUserRejectedError(error)) {
         // User rejection is not a technical error, so we don't track it as a failure
         // Just log it for debugging purposes in development
-        if (process.env.VERCEL_ENV === 'development') {
-          console.log('User rejected transaction:', error)
-        }
         return
       }
 
@@ -302,9 +283,6 @@ export const useSwapMutation = (chainIdInput: number) => {
         tx_data: errorData,
       })
 
-      // if (process.env.VERCEL_ENV !== 'development') {
-      //   console.log('Error', error)
-      // }
     },
     onSuccess: (data) => {
       setTimeout(() => {

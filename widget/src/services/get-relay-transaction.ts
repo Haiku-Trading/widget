@@ -27,12 +27,10 @@ export async function getRelayTransaction(hash: string) {
   const res = await fetch(`https://api.relay.link/requests/v2?hash=${hash}`)
   const data = (await res.json()) as Response
   if (data.requests.length === 0) {
-    console.log('No relay transaction request found')
     throw new Error('no request found')
   }
   const bridgeTx = filterRelayBridgeTransactions(data)
   if (bridgeTx?.status === 'pending') {
-    console.log('No relay transaction request found')
     throw new Error('no request found')
   }
   return bridgeTx

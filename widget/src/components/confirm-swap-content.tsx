@@ -97,11 +97,6 @@ export function ConfirmSwapContent({
     solveIntentQuery.data?.metadata?.bridgeProtocol,
   ])
 
-  // TODO Currently unused - remove?
-  // const successDescriptions = useMemo(() => {
-  //   return initialBalances || ''
-  // }, [initialBalances])
-
   const filteredInputTokens = inputTokens.filter((token) =>
     BigNumber(inputPositions[token.iid]).isGreaterThan(0),
   )

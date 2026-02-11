@@ -87,7 +87,6 @@ export async function getLifiTransaction(hash: string) {
   const data = (await res.json()) as LifiResponse
 
   if (!data) {
-    console.log('No relay transaction request found')
     throw new Error('no request found')
   }
 
@@ -102,7 +101,6 @@ export async function getTransactionData(protocol: string,hash: string) {
   const data = (await res.json()) as LifiResponse
 
   if (!data) {
-    console.log('No relay transaction request found')
     throw new Error('no request found')
   }
 

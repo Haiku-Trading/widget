@@ -7,7 +7,6 @@ import { Address } from 'viem'
 import { Chain } from '../enums/chains'
 import { TBuildIntentPayloadInput } from '../models/api/swap'
 import { getEndpoint } from './endpoints'
-import { APIToken } from './get-tokens'
 import { requester } from './requester'
 import { BridgeMode } from '../enums/bridge-mode'
 
@@ -51,9 +50,6 @@ export const solveIntent = async (
     },
     {
       signal,
-      headers: {
-        'api-key': '003f827f-b1da-4135-ac68-9a24fdd67599',
-      },
     },
   )
 
@@ -63,13 +59,8 @@ export const solveIntent = async (
 export const buildIntent = async (
   payload: TBuildIntentPayloadInput,
   config?: AxiosRequestConfig,
-  identityToken?: string,
 ): Promise<common.TransactionRequest | common.TransactionRequest[]> => {
-  const { data } = await requester({
-    headers: {
-      'api-key': '003f827f-b1da-4135-ac68-9a24fdd67599',
-    },
-  }).post<common.TransactionRequest | common.TransactionRequest[]>(
+  const { data } = await requester().post<common.TransactionRequest | common.TransactionRequest[]>(
     getEndpoint('BUILDINTENT'),
     payload,
     config,
@@ -80,14 +71,9 @@ export const buildIntent = async (
 
 export const migrateVault = async (
   payload: MigrateVaultPayload,
-  identityToken: string | null,
   config?: AxiosRequestConfig,
 ) => {
-  const { data } = await requester({
-    headers: {
-      'api-key': '003f827f-b1da-4135-ac68-9a24fdd67599',
-    },
-  }).post<common.TransactionRequest[]>(getEndpoint('MIGRATEVAULT'), payload, config)
+  const { data } = await requester().post<common.TransactionRequest[]>(getEndpoint('MIGRATEVAULT'), payload, config)
 
   return data
 }

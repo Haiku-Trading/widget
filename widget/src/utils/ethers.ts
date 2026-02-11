@@ -16,7 +16,6 @@ export function clientToProvider(client: Client<Transport, Chain>) {
     if (providers.length === 1) return providers[0]
     return new FallbackProvider(providers)
   }
-  // console.log({ transportType: transport.type, transportUrl: transport.url })
   return new JsonRpcProvider(transport.url, network)
 }
 

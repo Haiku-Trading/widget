@@ -44,7 +44,7 @@ const chains = [
 
 const config = getDefaultConfig({
     appName: "Haiku Swap Widget Demo",
-    projectId: "559f57c80e698d3d95adb8d69e8b9228", // Get from https://cloud.walletconnect.com
+    projectId: "YOUR_WALLETCONNECT_PROJECT_ID", // Get your own from https://cloud.walletconnect.com
     chains: chains as any,
 });
 

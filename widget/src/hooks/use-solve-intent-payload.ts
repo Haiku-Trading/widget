@@ -9,7 +9,6 @@ export function useClassicSolveIntentPayload(): SolveIntentPayload {
   const bridgeMode = useTradeStore((state) => state.bridgeMode)
   const inputPositions = useTradeStore((state) => state.inputPositions)
   const clammPositions = useTradeStore((state) => state.clammInputPositions)
-  // const targetWeights = useTradeStore((state) => state.targetWeights)
   const sessionID = useSessionStore((state) => state.sessionId)
   const outputTokens = useTradeStore((state) => state.outputTokens)
   const targetWeights = Object.fromEntries(

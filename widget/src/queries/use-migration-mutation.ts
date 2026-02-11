@@ -35,11 +35,9 @@ export function useMigrateVaultMutation() {
   return useMutation({
     mutationFn: async (payload: MigrateVaultPayload) => {
       if (!account.address) {
-        console.log('Account not found')
         throw Error('Account not found')
       }
       if (!client) {
-        console.log('Client not found')
         throw Error('Client not found')
       }
       // Use safe wallet client getter to avoid connector.getChainId() errors
@@ -48,7 +46,7 @@ export function useMigrateVaultMutation() {
         : await getWalletClientSafely(config, chainId)
       const wallet = walletClientToSigner(walletClient)
 
-      const transactions = await migrateVault(payload, null)
+      const transactions = await migrateVault(payload)
 
       try {
         let receipt
