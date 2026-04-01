@@ -59,7 +59,7 @@
     "@radix-ui/react-use-controllable-state": "^1.2.2",
     "@remixicon/react": "^4.6.0",
     "@uidotdev/usehooks": "^2.0.0",
-    "axios": "^1.8.2",
+    "axios": "1.13.5",
     "bignumber.js": "^9.1.2",
     "chroma-js": "^3.1.2",
     "clsx": "^2.1.1",
@@ -135,6 +135,11 @@
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "axios": "1.13.5"
+    }
   },
   "packageManager": "pnpm@8.15.0",
   "author": "Haiku",
