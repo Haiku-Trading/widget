@@ -1,4 +1,5 @@
 import { WidgetTheme } from './theme'
+import { Category } from '../services/get-tokens'
 
 export interface WidgetConfig {
   theme?: WidgetTheme
@@ -12,6 +13,10 @@ export interface WidgetConfig {
   lockedOutputs?: boolean
   tokenSelect?: 'simple' | 'default'
   bridgeMode?: 'open' | 'fast' | 'economy'
+  allowedInputCategories?: Category[]
+  allowedOutputCategories?: Category[]
+  allowedInputTokens?: string[]
+  allowedOutputTokens?: string[]
 }
 
 export interface ConfigProviderProps {
