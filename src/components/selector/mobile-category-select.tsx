@@ -7,17 +7,26 @@ type CategorySelectProps = {
   value: string[]
   onValueChange: (value: string[]) => void
   availableCategories?: string[]
+  allowedCategories?: string[]
 }
 
-export function MobileCategorySelect({ value, onValueChange, availableCategories = [] }: CategorySelectProps) {
+export function MobileCategorySelect({ value, onValueChange, availableCategories = [], allowedCategories }: CategorySelectProps) {
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Get all available categories including pendle
+  // Get all available categories including pendle, filtered by allowed categories
   const allCategories = [
-    ...availableCategories.filter((cat) => categoriesOrigNames[cat] && cat !== 'varDebt'),
-    'pendle',
+    ...availableCategories
+      .filter((cat) => categoriesOrigNames[cat] && cat !== 'varDebt')
+      .filter((cat) => !allowedCategories || allowedCategories.includes(cat)),
+    // Only include pendle if 'token' is allowed (or no restrictions)
+    ...(!allowedCategories || allowedCategories.includes('token') ? ['pendle'] : []),
   ]
+
+  // If only 1 or fewer categories, hide the selector entirely
+  if (allCategories.length <= 1) {
+    return null
+  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

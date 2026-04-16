@@ -19,3 +19,4 @@ export { Card } from './components/card'
 // Type exports
 export type { WidgetTheme } from './types/theme'
 export type { WidgetConfig } from './types/config'
+export type { Category } from './services/get-tokens'

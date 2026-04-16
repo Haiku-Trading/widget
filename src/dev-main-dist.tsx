@@ -71,6 +71,15 @@ const availableChains = [
 // Available protocols for testing
 const availableProtocols = ["AAVE_V3", "UNISWAP_V3", "SUSHISWAP", "CURVE", "BALANCER", "COMPOUND", "MAKER", "LIDO"];
 
+// Available categories for testing (varDebt excluded - not shown in UI)
+const availableCategories = [
+    { value: 'token', label: 'Token (ERC-20)' },
+    { value: 'collateral', label: 'Collateral (Lending)' },
+    { value: 'weightedLiquidity', label: 'Weighted Liquidity (Pools)' },
+    { value: 'vault', label: 'Vault (Yield)' },
+    { value: 'concentratedLiquidity', label: 'Concentrated Liquidity (CLAMM)' },
+];
+
 // Example token IDs for testing
 const exampleTokens = {
     inputs: [
@@ -141,6 +150,14 @@ function DevApp() {
     const [newOutputTokenId, setNewOutputTokenId] = useState("");
     const [newOutputWeight, setNewOutputWeight] = useState("");
 
+    // NEW: Category and token whitelist filters
+    const [allowedInputCategories, setAllowedInputCategories] = useState<string[]>([]);
+    const [allowedOutputCategories, setAllowedOutputCategories] = useState<string[]>([]);
+    const [allowedInputTokens, setAllowedInputTokens] = useState<string[]>([]);
+    const [allowedOutputTokens, setAllowedOutputTokens] = useState<string[]>([]);
+    const [newAllowedInputToken, setNewAllowedInputToken] = useState("");
+    const [newAllowedOutputToken, setNewAllowedOutputToken] = useState("");
+
     // Computed widget config
     const widgetConfig = useMemo((): WidgetConfig => {
         const theme: WidgetTheme = {
@@ -183,6 +200,10 @@ function DevApp() {
             preselectedOutputs: Object.keys(preselectedOutputs).length > 0 ? preselectedOutputs : undefined,
             tokenSelect: tokenSelect !== 'default' ? tokenSelect : undefined,
             bridgeMode: bridgeMode,
+            allowedInputCategories: allowedInputCategories.length > 0 ? allowedInputCategories as any : undefined,
+            allowedOutputCategories: allowedOutputCategories.length > 0 ? allowedOutputCategories as any : undefined,
+            allowedInputTokens: allowedInputTokens.length > 0 ? allowedInputTokens : undefined,
+            allowedOutputTokens: allowedOutputTokens.length > 0 ? allowedOutputTokens : undefined,
         };
     }, [
         configMode,
@@ -198,6 +219,10 @@ function DevApp() {
         preselectedOutputs,
         tokenSelect,
         bridgeMode,
+        allowedInputCategories,
+        allowedOutputCategories,
+        allowedInputTokens,
+        allowedOutputTokens,
     ]);
 
     // Preview config (uses previewMode for preview widget display)
@@ -292,6 +317,60 @@ function DevApp() {
         });
     };
 
+    const toggleAllowedInputCategory = (category: string) => {
+        setAllowedInputCategories((prev) =>
+            prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+        );
+    };
+
+    const toggleAllowedOutputCategory = (category: string) => {
+        setAllowedOutputCategories((prev) =>
+            prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+        );
+    };
+
+    const addAllowedInputToken = () => {
+        if (newAllowedInputToken && !allowedInputTokens.includes(newAllowedInputToken)) {
+            setAllowedInputTokens((prev) => [...prev, newAllowedInputToken]);
+            setNewAllowedInputToken("");
+        }
+    };
+
+    const addAllowedOutputToken = () => {
+        if (newAllowedOutputToken && !allowedOutputTokens.includes(newAllowedOutputToken)) {
+            setAllowedOutputTokens((prev) => [...prev, newAllowedOutputToken]);
+            setNewAllowedOutputToken("");
+        }
+    };
+
+    const removeAllowedInputToken = (tokenId: string) => {
+        setAllowedInputTokens((prev) => prev.filter((id) => id !== tokenId));
+    };
+
+    const removeAllowedOutputToken = (tokenId: string) => {
+        setAllowedOutputTokens((prev) => prev.filter((id) => id !== tokenId));
+    };
+
+    const loadClientPreset = () => {
+        // Client use case: Major EVM Chains USDC → Sei USDC only
+        setAllowedInputCategories(['token']);
+        setAllowedOutputCategories(['token']);
+        setAllowedInputTokens([
+            'eth:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',   // USDC on Ethereum
+            'arb:0xaf88d065e77c8cC2239327C5EDb3A432268e5831',   // USDC on Arbitrum
+            'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',  // USDC on Base
+        ]);
+        setAllowedOutputTokens([
+            'sei:0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F2',   // USDC on Sei
+        ]);
+        setSingleInput(true);
+        setSingleOutput(true);
+        setLockedOutputs(true);
+        setPreselectedOutputs({
+            'sei:0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F2': 100,
+        });
+    };
+
     const resetConfig = () => {
         setConfigMode("dark");
         setPreviewMode("dark");
@@ -342,6 +421,12 @@ function DevApp() {
         setNewInputAmount("");
         setNewOutputTokenId("");
         setNewOutputWeight("");
+        setAllowedInputCategories([]);
+        setAllowedOutputCategories([]);
+        setAllowedInputTokens([]);
+        setAllowedOutputTokens([]);
+        setNewAllowedInputToken("");
+        setNewAllowedOutputToken("");
     };
 
     function getDiff(current: any, defaults: any): any {
@@ -458,13 +543,19 @@ ${indentedConfig}
                                 <div className="flex justify-center mb-4">
                                     <ConnectButton />
                                 </div>
-                                <div className="flex gap-3 justify-center">
+                                <div className="flex gap-3 justify-center flex-wrap">
                                     <button
                                         onClick={copyConfig}
                                         id="copy-config-btn"
                                         className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium border border-blue-600"
                                         style={{ backgroundColor: "#3b82f6", color: "white" }}>
                                         Copy Config
+                                    </button>
+                                    <button
+                                        onClick={loadClientPreset}
+                                        className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors font-medium border border-purple-600"
+                                        style={{ backgroundColor: "#a855f7", color: "white" }}>
+                                        Load Client Preset (USDC → Sei)
                                     </button>
                                     <button
                                         onClick={resetConfig}
@@ -807,6 +898,174 @@ ${indentedConfig}
                                                 </div>
                                             ))}
                                         </div>
+                                    </div>
+
+                                    {/* NEW: Allowed Input Categories */}
+                                    <div className="bg-white rounded-lg p-4 shadow-sm border">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Allowed Input Categories</h3>
+                                        <p className="text-xs text-gray-600 mb-3">
+                                            Restrict which primitive types users can select for input. Leave empty for no restriction.
+                                        </p>
+                                        <div className="space-y-2">
+                                            {availableCategories.map((category) => (
+                                                <label key={category.value} className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={allowedInputCategories.includes(category.value)}
+                                                        onChange={() => toggleAllowedInputCategory(category.value)}
+                                                        className="mr-2"
+                                                    />
+                                                    <span className="text-sm text-gray-700">{category.label}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                        {allowedInputCategories.length > 0 && (
+                                            <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                                                ✓ Only {allowedInputCategories.length} category(ies) allowed for input
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* NEW: Allowed Output Categories */}
+                                    <div className="bg-white rounded-lg p-4 shadow-sm border">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Allowed Output Categories</h3>
+                                        <p className="text-xs text-gray-600 mb-3">
+                                            Restrict which primitive types users can select for output. Leave empty for no restriction.
+                                        </p>
+                                        <div className="space-y-2">
+                                            {availableCategories.map((category) => (
+                                                <label key={category.value} className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={allowedOutputCategories.includes(category.value)}
+                                                        onChange={() => toggleAllowedOutputCategory(category.value)}
+                                                        className="mr-2"
+                                                    />
+                                                    <span className="text-sm text-gray-700">{category.label}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                        {allowedOutputCategories.length > 0 && (
+                                            <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                                                ✓ Only {allowedOutputCategories.length} category(ies) allowed for output
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* NEW: Allowed Input Tokens (Whitelist) */}
+                                    <div className="bg-white rounded-lg p-4 shadow-sm border">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Allowed Input Tokens (Whitelist)</h3>
+                                        <p className="text-xs text-gray-600 mb-3">
+                                            Only these token IIDs will be available for input selection. Leave empty for no restriction.
+                                        </p>
+
+                                        <div className="space-y-2 mb-3">
+                                            <input
+                                                type="text"
+                                                value={newAllowedInputToken}
+                                                onChange={(e) => setNewAllowedInputToken(e.target.value)}
+                                                placeholder="arb:0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+                                                className="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            />
+                                            <button
+                                                onClick={addAllowedInputToken}
+                                                className="w-full px-3 py-2 bg-blue-500 text-white text-xs rounded-md hover:bg-blue-600 transition-colors"
+                                                style={{ backgroundColor: "#3b82f6", color: "white" }}>
+                                                Add to Whitelist
+                                            </button>
+
+                                            {/* Quick USDC examples */}
+                                            <div className="text-xs text-gray-600 mb-1">Quick add USDC:</div>
+                                            <div className="flex flex-wrap gap-1">
+                                                <button
+                                                    onClick={() => setNewAllowedInputToken("eth:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")}
+                                                    className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300">
+                                                    ETH
+                                                </button>
+                                                <button
+                                                    onClick={() => setNewAllowedInputToken("arb:0xaf88d065e77c8cC2239327C5EDb3A432268e5831")}
+                                                    className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300">
+                                                    ARB
+                                                </button>
+                                                <button
+                                                    onClick={() => setNewAllowedInputToken("base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913")}
+                                                    className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300">
+                                                    BASE
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-1 max-h-32 overflow-y-auto">
+                                            {allowedInputTokens.map((tokenId) => (
+                                                <div key={tokenId} className="flex items-center justify-between bg-gray-50 p-2 rounded text-xs">
+                                                    <div className="font-mono truncate flex-1">{tokenId}</div>
+                                                    <button
+                                                        onClick={() => removeAllowedInputToken(tokenId)}
+                                                        className="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                                                        style={{ backgroundColor: "#ef4444", color: "white" }}>
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {allowedInputTokens.length > 0 && (
+                                            <div className="mt-2 p-2 bg-green-50 rounded text-xs text-green-700">
+                                                ✓ {allowedInputTokens.length} token(s) whitelisted for input
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* NEW: Allowed Output Tokens (Whitelist) */}
+                                    <div className="bg-white rounded-lg p-4 shadow-sm border">
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Allowed Output Tokens (Whitelist)</h3>
+                                        <p className="text-xs text-gray-600 mb-3">
+                                            Only these token IIDs will be available for output selection. Leave empty for no restriction.
+                                        </p>
+
+                                        <div className="space-y-2 mb-3">
+                                            <input
+                                                type="text"
+                                                value={newAllowedOutputToken}
+                                                onChange={(e) => setNewAllowedOutputToken(e.target.value)}
+                                                placeholder="sei:0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F2"
+                                                className="w-full p-2 text-xs border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            />
+                                            <button
+                                                onClick={addAllowedOutputToken}
+                                                className="w-full px-3 py-2 bg-green-500 text-white text-xs rounded-md hover:bg-green-600 transition-colors"
+                                                style={{ backgroundColor: "#10b981", color: "white" }}>
+                                                Add to Whitelist
+                                            </button>
+
+                                            {/* Quick USDC on Sei example */}
+                                            <div className="text-xs text-gray-600 mb-1">Quick add USDC on Sei:</div>
+                                            <div className="flex flex-wrap gap-1">
+                                                <button
+                                                    onClick={() => setNewAllowedOutputToken("sei:0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F2")}
+                                                    className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300">
+                                                    USDC on Sei
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-1 max-h-32 overflow-y-auto">
+                                            {allowedOutputTokens.map((tokenId) => (
+                                                <div key={tokenId} className="flex items-center justify-between bg-gray-50 p-2 rounded text-xs">
+                                                    <div className="font-mono truncate flex-1">{tokenId}</div>
+                                                    <button
+                                                        onClick={() => removeAllowedOutputToken(tokenId)}
+                                                        className="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                                                        style={{ backgroundColor: "#ef4444", color: "white" }}>
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {allowedOutputTokens.length > 0 && (
+                                            <div className="mt-2 p-2 bg-green-50 rounded text-xs text-green-700">
+                                                ✓ {allowedOutputTokens.length} token(s) whitelisted for output
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 

@@ -256,7 +256,8 @@ export function TradeBody() {
         widgetConfig.preselectedInputs!,
         tokenData,
         widgetConfig.hiddenChains,
-        widgetConfig.hiddenProtocols
+        widgetConfig.hiddenProtocols,
+        widgetConfig.allowedInputTokens
       )
 
       // Respect multiInput setting - if false, only take the first token
@@ -275,7 +276,8 @@ export function TradeBody() {
         widgetConfig.preselectedOutputs!,
         tokenData,
         widgetConfig.hiddenChains,
-        widgetConfig.hiddenProtocols
+        widgetConfig.hiddenProtocols,
+        widgetConfig.allowedOutputTokens
       )
 
       // Respect multiOutput setting - if false, only take the first token

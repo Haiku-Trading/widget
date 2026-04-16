@@ -317,6 +317,20 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
   // Check if simplified mode is enabled
   const isSimpleMode = widgetConfig.tokenSelect === 'simple'
 
+  // Compute effective categories based on allowed categories config
+  const allowedCategories = type === 'input'
+    ? widgetConfig.allowedInputCategories
+    : widgetConfig.allowedOutputCategories
+
+  const effectiveTokenCategories = useMemo(() => {
+    const apiCategories = getTokensQuery.data?.tokenCategories || []
+    if (!allowedCategories || allowedCategories.length === 0) return apiCategories
+    return apiCategories.filter(cat => allowedCategories.includes(cat))
+  }, [getTokensQuery.data?.tokenCategories, allowedCategories])
+
+  // If restricted to a single category (or no useful UI options), hide the category selector
+  const shouldHideCategoryUI = effectiveTokenCategories.length <= 1
+
   const allTokensSelected = useTradeStore(
     useShallow((state) => state.inputTokens.concat(state.outputTokens)),
   )
@@ -421,6 +435,20 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       return true
     }
 
+    function applyTokenWhitelist(token: { iid: string }) {
+      const whitelist = type === 'input'
+        ? widgetConfig.allowedInputTokens
+        : widgetConfig.allowedOutputTokens
+      // If no whitelist is set, allow all tokens
+      if (!whitelist || whitelist.length === 0) return true
+      // Match on full iid or base iid (for concentrated liquidity tokens with tick ranges)
+      const baseIid = token.iid.split('::')[0]
+      return whitelist.some(
+        allowedIid => allowedIid.toLowerCase() === token.iid.toLowerCase() ||
+                      allowedIid.toLowerCase() === baseIid.toLowerCase()
+      )
+    }
+
     function isVarDebtAPIToken<T>(token: T | APIVarDebtToken): token is APIVarDebtToken {
       return (token as APIVarDebtToken).primaryColor !== undefined
     }
@@ -437,6 +465,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     const addBalanceToTokens = (tokens: (APIToken | APICollateralToken | APIVarDebtToken)[]) => {
       return tokens
         .filter(removeHiddenChainsAndProtocols)
+        .filter(applyTokenWhitelist)
         .map((token) => {
           const balance = BigNumber(balances[token.iid] || 0)
             .multipliedBy(token.priceUSD || 0)
@@ -451,6 +480,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     const addBalanceToConcentratedTokens = (tokens: APIConcentratedLiquidityToken[]) => {
       return tokens
         .filter(removeHiddenChainsAndProtocols)
+        .filter(applyTokenWhitelist)
         .map((token) => {
           // Parse tick range from iid if present (format: "baseIid::lowerTick:upperTick")
           const [iid, tickSpace] = token.iid.split('::')
@@ -478,7 +508,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     if (concentratedBalances && type === 'input') {
       Object.keys(concentratedBalances).forEach((iidKey) => {
         const concentratedToken = concentratedLiquidityTokens.find((token) => token.iid === iidKey)
-        if (concentratedToken) {
+        if (concentratedToken && removeHiddenChainsAndProtocols(concentratedToken) && applyTokenWhitelist(concentratedToken)) {
           Object.keys(concentratedBalances[iidKey]).forEach((key) => {
             const [, , tickLower, tickUpper] = key.split(':')
             concentratedLPBalanceTokens.push({
@@ -503,17 +533,22 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       let tokensWithBalance: any[] = []
 
       if (selectedCategories.includes('all')) {
-        tokensWithBalance = addBalanceToTokens(
-          tokens
-            .concat(collateralTokens)
-            .concat(varDebtTokens)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .concat(vaultTokens as any)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .concat(weightedLiquidityTokens as any),
-        )
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        tokensWithBalance = tokensWithBalance.concat(addBalanceToConcentratedTokens(concentratedLPBalanceTokens as any))
+        // If categories are restricted, only include tokens from allowed categories
+        const cats = allowedCategories || ['token', 'collateral', 'varDebt', 'weightedLiquidity', 'vault', 'concentratedLiquidity']
+
+        let baseTokens: any[] = []
+        if (cats.includes('token')) baseTokens = baseTokens.concat(tokens)
+        if (cats.includes('collateral')) baseTokens = baseTokens.concat(collateralTokens)
+        if (cats.includes('varDebt')) baseTokens = baseTokens.concat(varDebtTokens)
+        if (cats.includes('weightedLiquidity')) baseTokens = baseTokens.concat(weightedLiquidityTokens as any)
+        if (cats.includes('vault')) baseTokens = baseTokens.concat(vaultTokens as any)
+
+        tokensWithBalance = addBalanceToTokens(baseTokens)
+
+        if (cats.includes('concentratedLiquidity')) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          tokensWithBalance = tokensWithBalance.concat(addBalanceToConcentratedTokens(concentratedLPBalanceTokens as any))
+        }
       } else {
         // Combine tokens from all selected categories
         if (selectedCategories.includes('token')) {
@@ -898,6 +933,10 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
       concentratedBalances: Object.keys(concentratedBalances).length,
       hiddenChains: widgetConfig.hiddenChains,
       hiddenProtocols: widgetConfig.hiddenProtocols,
+      allowedInputTokens: widgetConfig.allowedInputTokens,
+      allowedOutputTokens: widgetConfig.allowedOutputTokens,
+      allowedInputCategories: widgetConfig.allowedInputCategories,
+      allowedOutputCategories: widgetConfig.allowedOutputCategories,
     })
   }, [
     tokens,
@@ -916,6 +955,10 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
     concentratedBalances,
     widgetConfig.hiddenChains,
     widgetConfig.hiddenProtocols,
+    widgetConfig.allowedInputTokens,
+    widgetConfig.allowedOutputTokens,
+    widgetConfig.allowedInputCategories,
+    widgetConfig.allowedOutputCategories,
   ])
 
   // Smart filtered tokens computation
@@ -1227,13 +1270,16 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                     onValueChange={setProtocolValue}
                     isSimpleMode={true}
                   />
-                  <MobileCategorySelect
-                    value={selectedCategories}
-                    onValueChange={setSelectedCategories}
-                    availableCategories={getTokensQuery.data?.tokenCategories || []}
-                  />
+                  {!shouldHideCategoryUI && (
+                    <MobileCategorySelect
+                      value={selectedCategories}
+                      onValueChange={setSelectedCategories}
+                      availableCategories={effectiveTokenCategories}
+                      allowedCategories={allowedCategories}
+                    />
+                  )}
                 </div>
-              ) : (
+              ) : !shouldHideCategoryUI ? (
                 <ToggleGroup.Root
                   type="multiple"
                   value={selectedCategories}
@@ -1255,7 +1301,7 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                   {/* <ToggleGroup.Item value="all" className="whitespace-nowrap flex-1">
                 All
               </ToggleGroup.Item> */}
-                  {getTokensQuery.data?.tokenCategories?.map((category) =>
+                  {effectiveTokenCategories?.map((category) =>
                     categoriesOrigNames[category] && category !== 'varDebt' ? (
                       <ToggleGroup.Item
                         key={category}
@@ -1267,15 +1313,17 @@ export function ChosenTokenDialogContent({ type, onSelectTokens, isOpen = true }
                       </ToggleGroup.Item>
                     ) : null,
                   )}
-                  <ToggleGroup.Item
-                    key={'pendle'}
-                    value={'pendle'}
-                    className="whitespace-nowrap capitalize"
-                  >
-                    YT/PT
-                  </ToggleGroup.Item>
+                  {(!allowedCategories || allowedCategories.includes('token')) && (
+                    <ToggleGroup.Item
+                      key={'pendle'}
+                      value={'pendle'}
+                      className="whitespace-nowrap capitalize"
+                    >
+                      YT/PT
+                    </ToggleGroup.Item>
+                  )}
                 </ToggleGroup.Root>
-              )}
+              ) : null}
 
               {selectedTokens.length > 0 && (
                 <div className="pb-4 flex flex-wrap items-center gap-2.5">

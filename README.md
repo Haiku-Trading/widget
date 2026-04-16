@@ -92,6 +92,10 @@ Pass a `config` prop to customize the widget:
 | `preselectedOutputs` | `Record<string, number>` | `undefined` | Pre-selected output tokens (token IID -> weight) |
 | `tokenSelect` | `'simple' \| 'default'` | `'default'` | Token selector UI style |
 | `bridgeMode` | `'open' \| 'fast' \| 'economy'` | `undefined` | Bridge routing preference |
+| `allowedInputCategories` | `Category[]` | `undefined` | Restrict input to specific primitive types (see below) |
+| `allowedOutputCategories` | `Category[]` | `undefined` | Restrict output to specific primitive types (see below) |
+| `allowedInputTokens` | `string[]` | `undefined` | Whitelist of token IIDs allowed for input |
+| `allowedOutputTokens` | `string[]` | `undefined` | Whitelist of token IIDs allowed for output |
 
 ### Theme
 
@@ -168,6 +172,125 @@ const config: WidgetConfig = {
 };
 
 <HaikuWidget widgetKey="your-widget-key" config={config} />
+```
+
+### Token Category Filtering
+
+Restrict which types of DeFi primitives users can select. This is useful when you want to limit the widget to specific asset types.
+
+**Available Categories:**
+- `'token'` - Vanilla ERC-20 tokens (USDC, WETH, DAI, etc.)
+- `'collateral'` - Lending collateral positions (Aave deposits, Compound cTokens, etc.)
+- `'varDebt'` - Variable debt positions (borrowed assets)
+- `'weightedLiquidity'` - Weighted liquidity pool tokens (Balancer pools, etc.)
+- `'vault'` - Yield vault tokens (Yearn, Beefy, etc.)
+- `'concentratedLiquidity'` - Concentrated liquidity positions (Uniswap V3, etc.)
+
+```tsx
+import { HaikuWidget, Category } from '@haiku-trade/widget';
+
+const config: WidgetConfig = {
+  // Only allow vanilla ERC-20 tokens for input
+  allowedInputCategories: ['token'],
+  
+  // Allow ERC-20 tokens and vaults for output
+  allowedOutputCategories: ['token', 'vault'],
+};
+
+<HaikuWidget widgetKey="your-widget-key" config={config} />
+```
+
+When `allowedInputCategories` or `allowedOutputCategories` is:
+- **Undefined**: All categories are available (default behavior)
+- **Set to array**: Only those categories appear in the token selector
+- **Single category**: Category toggle UI is automatically hidden
+
+### Token Whitelist
+
+Restrict token selection to a specific list of approved tokens by their IIDs (Integrated IDentifiers). This is ideal for highly controlled trading experiences.
+
+**Token IID Format:** `{chainName}:{tokenAddress}`
+
+Examples:
+- `'eth:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'` - USDC on Ethereum
+- `'arb:0xaf88d065e77c8cC2239327C5EDb3A432268e5831'` - USDC on Arbitrum
+- `'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913'` - USDC on Base
+
+```tsx
+const config: WidgetConfig = {
+  // Only allow USDC on major chains for input
+  allowedInputTokens: [
+    'eth:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',   // USDC on Ethereum
+    'arb:0xaf88d065e77c8cC2239327C5EDb3A432268e5831',   // USDC on Arbitrum
+    'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',  // USDC on Base
+  ],
+  
+  // Only allow USDC on Sei for output
+  allowedOutputTokens: [
+    'sei:0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F2',   // USDC on Sei
+  ],
+  
+  multiInput: false,
+  multiOutput: false,
+};
+
+<HaikuWidget widgetKey="your-widget-key" config={config} />
+```
+
+When `allowedInputTokens` or `allowedOutputTokens` is:
+- **Undefined**: All tokens are available (default behavior)
+- **Set to array**: Only tokens in the whitelist appear in the token selector
+- **Empty array**: No tokens are available (not recommended)
+
+**Note:** Token whitelists work with preselected tokens and respect `hiddenChains`/`hiddenProtocols` filters.
+
+### Combined Restrictions Example
+
+Create a highly controlled swap experience for a specific use case:
+
+```tsx
+const config: WidgetConfig = {
+  // Only ERC-20 tokens
+  allowedInputCategories: ['token'],
+  allowedOutputCategories: ['token'],
+  
+  // Only USDC on multiple chains → Sei
+  allowedInputTokens: [
+    'eth:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    'arb:0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
+    'base:0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+  ],
+  allowedOutputTokens: [
+    'sei:0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F2',
+  ],
+  
+  // Lock the output to prevent changes
+  lockedOutputs: true,
+  
+  // Pre-select output token
+  preselectedOutputs: {
+    'sei:0x3894085Ef7Ff0f0aeDf52E2A2704928d1Ec074F2': 100,
+  },
+  
+  // Single token mode
+  multiInput: false,
+  multiOutput: false,
+};
+
+<HaikuWidget widgetKey="your-widget-key" config={config} />
+```
+
+This configuration creates a focused "USDC to Sei" bridge experience where users can only:
+- Select USDC from Ethereum, Arbitrum, or Base as input
+- Output to USDC on Sei (pre-selected and locked)
+- No other tokens or categories are available
+
+## Finding Token IIDs
+
+Token IIDs (Integrated IDentifiers) follow the format `{chainSlug}:{tokenAddress}`. You can find token IIDs with the following Haiku API endpoint:
+
+```bash
+curl https://api.haiku.trade/v1/tokenList > tokenList.json
 ```
 
 ## Supported Chains
